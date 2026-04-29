@@ -1,1 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Cantonese Talk · Speak with Jyutping</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      background: linear-gradient(145deg, #f0f9f4 0%, #e6f2ec 100%);
+      font-family: 'Segoe UI', 'Roboto', 'Inter', system-ui, sans-serif;
+      color: #1e2a2c;
+      line-height: 1.5;
+      padding: 2rem 1.2rem;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #0f6b5e, #2b9c7c);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero .sub {
+      font-size: 1.2rem;
+      color: #2c6e5c;
+      background: #d9f0e8cc;
+      backdrop-filter: blur(4px);
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      border-radius: 60px;
+      margin-top: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* tab navigation */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #c3e0d4;
+      padding-bottom: 0.6rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #2d6a5c;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      background: #2b9c7c;
+      color: white;
+      box-shadow: 0 6px 12px rgba(27, 94, 74, 0.2);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: #d1efe7;
+      color: #0e5e4c;
+    }
+
+    /* panels */
+    .panel {
+      display: none;
+      animation: fade 0.25s ease;
+    }
+
+    .panel.active-panel {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.4rem;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .conv-card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.2rem;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+      transition: 0.2s;
+      border: 1px solid #cde8e0;
+    }
+
+    .conv-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 28px -8px rgba(0, 0, 0, 0.1);
+      border-color: #94c7b5;
+    }
+
+    .jyutping-phrase {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: 'Courier New', 'SF Mono', monospace;
+      color: #1f6e5c;
+      letter-spacing: 0.3px;
+      word-break: break-word;
+    }
+
+    .meaning {
+      color: #3a5e54;
+      font-size: 0.95rem;
+      margin-top: 0.7rem;
+      border-left: 3px solid #5fc1a4;
+      padding-left: 0.75rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .play-btn {
+      background: #e6f4ef;
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #1b6c58;
+      transition: 0.1s;
+      margin-top: 0.2rem;
+    }
+
+    .play-btn:hover {
+      background: #2b9c7c;
+      color: white;
+    }
+
+    /* quick phrase category */
+    .section-title {
+      font-size: 1.7rem;
+      margin: 1rem 0 0.5rem;
+      font-weight: 600;
+      color: #1f5c4e;
+    }
+
+    .subnote {
+      font-size: 0.85rem;
+      background: #e2f3ed;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      display: inline-block;
+    }
+
+    /* quiz area */
+    .quiz-area {
+      background: white;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+      border: 1px solid #cde8e0;
+    }
+
+    .quiz-question {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1a4e42;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .quiz-opt {
+      background: #f0faf6;
+      padding: 0.7rem 1.3rem;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.1s;
+      border: 1px solid #bcd9cf;
+      font-weight: 500;
+    }
+
+    .quiz-opt:hover {
+      background: #c7e6dc;
+    }
+
+    .quiz-feedback {
+      font-weight: 500;
+      padding: 0.5rem 0;
+    }
+
+    .next-quiz {
+      background: #2b9c7c;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 60px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 0.6rem;
+    }
+
+    .next-quiz:disabled {
+      background: #b9d4ca;
+      cursor: default;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6e9c8c;
+      border-top: 1px solid #cde0d8;
+      padding-top: 1.5rem;
+    }
+
+    @media (max-width: 650px) {
+      .jyutping-phrase { font-size: 1.1rem; }
+      .hero h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>🗣️ Cantonese Talk <span style="font-size:1.8rem;">🎧</span></h1>
+    <div class="sub">jyutping only · speak real conversations</div>
+    <p style="margin-top: 1rem; max-width: 650px; margin-left: auto; margin-right: auto;">💬 Master daily Cantonese without characters — learn pronunciation & speak naturally!</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="essentials">✨ Essentials</button>
+    <button class="tab-btn" data-tab="convos">🗯️ Real Conversations</button>
+    <button class="tab-btn" data-tab="quiz">🧠 Quiz Yourself</button>
+    <button class="tab-btn" data-tab="guide">📘 Speaking Guide</button>
+  </div>
+
+  <!-- 面板1: 必備詞彙與短語 (無漢字) -->
+  <div id="essentials" class="panel active-panel">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+      <h2>🔹 Core words & useful replies</h2>
+      <span class="subnote">🔊 tap any card to hear pronunciation</span>
+    </div>
+    <div class="card-grid" id="essentialList"></div>
+  </div>
+
+  <!-- 面板2: 對話實戰 (完整句子 + 情境) -->
+  <div id="convos" class="panel">
+    <h2>🗯️ Everyday dialogues (no characters)</h2>
+    <p style="margin-bottom: 0.5rem;">📢 Real questions & answers — practice out loud!</p>
+    <div class="card-grid" id="convoList"></div>
+  </div>
+
+  <!-- 面板3: 互動測驗 (聽力/理解) -->
+  <div id="quiz" class="panel">
+    <div class="quiz-area" id="quizPanel">
+      <!-- dynamic quiz -->
+    </div>
+  </div>
+
+  <!-- 面板4: 發音指引 + 粵拼技巧 -->
+  <div id="guide" class="panel">
+    <div style="background: white; border-radius: 2rem; padding: 1.8rem; border: 1px solid #cde8e0;">
+      <h3>🎯 Speak better Cantonese · tone & pronunciation guide</h3>
+      <ul style="margin-top: 1rem; margin-left: 1.2rem; line-height: 1.7;">
+        <li><strong>🎵 6 tones (Jyutping numbers)</strong> — 1: high flat (si1), 2: high rising (si2), 3: mid level (si3), 4: low falling (si4), 5: low rising (si5), 6: low level (si6).</li>
+        <li><strong>🗣️ Common initials:</strong> ‘c’ like ts, ‘z’ like ds, ‘ng’ nasal sound. Example: ngo5 (I), nei5 (you).</li>
+        <li><strong>💡 Polite particles:</strong> laa1 (啦), me1 (咩), aa3 (呀) — add friendliness.</li>
+        <li><strong>🔊 Tap any card to hear real pronunciation.</strong> Try to repeat exactly with same tone.</li>
+        <li><strong>✅ Quick tip:</strong> When asking questions, raise your tone at the end — nei5 hou2 maa3? (How are you?)</li>
+      </ul>
+      <div style="background: #e4f3ed; border-radius: 1.5rem; padding: 1rem; margin-top: 1.5rem;">
+        <strong>👍 Survival phrases</strong><br>
+        m4 goi1 = excuse me / thank you (service) <br>
+        do1 ze6 = thank you (gift/favor) <br>
+        hou2 aa3 = okay / alright <br>
+        m4 sik1 = I don't know / don't understand
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    🌟 No Chinese characters — pure jyutping conversation practice. Tap any card to hear native-like speech (Web Speech API, Cantonese).
+  </div>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // Vocabulary & phrases (on-screen: only jyutping + meaning)
+  // each entry: { jyutping, meaning }
+  // --------------------------------------------------------------
+  const essentialsData = [
+    { jyutping: "nei5 hou2", meaning: "Hello / How are you?" },
+    { jyutping: "ngo5 hou2", meaning: "I'm fine" },
+    { jyutping: "do1 ze6", meaning: "Thanks (for a gift / favor)" },
+    { jyutping: "m4 goi1", meaning: "Excuse me / Thanks (service)" },
+    { jyutping: "hou2 aa3", meaning: "Okay / Alright" },
+    { jyutping: "m4 hai6", meaning: "No / It's not" },
+    { jyutping: "hai6 aa3", meaning: "Yes / That's right" },
+    { jyutping: "m4 sik1", meaning: "I don't know / don't understand" },
+    { jyutping: "gei2 do1 cin2", meaning: "How much money?" },
+    { jyutping: "bin1 dou6", meaning: "Where?" },
+    { jyutping: "gam1 jat6", meaning: "Today" },
+    { jyutping: "ting1 jat6", meaning: "Tomorrow" },
+    { jyutping: "ceng1 man6", meaning: "Please / may I ask..." },
+    { jyutping: "deoi3 m4 zyu6", meaning: "Sorry" }
+  ];
+
+  // real conversation sentences (question & answer style)
+  const conversationData = [
+    { jyutping: "nei5 giu3 me1 meng2?", meaning: "What is your name?" },
+    { jyutping: "ngo5 giu3 Ming4. nei5 ho2 ji5 giu3 ngo5 Ming4.", meaning: "My name is Ming. You can call me Ming." },
+    { jyutping: "nei5 hai6 bin1 dou6 jan4?", meaning: "Where are you from?" },
+    { jyutping: "ngo5 hai6 Mei5 Gwok3 jan4. nei5 le1?", meaning: "I am from America. And you?" },
+    { jyutping: "nei5 sik1 m4 sik1 gong2 gwong2 dung1 waa2?", meaning: "Do you know how to speak Cantonese?" },
+    { jyutping: "ngo5 sik1 gong2 siu2 siu2. gum2 nei5 le1?", meaning: "I speak a little. How about you?" },
+    { jyutping: "m4 goi1, ngo5 soeng2 yam2 seoi2.", meaning: "Excuse me, I would like to drink water." },
+    { jyutping: "jat1 cai4 heoi3 sik6 faan6 laa1", meaning: "Let's go eat together" },
+    { jyutping: "gei2 dim2 zung1? m4 goi1 saai3", meaning: "What time is it? Thank you." },
+    { jyutping: "hou2 hoi1 sam1 gin3 dou3 nei5", meaning: "Nice to meet you" }
+  ];
+
+  // Quiz questions (answer based on meaning / recognition)
+  const quizQuestions = [
+    { question: "What does 'nei5 hou2' mean?", options: ["Goodbye", "Hello / How are you", "Thank you", "Excuse me"], correct: 1 },
+    { question: "How do you say 'Thank you' (for a gift) in Cantonese?", options: ["m4 goi1", "do1 ze6", "hou2 aa3", "m4 hai6"], correct: 1 },
+    { question: "What is the jyutping for 'Where?'", options: ["gei2 do1", "bin1 dou6", "gam1 jat6", "deoi3 m4 zyu6"], correct: 1 },
+    { question: "If someone says 'm4 sik1', they mean:", options: ["I understand", "I don't know", "I'm happy", "It's expensive"], correct: 1 },
+    { question: "How do you ask 'How much money?'", options: ["nei5 hou2 maa3", "gei2 do1 cin2", "bin1 go3", "hou2 leng3"], correct: 1 },
+    { question: "'deoi3 m4 zyu6' means:", options: ["Sorry", "Thank you", "No problem", "See you"], correct: 0 },
+    { question: "Pick the phrase for 'Let's eat together'", options: ["jat1 cai4 heoi3 sik6 faan6 laa1", "ngo5 sik6 zo2", "nei5 sek3 faan6 mei6?", "hou2 hoeng1"], correct: 0 },
+    { question: "What does 'm4 goi1' usually express?", options: ["Sorry", "Excuse me / Thanks (service)", "I'm full", "Help"], correct: 1 }
+  ];
+
+  // Helper: Web Speech API (Cantonese)
+  function speakCantonese(text) {
+    if (!window.speechSynthesis) {
+      alert("Browser does not support speech. Try Chrome/Edge/Safari.");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-HK';   // Hong Kong Cantonese
+    utterance.rate = 0.85;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Render Essentials (只用 jyutping + 英文意思)
+  function renderEssentials() {
+    const container = document.getElementById('essentialList');
+    if (!container) return;
+    container.innerHTML = '';
+    essentialsData.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'conv-card';
+      card.innerHTML = `
+        <div class="jyutping-phrase">${item.jyutping}</div>
+        <div class="meaning">💬 ${item.meaning}</div>
+        <button class="play-btn" data-phrase="${item.jyutping}">🔊 Listen & repeat</button>
+      `;
+      const btn = card.querySelector('.play-btn');
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        speakCantonese(btn.getAttribute('data-phrase'));
+      });
+      container.appendChild(card);
+    });
+  }
+
+  // Render conversations
+  function renderConversations() {
+    const container = document.getElementById('convoList');
+    if (!container) return;
+    container.innerHTML = '';
+    conversationData.forEach(conv => {
+      const card = document.createElement('div');
+      card.className = 'conv-card';
+      card.innerHTML = `
+        <div class="jyutping-phrase">🗣️ ${conv.jyutping}</div>
+        <div class="meaning">📌 ${conv.meaning}</div>
+        <button class="play-btn" data-phrase="${conv.jyutping}">🔊 Hear sentence</button>
+      `;
+      const btn = card.querySelector('.play-btn');
+      btn.addEventListener('click', () => {
+        speakCantonese(btn.getAttribute('data-phrase'));
+      });
+      container.appendChild(card);
+    });
+  }
+
+  // ---------- QUIZ LOGIC ----------
+  let quizIndex = 0;
+  let quizScore = 0;
+  let quizActive = true;
+  let currentQ = null;
+
+  function loadQuiz() {
+    const quizPanel = document.getElementById('quizPanel');
+    if (!quizPanel) return;
+    if (quizIndex >= quizQuestions.length) {
+      // quiz finished
+      const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+      quizPanel.innerHTML = `
+        <div style="text-align: center; padding: 1rem;">
+          <h3>🎉 Quiz completed! 🎉</h3>
+          <p style="font-size: 1.8rem; margin: 0.5rem 0;">${quizScore} / ${quizQuestions.length}</p>
+          <p>${percentage >= 70 ? 'Great progress! Keep speaking 💪' : 'Review the phrases & try again ✨'}</p>
+          <button class="next-quiz" id="restartQuizBtn">🔄 Restart Quiz</button>
+        </div>
+      `;
+      const restartBtn = document.getElementById('restartQuizBtn');
+      if (restartBtn) restartBtn.addEventListener('click', () => {
+        quizIndex = 0;
+        quizScore = 0;
+        quizActive = true;
+        loadQuiz();
+      });
+      return;
+    }
+    currentQ = quizQuestions[quizIndex];
+    quizActive = true;
+    // build UI
+    quizPanel.innerHTML = `
+      <div class="quiz-question">❓ ${currentQ.question}</div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <button class="next-quiz" id="nextQuizBtn" disabled>Next question</button>
+    `;
+    const optionsDiv = document.getElementById('quizOptions');
+    currentQ.options.forEach((opt, idx) => {
+      const optDiv = document.createElement('div');
+      optDiv.className = 'quiz-opt';
+      optDiv.innerText = opt;
+      optDiv.dataset.idx = idx;
+      optDiv.addEventListener('click', () => handleAnswer(idx, optDiv));
+      optionsDiv.appendChild(optDiv);
+    });
+    const nextBtn = document.getElementById('nextQuizBtn');
+    nextBtn.addEventListener('click', () => {
+      if (!quizActive) {
+        quizIndex++;
+        loadQuiz();
+      }
+    });
+  }
+
+  function handleAnswer(selectedIdx, element) {
+    if (!quizActive) return;
+    const isCorrect = (selectedIdx === currentQ.correct);
+    const feedbackDiv = document.getElementById('quizFeedback');
+    const allOptions = document.querySelectorAll('.quiz-opt');
+    // disable further clicks
+    quizActive = false;
+    if (isCorrect) {
+      quizScore++;
+      feedbackDiv.innerHTML = '✅ Correct! Great job.';
+      element.style.backgroundColor = '#c8e6d9';
+    } else {
+      feedbackDiv.innerHTML = `❌ Oops! Correct answer: ${currentQ.options[currentQ.correct]}. Keep practicing.`;
+      element.style.backgroundColor = '#ffe1cf';
+      // highlight correct answer in green
+      allOptions.forEach(opt => {
+        if (parseInt(opt.dataset.idx) === currentQ.correct) {
+          opt.style.backgroundColor = '#bde0d0';
+          opt.style.border = '1px solid #2b9c7c';
+        }
+      });
+    }
+    // disable all options styling
+    allOptions.forEach(opt => {
+      opt.style.pointerEvents = 'none';
+      opt.style.opacity = '0.8';
+    });
+    const nextBtn = document.getElementById('nextQuizBtn');
+    nextBtn.disabled = false;
+  }
+
+  // tab switching
+  function switchTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.panel');
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        panels.forEach(panel => panel.classList.remove('active-panel'));
+        const activePanel = document.getElementById(targetTab);
+        if (activePanel) activePanel.classList.add('active-panel');
+        // if quiz panel is opened and not yet initialized properly, ensure fresh UI
+        if (targetTab === 'quiz') {
+          // if quiz is already midway or fresh, just reload current state to display properly
+          if (quizIndex < quizQuestions.length && document.getElementById('quizPanel')) {
+            // re-trigger loadquiz to redraw in case
+            const tempIndex = quizIndex;
+            const tempScore = quizScore;
+            // avoid reset, just recall render
+            // but better call refresh function that rebuilds based on global index
+            loadQuiz();
+          } else if (quizIndex >= quizQuestions.length) {
+            loadQuiz();   // show ending screen
+          } else {
+            loadQuiz();
+          }
+        }
+      });
+    });
+  }
+
+  // initial render all
+  function init() {
+    renderEssentials();
+    renderConversations();
+    loadQuiz();   // starts quiz panel with first question
+    switchTabs();
+  }
+  init();
+</script>
+</body>
+</html>
