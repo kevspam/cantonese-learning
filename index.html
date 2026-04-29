@@ -33,6 +33,7 @@
       flex-direction: column;
     }
 
+    /* TOP HEADER */
     .top-bar {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -80,12 +81,14 @@
     .top-search:focus { border-color: var(--accent); }
     .top-search::placeholder { color: var(--text-dim); }
 
+    /* LAYOUT */
     .layout {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
 
+    /* SIDEBAR */
     .sidebar {
       width: var(--sidebar-w);
       background: var(--surface);
@@ -149,6 +152,7 @@
       margin: 0.5rem 1rem;
     }
 
+    /* MAIN CONTENT */
     .main {
       flex: 1;
       overflow-y: auto;
@@ -159,6 +163,7 @@
     .main::-webkit-scrollbar-track { background: transparent; }
     .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
+    /* PANEL */
     .panel { display: none; animation: fadein 0.2s ease; }
     .panel.active { display: block; }
 
@@ -183,6 +188,7 @@
       font-size: 0.9rem;
     }
 
+    /* CARD GRID */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -244,6 +250,7 @@
     .card-listen:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
     .card-record:hover { background: var(--accent2); color: var(--bg); border-color: var(--accent2); }
 
+    /* INTERMEDIATE CARDS (wider) */
     .wide-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -279,6 +286,7 @@
       padding: 0.4rem 0.7rem;
       background: var(--surface2);
       border-radius: 7px;
+      flex-wrap: wrap;
     }
 
     .ex-jp {
@@ -306,6 +314,7 @@
     .ex-listen:hover { color: var(--accent); }
     .ex-record:hover { color: var(--accent2); }
 
+    /* QUIZ */
     .quiz-wrap {
       max-width: 640px;
     }
@@ -406,6 +415,7 @@
       margin: 0.5rem 0;
     }
 
+    /* MTR TABLE */
     .mtr-table {
       width: 100%;
       border-collapse: collapse;
@@ -431,6 +441,28 @@
 
     .mtr-table tr:hover td { background: var(--surface2); }
 
+    .mtr-line {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+      margin-left: 0.5rem;
+    }
+
+    /* STORAGE PANEL */
     .storage-panel {
       position: fixed;
       bottom: 20px;
@@ -450,20 +482,11 @@
       color: var(--accent);
     }
 
-    .storage-panel select {
-      background: var(--surface2);
-      color: var(--text);
-      padding: 0.3rem;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-
     .storage-buttons {
       display: flex;
       gap: 0.5rem;
       margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
 
     .small-btn {
@@ -480,9 +503,11 @@
 
     .small-btn:hover { background: var(--accent2); color: var(--bg); }
 
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .hamburger { display: block; }
       .top-search { width: 140px; }
+
       .sidebar {
         position: fixed;
         left: -100%;
@@ -491,7 +516,9 @@
         z-index: 300;
         transition: left 0.25s ease;
       }
+
       .sidebar.open { left: 0; }
+
       .main { padding: 1.2rem; }
       .card-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
       .ex-jp { min-width: 120px; }
@@ -509,7 +536,10 @@
 
 <div class="layout">
 
+  <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
+
+    <!-- BASICS -->
     <div class="sidebar-section">
       <div class="sidebar-label">Basics</div>
       <div class="sidebar-item active" data-panel="numbers"><span class="icon">🔢</span>Numbers</div>
@@ -522,6 +552,7 @@
 
     <div class="sidebar-divider"></div>
 
+    <!-- BEGINNERS -->
     <div class="sidebar-section">
       <div class="sidebar-label">Beginners</div>
       <div class="sidebar-item" data-panel="adjectives"><span class="icon">✨</span>Adjectives</div>
@@ -558,6 +589,7 @@
 
     <div class="sidebar-divider"></div>
 
+    <!-- INTERMEDIATE -->
     <div class="sidebar-section">
       <div class="sidebar-label">Intermediate</div>
       <div class="sidebar-item" data-panel="intro_intermediate"><span class="icon">📖</span>Introduction</div>
@@ -574,172 +606,266 @@
 
     <div class="sidebar-divider"></div>
 
+    <!-- EXTRAS -->
     <div class="sidebar-section">
       <div class="sidebar-label">Practice</div>
       <div class="sidebar-item" data-panel="quiz"><span class="icon">📝</span>Quiz</div>
     </div>
+
   </nav>
 
+  <!-- MAIN CONTENT -->
   <main class="main" id="mainContent">
-    <!-- All the same panels from your original code -->
+
+    <!-- ========== BASICS ========== -->
+
     <div class="panel active" id="panel-numbers">
       <div class="panel-header"><h2>🔢 Numbers</h2><p>Counting in Cantonese</p></div>
       <div class="card-grid" id="grid-numbers"></div>
     </div>
+
     <div class="panel" id="panel-natural">
       <div class="panel-header"><h2>🌿 Natural Objects</h2><p>Nature vocabulary</p></div>
       <div class="card-grid" id="grid-natural"></div>
     </div>
+
     <div class="panel" id="panel-dates">
       <div class="panel-header"><h2>📅 Dates</h2><p>Days, months and calendar</p></div>
       <div class="card-grid" id="grid-dates"></div>
     </div>
+
     <div class="panel" id="panel-quantities">
       <div class="panel-header"><h2>📏 Quantities & Sizes</h2><p>Describing amounts and dimensions</p></div>
       <div class="card-grid" id="grid-quantities"></div>
     </div>
+
     <div class="panel" id="panel-directions">
       <div class="panel-header"><h2>🧭 Directions</h2><p>Getting around</p></div>
       <div class="card-grid" id="grid-directions"></div>
     </div>
+
     <div class="panel" id="panel-time">
       <div class="panel-header"><h2>⏰ Time</h2><p>Telling time and time expressions</p></div>
       <div class="card-grid" id="grid-time"></div>
     </div>
+
+    <!-- ========== BEGINNERS ========== -->
+
     <div class="panel" id="panel-adjectives">
       <div class="panel-header"><h2>✨ Adjectives</h2><p>Describing words</p></div>
       <div class="card-grid" id="grid-adjectives"></div>
     </div>
+
     <div class="panel" id="panel-animals">
       <div class="panel-header"><h2>🐾 Animals</h2><p>Common animals</p></div>
       <div class="card-grid" id="grid-animals"></div>
     </div>
+
     <div class="panel" id="panel-basic_conversation">
       <div class="panel-header"><h2>💬 Basic Conversation</h2><p>Everyday exchanges</p></div>
       <div class="card-grid" id="grid-basic_conversation"></div>
     </div>
+
     <div class="panel" id="panel-body">
       <div class="panel-header"><h2>🫀 Body</h2><p>Parts of the body</p></div>
       <div class="card-grid" id="grid-body"></div>
     </div>
+
     <div class="panel" id="panel-buildings">
       <div class="panel-header"><h2>🏢 Buildings</h2><p>Places and structures</p></div>
       <div class="card-grid" id="grid-buildings"></div>
     </div>
+
     <div class="panel" id="panel-colours">
       <div class="panel-header"><h2>🎨 Colours</h2><p>Colour vocabulary</p></div>
       <div class="card-grid" id="grid-colours"></div>
     </div>
+
     <div class="panel" id="panel-common_phrases">
       <div class="panel-header"><h2>🗣️ Common Phrases</h2><p>Must-know everyday phrases</p></div>
       <div class="card-grid" id="grid-common_phrases"></div>
     </div>
+
     <div class="panel" id="panel-cooking">
       <div class="panel-header"><h2>🍳 Cooking</h2><p>Kitchen and cooking vocabulary</p></div>
       <div class="card-grid" id="grid-cooking"></div>
     </div>
+
     <div class="panel" id="panel-countries">
       <div class="panel-header"><h2>🌍 Countries</h2><p>Countries and nationalities</p></div>
       <div class="card-grid" id="grid-countries"></div>
     </div>
+
     <div class="panel" id="panel-drinks">
       <div class="panel-header"><h2>🥤 Drinks</h2><p>Beverages in Cantonese</p></div>
       <div class="card-grid" id="grid-drinks"></div>
     </div>
+
     <div class="panel" id="panel-eating_out">
       <div class="panel-header"><h2>🍜 Eating Out</h2><p>Restaurant phrases and food ordering</p></div>
       <div class="card-grid" id="grid-eating_out"></div>
     </div>
+
     <div class="panel" id="panel-emotions">
       <div class="panel-header"><h2>😊 Emotions</h2><p>Feelings and states of mind</p></div>
       <div class="card-grid" id="grid-emotions"></div>
     </div>
+
     <div class="panel" id="panel-family">
       <div class="panel-header"><h2>👨‍👩‍👧 Family</h2><p>Family members and relationships</p></div>
       <div class="card-grid" id="grid-family"></div>
     </div>
+
     <div class="panel" id="panel-greetings">
       <div class="panel-header"><h2>👋 Greetings</h2><p>Hellos, goodbyes and pleasantries</p></div>
       <div class="card-grid" id="grid-greetings"></div>
     </div>
+
     <div class="panel" id="panel-health">
       <div class="panel-header"><h2>🏥 Health</h2><p>Medical and health vocabulary</p></div>
       <div class="card-grid" id="grid-health"></div>
     </div>
+
     <div class="panel" id="panel-holidays">
       <div class="panel-header"><h2>🏖️ Holidays</h2><p>Travel and holiday phrases</p></div>
       <div class="card-grid" id="grid-holidays"></div>
     </div>
+
     <div class="panel" id="panel-home">
       <div class="panel-header"><h2>🏠 Home</h2><p>Rooms, furniture and household items</p></div>
       <div class="card-grid" id="grid-home"></div>
     </div>
+
     <div class="panel" id="panel-machines">
       <div class="panel-header"><h2>⚙️ Machines</h2><p>Technology and devices</p></div>
       <div class="card-grid" id="grid-machines"></div>
     </div>
+
     <div class="panel" id="panel-motoring">
       <div class="panel-header"><h2>🚗 Motoring</h2><p>Cars and transport vocabulary</p></div>
       <div class="card-grid" id="grid-motoring"></div>
     </div>
+
     <div class="panel" id="panel-people">
       <div class="panel-header"><h2>👥 People</h2><p>Describing people</p></div>
       <div class="card-grid" id="grid-people"></div>
     </div>
+
     <div class="panel" id="panel-places">
       <div class="panel-header"><h2>📍 Places</h2><p>Locations around town</p></div>
       <div class="card-grid" id="grid-places"></div>
     </div>
+
     <div class="panel" id="panel-professions">
       <div class="panel-header"><h2>💼 Professions</h2><p>Jobs and occupations</p></div>
       <div class="card-grid" id="grid-professions"></div>
     </div>
+
     <div class="panel" id="panel-pronouns">
       <div class="panel-header"><h2>🔤 Pronouns</h2><p>Personal and possessive pronouns</p></div>
       <div class="card-grid" id="grid-pronouns"></div>
     </div>
+
     <div class="panel" id="panel-school">
       <div class="panel-header"><h2>🎒 School</h2><p>Education vocabulary</p></div>
       <div class="card-grid" id="grid-school"></div>
     </div>
+
     <div class="panel" id="panel-seasons">
       <div class="panel-header"><h2>🌸 Seasons</h2><p>Seasons and weather vocabulary</p></div>
       <div class="card-grid" id="grid-seasons"></div>
     </div>
+
     <div class="panel" id="panel-special_occasions">
       <div class="panel-header"><h2>🎉 Special Occasions</h2><p>Celebrations and festivals</p></div>
       <div class="card-grid" id="grid-special_occasions"></div>
     </div>
+
     <div class="panel" id="panel-sport">
       <div class="panel-header"><h2>⚽ Sport</h2><p>Sports and activities</p></div>
       <div class="card-grid" id="grid-sport"></div>
     </div>
+
     <div class="panel" id="panel-christmas">
       <div class="panel-header"><h2>🎄 Christmas</h2><p>Christmas vocabulary in Cantonese</p></div>
       <div class="card-grid" id="grid-christmas"></div>
     </div>
+
     <div class="panel" id="panel-verbs">
       <div class="panel-header"><h2>🏃 Verbs</h2><p>Common action words</p></div>
       <div class="card-grid" id="grid-verbs"></div>
     </div>
+
     <div class="panel" id="panel-weather">
       <div class="panel-header"><h2>🌤️ Weather</h2><p>Weather expressions</p></div>
       <div class="card-grid" id="grid-weather"></div>
     </div>
+
+    <!-- ========== INTERMEDIATE ========== -->
+
     <div class="panel" id="panel-intro_intermediate">
       <div class="panel-header"><h2>📖 Intermediate Introduction</h2><p>Moving beyond basics</p></div>
-      <div style="max-width:640px;"><div class="wide-card"><h3>Welcome to Intermediate Cantonese</h3><p>At this level you already know core vocabulary and can hold basic conversations. The intermediate section focuses on <strong style="color:var(--accent)">grammar patterns</strong>, <strong style="color:var(--accent)">sentence structure</strong>, and <strong style="color:var(--accent)">natural-sounding Cantonese</strong>.</p><p style="margin-top:0.8rem;">Cantonese is a tonal language with <strong style="color:var(--accent)">6 tones</strong> (plus 3 entering tones). Jyutping numbers 1–6 indicate tone: <code style="color:var(--accent2)">1</code> high flat, <code style="color:var(--accent2)">2</code> high rising, <code style="color:var(--accent2)">3</code> mid flat, <code style="color:var(--accent2)">4</code> low falling, <code style="color:var(--accent2)">5</code> low rising, <code style="color:var(--accent2)">6</code> low flat.</p><p style="margin-top:0.8rem;">Topics at this level: classifiers, particles, "this/that", compound words, idioms, riddles, dim sum, and the MTR.</p></div></div>
+      <div style="max-width:640px;">
+        <div class="wide-card">
+          <h3>Welcome to Intermediate Cantonese</h3>
+          <p>At this level you already know core vocabulary and can hold basic conversations. The intermediate section focuses on <strong style="color:var(--accent)">grammar patterns</strong>, <strong style="color:var(--accent)">sentence structure</strong>, and <strong style="color:var(--accent)">natural-sounding Cantonese</strong>.</p>
+          <p style="margin-top:0.8rem;">Cantonese is a tonal language with <strong style="color:var(--accent)">6 tones</strong> (plus 3 entering tones). Jyutping numbers 1–6 indicate tone: <code style="color:var(--accent2)">1</code> high flat, <code style="color:var(--accent2)">2</code> high rising, <code style="color:var(--accent2)">3</code> mid flat, <code style="color:var(--accent2)">4</code> low falling, <code style="color:var(--accent2)">5</code> low rising, <code style="color:var(--accent2)">6</code> low flat.</p>
+          <p style="margin-top:0.8rem;">Topics at this level: classifiers, particles, "this/that", compound words, idioms, riddles, dim sum, and the MTR.</p>
+        </div>
+      </div>
     </div>
-    <div class="panel" id="panel-characters"><div class="panel-header"><h2>字 Characters & Compound Words</h2><p>How Chinese words are built</p></div><div id="grid-characters"></div></div>
-    <div class="panel" id="panel-classifiers"><div class="panel-header"><h2>🔢 Numerical Classifiers</h2><p>Measure words (量詞 leong6 ci4)</p></div><div class="card-grid" id="grid-classifiers"></div></div>
-    <div class="panel" id="panel-this_that"><div class="panel-header"><h2>👉 "This" and "That"</h2><p>Demonstrative pronouns</p></div><div id="grid-this_that"></div></div>
-    <div class="panel" id="panel-particles"><div class="panel-header"><h2>💬 Cantonese Particles</h2><p>Sentence-final particles (語氣助詞)</p></div><div id="grid-particles"></div></div>
-    <div class="panel" id="panel-tone_mistakes"><div class="panel-header"><h2>🎵 Common Tone Mistakes</h2><p>Pairs that are easy to confuse</p></div><div id="grid-tone_mistakes"></div></div>
-    <div class="panel" id="panel-idioms"><div class="panel-header"><h2>🀄 Chinese Idioms</h2><p>4-character 成語 (sing4 jyu5)</p></div><div class="card-grid" id="grid-idioms"></div></div>
-    <div class="panel" id="panel-riddles"><div class="panel-header"><h2>🔮 Chinese Riddles</h2><p>謎語 (mai4 jyu5) — fun wordplay</p></div><div id="grid-riddles"></div></div>
-    <div class="panel" id="panel-dimsum"><div class="panel-header"><h2>🥟 Dim Sum Menu</h2><p>Order like a local at yum cha</p></div><div class="card-grid" id="grid-dimsum"></div></div>
-    <div class="panel" id="panel-mtr"><div class="panel-header"><h2>🚇 Hong Kong MTR</h2><p>Station names in Jyutping</p></div><div id="grid-mtr"></div></div>
-    <div class="panel" id="panel-quiz"><div class="panel-header"><h2>📝 Quiz</h2><p>Test your Cantonese knowledge</p></div><div class="quiz-wrap" id="quizWrap"></div></div>
+
+    <div class="panel" id="panel-characters">
+      <div class="panel-header"><h2>字 Characters & Compound Words</h2><p>How Chinese words are built</p></div>
+      <div id="grid-characters"></div>
+    </div>
+
+    <div class="panel" id="panel-classifiers">
+      <div class="panel-header"><h2>🔢 Numerical Classifiers</h2><p>Measure words (量詞 leong6 ci4)</p></div>
+      <div class="card-grid" id="grid-classifiers"></div>
+    </div>
+
+    <div class="panel" id="panel-this_that">
+      <div class="panel-header"><h2>👉 "This" and "That"</h2><p>Demonstrative pronouns</p></div>
+      <div id="grid-this_that"></div>
+    </div>
+
+    <div class="panel" id="panel-particles">
+      <div class="panel-header"><h2>💬 Cantonese Particles</h2><p>Sentence-final particles (語氣助詞)</p></div>
+      <div id="grid-particles"></div>
+    </div>
+
+    <div class="panel" id="panel-tone_mistakes">
+      <div class="panel-header"><h2>🎵 Common Tone Mistakes</h2><p>Pairs that are easy to confuse</p></div>
+      <div id="grid-tone_mistakes"></div>
+    </div>
+
+    <div class="panel" id="panel-idioms">
+      <div class="panel-header"><h2>🀄 Chinese Idioms</h2><p>4-character 成語 (sing4 jyu5)</p></div>
+      <div class="card-grid" id="grid-idioms"></div>
+    </div>
+
+    <div class="panel" id="panel-riddles">
+      <div class="panel-header"><h2>🔮 Chinese Riddles</h2><p>謎語 (mai4 jyu5) — fun wordplay</p></div>
+      <div id="grid-riddles"></div>
+    </div>
+
+    <div class="panel" id="panel-dimsum">
+      <div class="panel-header"><h2>🥟 Dim Sum Menu</h2><p>Order like a local at yum cha</p></div>
+      <div class="card-grid" id="grid-dimsum"></div>
+    </div>
+
+    <div class="panel" id="panel-mtr">
+      <div class="panel-header"><h2>🚇 Hong Kong MTR</h2><p>Station names in Jyutping</p></div>
+      <div id="grid-mtr"></div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="panel" id="panel-quiz">
+      <div class="panel-header"><h2>📝 Quiz</h2><p>Test your Cantonese knowledge</p></div>
+      <div class="quiz-wrap" id="quizWrap"></div>
+    </div>
+
   </main>
 </div>
 
@@ -761,294 +887,675 @@
 
 <!-- STORAGE PANEL -->
 <div class="storage-panel">
-  <h4>💾 Voice Storage</h4>
-  <select id="storageMethod">
-    <option value="local">💻 Local Browser (persists)</option>
-    <option value="export">📁 Export/Import to File</option>
-  </select>
+  <h4>💾 Your Voice Recordings</h4>
   <div class="storage-buttons">
-    <button id="exportAllBtn" class="small-btn">📥 Export All</button>
-    <button id="importAllBtn" class="small-btn">📤 Import</button>
+    <button id="exportAllBtn" class="small-btn">📥 Export Backup</button>
+    <button id="importAllBtn" class="small-btn">📤 Import Backup</button>
     <button id="clearRecordingsBtn" class="small-btn">🗑️ Clear All</button>
   </div>
   <div id="storageInfo" style="font-size:0.7rem; margin-top:0.5rem; color:var(--text-muted);"></div>
+  <div style="font-size:0.65rem; margin-top:0.5rem; color:var(--text-dim);">✓ Recordings save automatically<br>✓ Export to keep forever</div>
 </div>
 
 <script>
 // =============================================
-//  ALL VOCABULARY DATA (same as your original)
+//  ALL VOCABULARY DATA (COMPLETE - NOTHING REMOVED)
 // =============================================
 
 const VOCAB = {
+
   numbers: [
-    { jp: "ling4", en: "Zero (0)" }, { jp: "jat1", en: "One (1)" }, { jp: "ji6", en: "Two (2)" },
-    { jp: "saam1", en: "Three (3)" }, { jp: "sei3", en: "Four (4)" }, { jp: "ng5", en: "Five (5)" },
-    { jp: "luk6", en: "Six (6)" }, { jp: "cat1", en: "Seven (7)" }, { jp: "baat3", en: "Eight (8)" },
-    { jp: "gau2", en: "Nine (9)" }, { jp: "sap6", en: "Ten (10)" }, { jp: "sap6 jat1", en: "Eleven (11)" },
-    { jp: "ji6 sap6", en: "Twenty (20)" }, { jp: "baak3", en: "Hundred (100)" }, { jp: "cin1", en: "Thousand (1000)" },
-    { jp: "maan6", en: "Ten thousand (10,000)" }, { jp: "daai6", en: "Ordinal: big / senior" }, { jp: "siu2", en: "Ordinal: small / junior" }
+    { jp: "ling4", en: "Zero (0)" },
+    { jp: "jat1", en: "One (1)" },
+    { jp: "ji6", en: "Two (2)" },
+    { jp: "saam1", en: "Three (3)" },
+    { jp: "sei3", en: "Four (4)" },
+    { jp: "ng5", en: "Five (5)" },
+    { jp: "luk6", en: "Six (6)" },
+    { jp: "cat1", en: "Seven (7)" },
+    { jp: "baat3", en: "Eight (8)" },
+    { jp: "gau2", en: "Nine (9)" },
+    { jp: "sap6", en: "Ten (10)" },
+    { jp: "sap6 jat1", en: "Eleven (11)" },
+    { jp: "ji6 sap6", en: "Twenty (20)" },
+    { jp: "baak3", en: "Hundred (100)" },
+    { jp: "cin1", en: "Thousand (1000)" },
+    { jp: "maan6", en: "Ten thousand (10,000)" },
+    { jp: "daai6", en: "Ordinal: big / senior" },
+    { jp: "siu2", en: "Ordinal: small / junior" }
   ],
+
   natural: [
-    { jp: "tou2", en: "Earth / Ground" }, { jp: "seoi2", en: "Water" }, { jp: "fo2", en: "Fire" },
-    { jp: "fung1", en: "Wind" }, { jp: "wan4", en: "Cloud" }, { jp: "jyu5", en: "Rain" },
-    { jp: "syut3", en: "Snow" }, { jp: "taai3 joeng4", en: "Sun" }, { jp: "jyut6 loeng4", en: "Moon" },
-    { jp: "sing1", en: "Star" }, { jp: "saan1", en: "Mountain" }, { jp: "hoi2", en: "Sea / Ocean" },
-    { jp: "ho4", en: "River" }, { jp: "lam4", en: "Forest / Jungle" }, { jp: "fa1", en: "Flower" },
-    { jp: "syu6", en: "Tree" }, { jp: "cou2", en: "Grass" }, { jp: "sek6", en: "Stone / Rock" }
+    { jp: "tou2", en: "Earth / Ground" },
+    { jp: "seoi2", en: "Water" },
+    { jp: "fo2", en: "Fire" },
+    { jp: "fung1", en: "Wind" },
+    { jp: "wan4", en: "Cloud" },
+    { jp: "jyu5", en: "Rain" },
+    { jp: "syut3", en: "Snow" },
+    { jp: "taai3 joeng4", en: "Sun" },
+    { jp: "jyut6 loeng4", en: "Moon" },
+    { jp: "sing1", en: "Star" },
+    { jp: "saan1", en: "Mountain" },
+    { jp: "hoi2", en: "Sea / Ocean" },
+    { jp: "ho4", en: "River" },
+    { jp: "lam4", en: "Forest / Jungle" },
+    { jp: "fa1", en: "Flower" },
+    { jp: "syu6", en: "Tree" },
+    { jp: "cou2", en: "Grass" },
+    { jp: "sek6", en: "Stone / Rock" }
   ],
+
   dates: [
-    { jp: "sing1 kei4 jat1", en: "Monday" }, { jp: "sing1 kei4 ji6", en: "Tuesday" }, { jp: "sing1 kei4 saam1", en: "Wednesday" },
-    { jp: "sing1 kei4 sei3", en: "Thursday" }, { jp: "sing1 kei4 ng5", en: "Friday" }, { jp: "sing1 kei4 luk6", en: "Saturday" },
-    { jp: "sing1 kei4 jat6", en: "Sunday" }, { jp: "jat1 jyut6", en: "January" }, { jp: "ji6 jyut6", en: "February" },
-    { jp: "saam1 jyut6", en: "March" }, { jp: "sei3 jyut6", en: "April" }, { jp: "ng5 jyut6", en: "May" },
-    { jp: "luk6 jyut6", en: "June" }, { jp: "cat1 jyut6", en: "July" }, { jp: "baat3 jyut6", en: "August" },
-    { jp: "gau2 jyut6", en: "September" }, { jp: "sap6 jyut6", en: "October" }, { jp: "sap6 jat1 jyut6", en: "November" },
-    { jp: "sap6 ji6 jyut6", en: "December" }, { jp: "nin4", en: "Year" }, { jp: "jyut6", en: "Month" }, { jp: "jat6", en: "Day" }
+    { jp: "sing1 kei4 jat1", en: "Monday" },
+    { jp: "sing1 kei4 ji6", en: "Tuesday" },
+    { jp: "sing1 kei4 saam1", en: "Wednesday" },
+    { jp: "sing1 kei4 sei3", en: "Thursday" },
+    { jp: "sing1 kei4 ng5", en: "Friday" },
+    { jp: "sing1 kei4 luk6", en: "Saturday" },
+    { jp: "sing1 kei4 jat6", en: "Sunday" },
+    { jp: "jat1 jyut6", en: "January" },
+    { jp: "ji6 jyut6", en: "February" },
+    { jp: "saam1 jyut6", en: "March" },
+    { jp: "sei3 jyut6", en: "April" },
+    { jp: "ng5 jyut6", en: "May" },
+    { jp: "luk6 jyut6", en: "June" },
+    { jp: "cat1 jyut6", en: "July" },
+    { jp: "baat3 jyut6", en: "August" },
+    { jp: "gau2 jyut6", en: "September" },
+    { jp: "sap6 jyut6", en: "October" },
+    { jp: "sap6 jat1 jyut6", en: "November" },
+    { jp: "sap6 ji6 jyut6", en: "December" },
+    { jp: "nin4", en: "Year" },
+    { jp: "jyut6", en: "Month" },
+    { jp: "jat6", en: "Day" }
   ],
+
   quantities: [
-    { jp: "do1", en: "Many / More" }, { jp: "siu2", en: "Few / Less / Small" }, { jp: "daai6", en: "Big / Large" },
-    { jp: "sai3", en: "Small (for people)" }, { jp: "coeng4", en: "Long" }, { jp: "dyun2", en: "Short (length)" },
-    { jp: "gou1", en: "Tall / High" }, { jp: "dai1", en: "Low / Short (height)" }, { jp: "fung1 mun5", en: "Full / Ample" },
-    { jp: "hung1", en: "Empty" }, { jp: "hou2 do1", en: "A lot" }, { jp: "jat1 dik1 dik1", en: "A tiny bit" },
-    { jp: "jat1 bun3", en: "Half" }, { jp: "cyun4 bouh6", en: "All / Entirely" }, { jp: "gok3 zo2", en: "Each / Every" }
+    { jp: "do1", en: "Many / More" },
+    { jp: "siu2", en: "Few / Less / Small" },
+    { jp: "daai6", en: "Big / Large" },
+    { jp: "sai3", en: "Small (for people)" },
+    { jp: "coeng4", en: "Long" },
+    { jp: "dyun2", en: "Short (length)" },
+    { jp: "gou1", en: "Tall / High" },
+    { jp: "dai1", en: "Low / Short (height)" },
+    { jp: "fung1 mun5", en: "Full / Ample" },
+    { jp: "hung1", en: "Empty" },
+    { jp: "hou2 do1", en: "A lot" },
+    { jp: "jat1 dik1 dik1", en: "A tiny bit" },
+    { jp: "jat1 bun3", en: "Half" },
+    { jp: "cyun4 bouh6", en: "All / Entirely" },
+    { jp: "gok3 zo2", en: "Each / Every" }
   ],
+
   directions: [
-    { jp: "zuo2", en: "Left" }, { jp: "jau6", en: "Right" }, { jp: "cin4", en: "Front / Ahead" },
-    { jp: "hau6", en: "Behind / Back" }, { jp: "soeng6", en: "Up / Above" }, { jp: "haa6", en: "Down / Below" },
-    { jp: "dung1", en: "East" }, { jp: "naam4", en: "South" }, { jp: "sai1", en: "West" },
-    { jp: "bak1", en: "North" }, { jp: "jyun5", en: "Far" }, { jp: "gaan6", en: "Near / Close" },
-    { jp: "jat1 zik6 haang4", en: "Go straight" }, { jp: "zoeng3 zuo2 zyun3", en: "Turn left" }, { jp: "zoeng3 jau6 zyun3", en: "Turn right" }, { jp: "lo4 hau2", en: "Junction / Intersection" }
+    { jp: "zuo2", en: "Left" },
+    { jp: "jau6", en: "Right" },
+    { jp: "cin4", en: "Front / Ahead" },
+    { jp: "hau6", en: "Behind / Back" },
+    { jp: "soeng6", en: "Up / Above" },
+    { jp: "haa6", en: "Down / Below" },
+    { jp: "dung1", en: "East" },
+    { jp: "naam4", en: "South" },
+    { jp: "sai1", en: "West" },
+    { jp: "bak1", en: "North" },
+    { jp: "jyun5", en: "Far" },
+    { jp: "gaan6", en: "Near / Close" },
+    { jp: "jat1 zik6 haang4", en: "Go straight" },
+    { jp: "zoeng3 zuo2 zyun3", en: "Turn left" },
+    { jp: "zoeng3 jau6 zyun3", en: "Turn right" },
+    { jp: "lo4 hau2", en: "Junction / Intersection" }
   ],
+
   time: [
-    { jp: "ji4 gaa1", en: "Now" }, { jp: "gam1 jat6", en: "Today" }, { jp: "ting1 jat6", en: "Tomorrow" },
-    { jp: "cam4 jat6", en: "Yesterday" }, { jp: "hau6 jat6", en: "The day after tomorrow" }, { jp: "cin4 jat6", en: "The day before yesterday" },
-    { jp: "ziu1", en: "Morning" }, { jp: "ng5 aan3", en: "Noon / Midday" }, { jp: "haa6 zau3", en: "Afternoon" },
-    { jp: "maan5 haa6", en: "Evening / Night" }, { jp: "jat1 go3 zung1", en: "One o'clock" }, { jp: "bun3", en: "Half past (30 mins)" },
-    { jp: "gei2 dim2 zung1", en: "What time is it?" }, { jp: "faai3 di1", en: "Quickly / Hurry" }, { jp: "maan6 di1", en: "Slowly" }
+    { jp: "ji4 gaa1", en: "Now" },
+    { jp: "gam1 jat6", en: "Today" },
+    { jp: "ting1 jat6", en: "Tomorrow" },
+    { jp: "cam4 jat6", en: "Yesterday" },
+    { jp: "hau6 jat6", en: "The day after tomorrow" },
+    { jp: "cin4 jat6", en: "The day before yesterday" },
+    { jp: "ziu1", en: "Morning" },
+    { jp: "ng5 aan3", en: "Noon / Midday" },
+    { jp: "haa6 zau3", en: "Afternoon" },
+    { jp: "maan5 haa6", en: "Evening / Night" },
+    { jp: "jat1 go3 zung1", en: "One o'clock" },
+    { jp: "bun3", en: "Half past (30 mins)" },
+    { jp: "gei2 dim2 zung1", en: "What time is it?" },
+    { jp: "faai3 di1", en: "Quickly / Hurry" },
+    { jp: "maan6 di1", en: "Slowly" }
   ],
+
   adjectives: [
-    { jp: "leng3", en: "Beautiful / Pretty" }, { jp: "cau1", en: "Ugly" }, { jp: "hoi1 sam1", en: "Happy" },
-    { jp: "siu1 sam1", en: "Sad" }, { jp: "gwai3", en: "Expensive" }, { jp: "peng4", en: "Cheap" },
-    { jp: "san1", en: "New" }, { jp: "gau6", en: "Old (things)" }, { jp: "laan6", en: "Lazy" },
-    { jp: "kaan4 lik6", en: "Hard-working" }, { jp: "zung1", en: "Heavy" }, { jp: "heng1", en: "Light (weight)" },
-    { jp: "yit6", en: "Hot" }, { jp: "laang5", en: "Cold" }, { jp: "nyn5", en: "Warm" },
-    { jp: "gwong3", en: "Wide / Broad" }, { jp: "zaak3", en: "Narrow" }, { jp: "leng3 gwai3", en: "Gorgeous / Stunning" }
+    { jp: "leng3", en: "Beautiful / Pretty" },
+    { jp: "cau1", en: "Ugly" },
+    { jp: "hoi1 sam1", en: "Happy" },
+    { jp: "siu1 sam1", en: "Sad" },
+    { jp: "gwai3", en: "Expensive" },
+    { jp: "peng4", en: "Cheap" },
+    { jp: "san1", en: "New" },
+    { jp: "gau6", en: "Old (things)" },
+    { jp: "laan6", en: "Lazy" },
+    { jp: "kaan4 lik6", en: "Hard-working" },
+    { jp: "zung1", en: "Heavy" },
+    { jp: "heng1", en: "Light (weight)" },
+    { jp: "yit6", en: "Hot" },
+    { jp: "laang5", en: "Cold" },
+    { jp: "nyn5", en: "Warm" },
+    { jp: "gwong3", en: "Wide / Broad" },
+    { jp: "zaak3", en: "Narrow" },
+    { jp: "leng3 gwai3", en: "Gorgeous / Stunning" }
   ],
+
   animals: [
-    { jp: "gau2", en: "Dog" }, { jp: "maau1", en: "Cat" }, { jp: "jyu2", en: "Fish" },
-    { jp: "gai1", en: "Chicken" }, { jp: "ngau4", en: "Cow / Beef" }, { jp: "zyu1", en: "Pig" },
-    { jp: "jeoung4", en: "Sheep / Goat" }, { jp: "maa5", en: "Horse" }, { jp: "lo4 bok6", en: "Rabbit (colloquial)" },
-    { jp: "fu2", en: "Tiger" }, { jp: "si3 zi2", en: "Lion" }, { jp: "daai6 soeng6", en: "Elephant" },
-    { jp: "baan1 maa5", en: "Zebra" }, { jp: "hang4 hang4", en: "Penguin" }, { jp: "paang4 jyu5", en: "Crab" }, { jp: "haa1", en: "Shrimp / Prawn" }
+    { jp: "gau2", en: "Dog" },
+    { jp: "maau1", en: "Cat" },
+    { jp: "jyu2", en: "Fish" },
+    { jp: "gai1", en: "Chicken" },
+    { jp: "ngau4", en: "Cow / Beef" },
+    { jp: "zyu1", en: "Pig" },
+    { jp: "jeoung4", en: "Sheep / Goat" },
+    { jp: "maa5", en: "Horse" },
+    { jp: "lo4 bok6", en: "Rabbit (colloquial)" },
+    { jp: "fu2", en: "Tiger" },
+    { jp: "si3 zi2", en: "Lion" },
+    { jp: "daai6 soeng6", en: "Elephant" },
+    { jp: "baan1 maa5", en: "Zebra" },
+    { jp: "hang4 hang4", en: "Penguin" },
+    { jp: "paang4 jyu5", en: "Crab" },
+    { jp: "haa1", en: "Shrimp / Prawn" }
   ],
+
   basic_conversation: [
-    { jp: "nei5 hou2", en: "Hello / How are you?" }, { jp: "ngo5 hou2, nei5 le1?", en: "I'm fine, and you?" },
-    { jp: "nei5 giu3 me1 meng2?", en: "What's your name?" }, { jp: "ngo5 giu3 ___.", en: "My name is ___." },
-    { jp: "nei5 hai6 bin1 dou6 jan4?", en: "Where are you from?" }, { jp: "ngo5 sik1 gong2 siu2 siu2 gwong2 dung1 waa2", en: "I speak a little Cantonese" },
-    { jp: "nei5 ho2 m4 ho2 ji5 gong2 maan6 di1?", en: "Can you speak slower?" }, { jp: "ngo5 teng1 m4 ming4", en: "I don't understand" },
-    { jp: "dang2 zan6", en: "Wait a moment" }, { jp: "haau2 oi3 bin6 hai2 bin1?", en: "Where is the toilet?" },
-    { jp: "gei2 do1 cin2?", en: "How much?" }, { jp: "m4 goi1 saai3", en: "Thank you very much" }
+    { jp: "nei5 hou2", en: "Hello / How are you?" },
+    { jp: "ngo5 hou2, nei5 le1?", en: "I'm fine, and you?" },
+    { jp: "nei5 giu3 me1 meng2?", en: "What's your name?" },
+    { jp: "ngo5 giu3 ___.", en: "My name is ___." },
+    { jp: "nei5 hai6 bin1 dou6 jan4?", en: "Where are you from?" },
+    { jp: "ngo5 sik1 gong2 siu2 siu2 gwong2 dung1 waa2", en: "I speak a little Cantonese" },
+    { jp: "nei5 ho2 m4 ho2 ji5 gong2 maan6 di1?", en: "Can you speak slower?" },
+    { jp: "ngo5 teng1 m4 ming4", en: "I don't understand" },
+    { jp: "dang2 zan6", en: "Wait a moment" },
+    { jp: "haau2 oi3 bin6 hai2 bin1?", en: "Where is the toilet?" },
+    { jp: "gei2 do1 cin2?", en: "How much?" },
+    { jp: "m4 goi1 saai3", en: "Thank you very much" }
   ],
+
   body: [
-    { jp: "tau4", en: "Head" }, { jp: "min6", en: "Face" }, { jp: "ngaan5", en: "Eye(s)" },
-    { jp: "ji5", en: "Ear(s)" }, { jp: "bei6", en: "Nose" }, { jp: "zui2", en: "Mouth" },
-    { jp: "nga4", en: "Teeth" }, { jp: "sau2", en: "Hand" }, { jp: "goek3", en: "Foot / Leg" },
-    { jp: "bei3", en: "Back" }, { jp: "tou5", en: "Stomach / Belly" }, { jp: "sam1", en: "Heart" },
-    { jp: "san1", en: "Body" }, { jp: "bak1", en: "Neck (colloquial)" }, { jp: "jiu1", en: "Waist" }
+    { jp: "tau4", en: "Head" },
+    { jp: "min6", en: "Face" },
+    { jp: "ngaan5", en: "Eye(s)" },
+    { jp: "ji5", en: "Ear(s)" },
+    { jp: "bei6", en: "Nose" },
+    { jp: "zui2", en: "Mouth" },
+    { jp: "nga4", en: "Teeth" },
+    { jp: "sau2", en: "Hand" },
+    { jp: "goek3", en: "Foot / Leg" },
+    { jp: "bei3", en: "Back" },
+    { jp: "tou5", en: "Stomach / Belly" },
+    { jp: "sam1", en: "Heart" },
+    { jp: "san1", en: "Body" },
+    { jp: "bak1", en: "Neck (colloquial)" },
+    { jp: "jiu1", en: "Waist" }
   ],
+
   buildings: [
-    { jp: "uk1", en: "House" }, { jp: "daai6 haa4", en: "Block / Tower (residential)" }, { jp: "coeng4", en: "Factory / Warehouse" },
-    { jp: "hohk6 haau6", en: "School" }, { jp: "ji1 jyun2", en: "Hospital" }, { jp: "zing3 fu2", en: "Government building" },
-    { jp: "ngan4 hong4", en: "Bank" }, { jp: "soeng1 dim3", en: "Shop" }, { jp: "zaau6 dim3", en: "Hotel" },
-    { jp: "caan1 teng1", en: "Restaurant" }, { jp: "tau4 dang1 zaam6", en: "Bus stop" }, { jp: "tit3 lou6 zaam6", en: "Train / MTR station" },
-    { jp: "fei1 gei1 coeng4", en: "Airport" }, { jp: "hoi2 gong2", en: "Harbour / Port" }
+    { jp: "uk1", en: "House" },
+    { jp: "daai6 haa4", en: "Block / Tower (residential)" },
+    { jp: "coeng4", en: "Factory / Warehouse" },
+    { jp: "hohk6 haau6", en: "School" },
+    { jp: "ji1 jyun2", en: "Hospital" },
+    { jp: "zing3 fu2", en: "Government building" },
+    { jp: "ngan4 hong4", en: "Bank" },
+    { jp: "soeng1 dim3", en: "Shop" },
+    { jp: "zaau6 dim3", en: "Hotel" },
+    { jp: "caan1 teng1", en: "Restaurant" },
+    { jp: "tau4 dang1 zaam6", en: "Bus stop" },
+    { jp: "tit3 lou6 zaam6", en: "Train / MTR station" },
+    { jp: "fei1 gei1 coeng4", en: "Airport" },
+    { jp: "hoi2 gong2", en: "Harbour / Port" }
   ],
+
   colours: [
-    { jp: "hung4 sik1", en: "Red" }, { jp: "lam4 sik1", en: "Blue" }, { jp: "lyuk6 sik1", en: "Green" },
-    { jp: "wong4 sik1", en: "Yellow" }, { jp: "haak1 sik1", en: "Black" }, { jp: "baak6 sik1", en: "White" },
-    { jp: "fui1 sik1", en: "Grey" }, { jp: "cang4 sik1", en: "Orange" }, { jp: "fan2 hung4", en: "Pink" },
-    { jp: "zi2 sik1", en: "Purple" }, { jp: "caam3 sik1", en: "Brown" }, { jp: "gam1 sik1", en: "Gold" },
-    { jp: "ngan4 sik1", en: "Silver" }, { jp: "cin1 lam4", en: "Light blue" }
+    { jp: "hung4 sik1", en: "Red" },
+    { jp: "lam4 sik1", en: "Blue" },
+    { jp: "lyuk6 sik1", en: "Green" },
+    { jp: "wong4 sik1", en: "Yellow" },
+    { jp: "haak1 sik1", en: "Black" },
+    { jp: "baak6 sik1", en: "White" },
+    { jp: "fui1 sik1", en: "Grey" },
+    { jp: "cang4 sik1", en: "Orange" },
+    { jp: "fan2 hung4", en: "Pink" },
+    { jp: "zi2 sik1", en: "Purple" },
+    { jp: "caam3 sik1", en: "Brown" },
+    { jp: "gam1 sik1", en: "Gold" },
+    { jp: "ngan4 sik1", en: "Silver" },
+    { jp: "cin1 lam4", en: "Light blue" }
   ],
+
   common_phrases: [
-    { jp: "m4 goi1", en: "Excuse me / Thank you (for service)" }, { jp: "do1 ze6", en: "Thank you (for a gift/favour)" },
-    { jp: "m4 sai2 haak3 hei3", en: "You're welcome" }, { jp: "deoi3 m4 zyu6", en: "Sorry / Excuse me" },
-    { jp: "mou5 man6 tai4", en: "No problem" }, { jp: "hou2 aa3", en: "OK / Alright" },
-    { jp: "hai6 aa3", en: "Yes / That's right" }, { jp: "m4 hai6", en: "No / That's not it" },
-    { jp: "mou5 aa3", en: "There isn't any" }, { jp: "jau5 aa3", en: "There is / I have" },
-    { jp: "dang2 jat6", en: "One moment" }, { jp: "zing6 hai6", en: "Exactly / Precisely" },
-    { jp: "bat1 gwai2 dak1", en: "No wonder!" }, { jp: "saan3 lo3!", en: "Awesome! Great!" }
+    { jp: "m4 goi1", en: "Excuse me / Thank you (for service)" },
+    { jp: "do1 ze6", en: "Thank you (for a gift/favour)" },
+    { jp: "m4 sai2 haak3 hei3", en: "You're welcome" },
+    { jp: "deoi3 m4 zyu6", en: "Sorry / Excuse me" },
+    { jp: "mou5 man6 tai4", en: "No problem" },
+    { jp: "hou2 aa3", en: "OK / Alright" },
+    { jp: "hai6 aa3", en: "Yes / That's right" },
+    { jp: "m4 hai6", en: "No / That's not it" },
+    { jp: "mou5 aa3", en: "There isn't any" },
+    { jp: "jau5 aa3", en: "There is / I have" },
+    { jp: "dang2 jat6", en: "One moment" },
+    { jp: "zing6 hai6", en: "Exactly / Precisely" },
+    { jp: "bat1 gwai2 dak1", en: "No wonder!" },
+    { jp: "saan3 lo3!", en: "Awesome! Great!" }
   ],
+
   cooking: [
-    { jp: "zyu2 faan6", en: "Cook rice" }, { jp: "cin1", en: "Fry (pan fry)" }, { jp: "zaau2", en: "Stir fry" },
-    { jp: "zin1", en: "Steam" }, { jp: "hung4 siu1", en: "Roast / BBQ" }, { jp: "tong1", en: "Soup / Broth" },
-    { jp: "mun6", en: "Braise / Stew" }, { jp: "liu2", en: "Ingredients" }, { jp: "jim4", en: "Salt" },
-    { jp: "tong4", en: "Sugar" }, { jp: "jau4", en: "Oil" }, { jp: "coeng1", en: "Spring onion / Ginger context" },
-    { jp: "soeng1 jau4", en: "Soy sauce" }, { jp: "laat6 ziu1", en: "Chili pepper" }, { jp: "syun3", en: "Garlic" }
+    { jp: "zyu2 faan6", en: "Cook rice" },
+    { jp: "cin1", en: "Fry (pan fry)" },
+    { jp: "zaau2", en: "Stir fry" },
+    { jp: "zin1", en: "Steam" },
+    { jp: "hung4 siu1", en: "Roast / BBQ" },
+    { jp: "tong1", en: "Soup / Broth" },
+    { jp: "mun6", en: "Braise / Stew" },
+    { jp: "liu2", en: "Ingredients" },
+    { jp: "jim4", en: "Salt" },
+    { jp: "tong4", en: "Sugar" },
+    { jp: "jau4", en: "Oil" },
+    { jp: "coeng1", en: "Spring onion / Ginger context" },
+    { jp: "soeng1 jau4", en: "Soy sauce" },
+    { jp: "laat6 ziu1", en: "Chili pepper" },
+    { jp: "syun3", en: "Garlic" }
   ],
+
   countries: [
-    { jp: "Zung1 Gwok3", en: "China" }, { jp: "Hoeng1 Gong2", en: "Hong Kong" }, { jp: "Jing1 Gwok3", en: "United Kingdom" },
-    { jp: "Mei5 Gwok3", en: "United States" }, { jp: "Faat3 Gwok3", en: "France" }, { jp: "Dak1 Gwok3", en: "Germany" },
-    { jp: "Jat6 Bun2", en: "Japan" }, { jp: "Hohn4 Gwok3", en: "Korea" }, { jp: "Ou3 Zau1", en: "Australia" },
-    { jp: "Gaa1 Naa4 Daai6", en: "Canada" }, { jp: "Jing3 Dou6", en: "India" }, { jp: "Sai1 Baan1 Ngaa4", en: "Spain" },
-    { jp: "Jyi5 Daai6 Lei6", en: "Italy" }, { jp: "Naam4 Fei1", en: "South Africa" }, { jp: "Baa1 Sai1", en: "Brazil" }
+    { jp: "Zung1 Gwok3", en: "China" },
+    { jp: "Hoeng1 Gong2", en: "Hong Kong" },
+    { jp: "Jing1 Gwok3", en: "United Kingdom" },
+    { jp: "Mei5 Gwok3", en: "United States" },
+    { jp: "Faat3 Gwok3", en: "France" },
+    { jp: "Dak1 Gwok3", en: "Germany" },
+    { jp: "Jat6 Bun2", en: "Japan" },
+    { jp: "Hohn4 Gwok3", en: "Korea" },
+    { jp: "Ou3 Zau1", en: "Australia" },
+    { jp: "Gaa1 Naa4 Daai6", en: "Canada" },
+    { jp: "Jing3 Dou6", en: "India" },
+    { jp: "Sai1 Baan1 Ngaa4", en: "Spain" },
+    { jp: "Jyi5 Daai6 Lei6", en: "Italy" },
+    { jp: "Naam4 Fei1", en: "South Africa" },
+    { jp: "Baa1 Sai1", en: "Brazil" }
   ],
+
   drinks: [
-    { jp: "seoi2", en: "Water" }, { jp: "caa4", en: "Tea" }, { jp: "gaa3 fe1", en: "Coffee" },
-    { jp: "naai5 caa4", en: "Milk tea" }, { jp: "naai5", en: "Milk" }, { jp: "gwok3 zap1", en: "Fruit juice" },
-    { jp: "be1 ziu2", en: "Beer" }, { jp: "hong4 ziu2", en: "Red wine" }, { jp: "baak6 ziu2", en: "White wine" },
-    { jp: "zeng1", en: "Spirits / Liquor" }, { jp: "beng1 gok3 lo4", en: "Coca-Cola" }, { jp: "bing1 seoi2", en: "Ice water" },
-    { jp: "jyun4 joeng1", en: "Yuenyeung (coffee + tea)" }, { jp: "dong4 zeng3", en: "Sugarcane juice" }
+    { jp: "seoi2", en: "Water" },
+    { jp: "caa4", en: "Tea" },
+    { jp: "gaa3 fe1", en: "Coffee" },
+    { jp: "naai5 caa4", en: "Milk tea" },
+    { jp: "naai5", en: "Milk" },
+    { jp: "gwok3 zap1", en: "Fruit juice" },
+    { jp: "be1 ziu2", en: "Beer" },
+    { jp: "hong4 ziu2", en: "Red wine" },
+    { jp: "baak6 ziu2", en: "White wine" },
+    { jp: "zeng1", en: "Spirits / Liquor" },
+    { jp: "beng1 gok3 lo4", en: "Coca-Cola" },
+    { jp: "bing1 seoi2", en: "Ice water" },
+    { jp: "jyun4 joeng1", en: "Yuenyeung (coffee + tea)" },
+    { jp: "dong4 zeng3", en: "Sugarcane juice" }
   ],
+
   eating_out: [
-    { jp: "jau5 mou5 wai2?", en: "Do you have a table?" }, { jp: "loeng5 wai2", en: "Table for two" }, { jp: "tung4 daan1", en: "Menu" },
-    { jp: "dim2 coi3?", en: "What would you like to order?" }, { jp: "ngo5 soeng2 jiu3...", en: "I'd like..." }, { jp: "m4 goi1 maai4 daan1", en: "Check please" },
-    { jp: "hou2 hoeng1", en: "Delicious" }, { jp: "taan4 tei4 faan6", en: "Set meal / Fixed menu" }, { jp: "jaau6 gaak3 faan6", en: "Lunch box" },
-    { jp: "ziu2 caan1", en: "Breakfast" }, { jp: "ng5 caan1", en: "Lunch" }, { jp: "maan5 faan6", en: "Dinner" },
-    { jp: "daai6 baau1 / siu2 baau1", en: "To go / Takeaway" }, { jp: "mou5 haa1 / mou5 niu5 naai5", en: "No shrimp / No dairy" }, { jp: "laat6", en: "Spicy" }
+    { jp: "jau5 mou5 wai2?", en: "Do you have a table?" },
+    { jp: "loeng5 wai2", en: "Table for two" },
+    { jp: "tung4 daan1", en: "Menu" },
+    { jp: "dim2 coi3?", en: "What would you like to order?" },
+    { jp: "ngo5 soeng2 jiu3...", en: "I'd like..." },
+    { jp: "m4 goi1 maai4 daan1", en: "Check please" },
+    { jp: "hou2 hoeng1", en: "Delicious" },
+    { jp: "taan4 tei4 faan6", en: "Set meal / Fixed menu" },
+    { jp: "jaau6 gaak3 faan6", en: "Lunch box" },
+    { jp: "ziu2 caan1", en: "Breakfast" },
+    { jp: "ng5 caan1", en: "Lunch" },
+    { jp: "maan5 faan6", en: "Dinner" },
+    { jp: "daai6 baau1 / siu2 baau1", en: "To go / Takeaway" },
+    { jp: "mou5 haa1 / mou5 niu5 naai5", en: "No shrimp / No dairy" },
+    { jp: "laat6", en: "Spicy" }
   ],
+
   emotions: [
-    { jp: "hoi1 sam1", en: "Happy" }, { jp: "naan4 gwo3", en: "Sad / Upset" }, { jp: "po3 nouh6", en: "Angry" },
-    { jp: "pa3", en: "Scared / Afraid" }, { jp: "geng1", en: "Surprised / Shocked" }, { jp: "oi3", en: "Love" },
-    { jp: "hang3", en: "Hate" }, { jp: "gu2 duk6", en: "Lonely" }, { jp: "fan3", en: "Tired / Sleepy" },
-    { jp: "hung4 mung6", en: "Excited" }, { jp: "gaan2 dung6", en: "Touched / Moved" }, { jp: "zau6 haak3", en: "Embarrassed" },
-    { jp: "baat3 gwo3", en: "Nervous (HK colloquial)" }, { jp: "fong3 sung1", en: "Relaxed" }
+    { jp: "hoi1 sam1", en: "Happy" },
+    { jp: "naan4 gwo3", en: "Sad / Upset" },
+    { jp: "po3 nouh6", en: "Angry" },
+    { jp: "pa3", en: "Scared / Afraid" },
+    { jp: "geng1", en: "Surprised / Shocked" },
+    { jp: "oi3", en: "Love" },
+    { jp: "hang3", en: "Hate" },
+    { jp: "gu2 duk6", en: "Lonely" },
+    { jp: "fan3", en: "Tired / Sleepy" },
+    { jp: "hung4 mung6", en: "Excited" },
+    { jp: "gaan2 dung6", en: "Touched / Moved" },
+    { jp: "zau6 haak3", en: "Embarrassed" },
+    { jp: "baat3 gwo3", en: "Nervous (HK colloquial)" },
+    { jp: "fong3 sung1", en: "Relaxed" }
   ],
+
   family: [
-    { jp: "baa4 baa1", en: "Dad" }, { jp: "maa1 maa1", en: "Mum" }, { jp: "go1 go1", en: "Older brother" },
-    { jp: "ze1 ze1", en: "Older sister" }, { jp: "sai3 lou6", en: "Younger brother" }, { jp: "sai3 mui4", en: "Younger sister" },
-    { jp: "je4 je4", en: "Paternal grandfather" }, { jp: "naai4 naai4", en: "Paternal grandmother" }, { jp: "ngoi6 gung1", en: "Maternal grandfather" },
-    { jp: "ngoi6 pou4", en: "Maternal grandmother" }, { jp: "suk1 suk1", en: "Uncle (paternal)" }, { jp: "aa4 jyi4", en: "Aunt (maternal)" },
-    { jp: "pou4 pou4", en: "Grandmother (general)" }, { jp: "lou5 gung1", en: "Husband" }, { jp: "lou5 po4", en: "Wife" }
+    { jp: "baa4 baa1", en: "Dad" },
+    { jp: "maa1 maa1", en: "Mum" },
+    { jp: "go1 go1", en: "Older brother" },
+    { jp: "ze1 ze1", en: "Older sister" },
+    { jp: "sai3 lou6", en: "Younger brother" },
+    { jp: "sai3 mui4", en: "Younger sister" },
+    { jp: "je4 je4", en: "Paternal grandfather" },
+    { jp: "naai4 naai4", en: "Paternal grandmother" },
+    { jp: "ngoi6 gung1", en: "Maternal grandfather" },
+    { jp: "ngoi6 pou4", en: "Maternal grandmother" },
+    { jp: "suk1 suk1", en: "Uncle (paternal)" },
+    { jp: "aa4 jyi4", en: "Aunt (maternal)" },
+    { jp: "pou4 pou4", en: "Grandmother (general)" },
+    { jp: "lou5 gung1", en: "Husband" },
+    { jp: "lou5 po4", en: "Wife" }
   ],
+
   greetings: [
-    { jp: "nei5 hou2", en: "Hello / Hi" }, { jp: "zou2 san4", en: "Good morning" }, { jp: "ng5 on1", en: "Good afternoon" },
-    { jp: "maan5 on1", en: "Good evening" }, { jp: "zou2 tau4", en: "Good night (bedtime)" }, { jp: "bai1 bai3", en: "Bye bye" },
-    { jp: "zou6 gin3", en: "Goodbye (formal)" }, { jp: "hou2 hoi1 sam1 gin3 dou3 nei5", en: "Nice to meet you" }, { jp: "hou2 noi6 mou5 gin3", en: "Long time no see" },
-    { jp: "sik6 zo2 maa3?", en: "Have you eaten? (common greeting)" }, { jp: "keoi5 dei6 dou1 hou2", en: "They are all well" }, { jp: "jyu5 nei5 hei3", en: "Best wishes to you" }
+    { jp: "nei5 hou2", en: "Hello / Hi" },
+    { jp: "zou2 san4", en: "Good morning" },
+    { jp: "ng5 on1", en: "Good afternoon" },
+    { jp: "maan5 on1", en: "Good evening" },
+    { jp: "zou2 tau4", en: "Good night (bedtime)" },
+    { jp: "bai1 bai3", en: "Bye bye" },
+    { jp: "zou6 gin3", en: "Goodbye (formal)" },
+    { jp: "hou2 hoi1 sam1 gin3 dou3 nei5", en: "Nice to meet you" },
+    { jp: "hou2 noi6 mou5 gin3", en: "Long time no see" },
+    { jp: "sik6 zo2 maa3?", en: "Have you eaten? (common greeting)" },
+    { jp: "keoi5 dei6 dou1 hou2", en: "They are all well" },
+    { jp: "jyu5 nei5 hei3", en: "Best wishes to you" }
   ],
+
   health: [
-    { jp: "tung3", en: "Pain / Hurt" }, { jp: "beng6", en: "Sick / Ill" }, { jp: "faat3 siu1", en: "Have a fever" },
-    { jp: "haat3 chai4", en: "Sneeze" }, { jp: "haat3 so3", en: "Cough" }, { jp: "tau4 tung3", en: "Headache" },
-    { jp: "tou5 tung3", en: "Stomachache" }, { jp: "ji1 saang1", en: "Doctor" }, { jp: "ji1 jyun2", en: "Hospital" },
-    { jp: "joek6 fong4", en: "Pharmacy" }, { jp: "joek6", en: "Medicine" }, { jp: "siu1 duk6 gou1", en: "Disinfectant" },
-    { jp: "kau3 fo3 ce1", en: "Ambulance" }, { jp: "mou5 si6", en: "It's OK / Nothing serious" }
+    { jp: "tung3", en: "Pain / Hurt" },
+    { jp: "beng6", en: "Sick / Ill" },
+    { jp: "faat3 siu1", en: "Have a fever" },
+    { jp: "haat3 chai4", en: "Sneeze" },
+    { jp: "haat3 so3", en: "Cough" },
+    { jp: "tau4 tung3", en: "Headache" },
+    { jp: "tou5 tung3", en: "Stomachache" },
+    { jp: "ji1 saang1", en: "Doctor" },
+    { jp: "ji1 jyun2", en: "Hospital" },
+    { jp: "joek6 fong4", en: "Pharmacy" },
+    { jp: "joek6", en: "Medicine" },
+    { jp: "siu1 duk6 gou1", en: "Disinfectant" },
+    { jp: "kau3 fo3 ce1", en: "Ambulance" },
+    { jp: "mou5 si6", en: "It's OK / Nothing serious" }
   ],
+
   holidays: [
-    { jp: "gaa3 kei4", en: "Holiday / Vacation" }, { jp: "leoi5 jau4", en: "Travel / Tourism" }, { jp: "fei1 gei1", en: "Aeroplane" },
-    { jp: "zau6 dim3", en: "Hotel" }, { jp: "hoi2 taan1", en: "Beach" }, { jp: "bo3 wu6 ziu3", en: "Passport" },
-    { jp: "gai2 jyun4", en: "Currency exchange" }, { jp: "saam1 lung4", en: "Luggage / Suitcase" }, { jp: "dai1 gaa3 liu4", en: "Budget (travel)" },
-    { jp: "caan2 gun2", en: "Tourist attraction" }, { jp: "faan1 gwok3", en: "Return to home country" }, { jp: "ceot1 gwok3", en: "Go abroad" }
+    { jp: "gaa3 kei4", en: "Holiday / Vacation" },
+    { jp: "leoi5 jau4", en: "Travel / Tourism" },
+    { jp: "fei1 gei1", en: "Aeroplane" },
+    { jp: "zau6 dim3", en: "Hotel" },
+    { jp: "hoi2 taan1", en: "Beach" },
+    { jp: "bo3 wu6 ziu3", en: "Passport" },
+    { jp: "gai2 jyun4", en: "Currency exchange" },
+    { jp: "saam1 lung4", en: "Luggage / Suitcase" },
+    { jp: "dai1 gaa3 liu4", en: "Budget (travel)" },
+    { jp: "caan2 gun2", en: "Tourist attraction" },
+    { jp: "faan1 gwok3", en: "Return to home country" },
+    { jp: "ceot1 gwok3", en: "Go abroad" }
   ],
+
   home: [
-    { jp: "uk1 kei2", en: "Home / House" }, { jp: "cyu5 fong2", en: "Kitchen" }, { jp: "fan3 fong2", en: "Bedroom" },
-    { jp: "haak3 teng1", en: "Living room" }, { jp: "ci4 so2", en: "Toilet / Bathroom" }, { jp: "mun4", en: "Door" },
-    { jp: "coeng1", en: "Window" }, { jp: "toi2", en: "Table" }, { jp: "yi2", en: "Chair" },
-    { jp: "cong4", en: "Bed" }, { jp: "saat1 faa1", en: "Sofa" }, { jp: "gwaai6", en: "Wardrobe / Cabinet" },
-    { jp: "san6 gwai6", en: "Bookshelf" }, { jp: "bing1 soeng1", en: "Refrigerator" }, { jp: "faan6 bou1", en: "Rice cooker" }
+    { jp: "uk1 kei2", en: "Home / House" },
+    { jp: "cyu5 fong2", en: "Kitchen" },
+    { jp: "fan3 fong2", en: "Bedroom" },
+    { jp: "haak3 teng1", en: "Living room" },
+    { jp: "ci4 so2", en: "Toilet / Bathroom" },
+    { jp: "mun4", en: "Door" },
+    { jp: "coeng1", en: "Window" },
+    { jp: "toi2", en: "Table" },
+    { jp: "yi2", en: "Chair" },
+    { jp: "cong4", en: "Bed" },
+    { jp: "saat1 faa1", en: "Sofa" },
+    { jp: "gwaai6", en: "Wardrobe / Cabinet" },
+    { jp: "san6 gwai6", en: "Bookshelf" },
+    { jp: "bing1 soeng1", en: "Refrigerator" },
+    { jp: "faan6 bou1", en: "Rice cooker" }
   ],
+
   machines: [
-    { jp: "din6 nou5", en: "Computer" }, { jp: "sau2 gei1", en: "Mobile phone" }, { jp: "din6 si6", en: "Television" },
-    { jp: "din6 toi4", en: "Telephone (landline)" }, { jp: "tin4 lei5", en: "Air conditioner (A/C)" }, { jp: "sin3 sat1 gei1", en: "Washing machine" },
-    { jp: "kei3 sin3 gei1", en: "Vacuum cleaner" }, { jp: "lou4 fu1", en: "Microwave oven" }, { jp: "sang1 jat6", en: "Birthday" },
-    { jp: "din6 ti1", en: "Elevator / Lift" }, { jp: "daa2 jing3 gei1", en: "Printer" }, { jp: "sing4 ling4", en: "Camera" }
+    { jp: "din6 nou5", en: "Computer" },
+    { jp: "sau2 gei1", en: "Mobile phone" },
+    { jp: "din6 si6", en: "Television" },
+    { jp: "din6 toi4", en: "Telephone (landline)" },
+    { jp: "tin4 lei5", en: "Air conditioner (A/C)" },
+    { jp: "sin3 sat1 gei1", en: "Washing machine" },
+    { jp: "kei3 sin3 gei1", en: "Vacuum cleaner" },
+    { jp: "lou4 fu1", en: "Microwave oven" },
+    { jp: "sang1 jat6", en: "Birthday" },
+    { jp: "din6 ti1", en: "Elevator / Lift" },
+    { jp: "daa2 jing3 gei1", en: "Printer" },
+    { jp: "sing4 ling4", en: "Camera" }
   ],
+
   motoring: [
-    { jp: "ce1", en: "Car / Vehicle" }, { jp: "baa1 si2", en: "Bus" }, { jp: "fong4 ce1", en: "Taxi / Cab" },
-    { jp: "dik1 si2", en: "Taxi (HK colloquial)" }, { jp: "dit6 si2", en: "Tram" }, { jp: "dei6 tit3", en: "MTR / Subway" },
-    { jp: "sau1 fei3 zaam6", en: "Toll booth" }, { jp: "jau4 zaak3", en: "Petrol / Gasoline" }, { jp: "coeng4 ci4", en: "Car park" },
-    { jp: "zou6 ce1", en: "Drive (a car)" }, { jp: "daap3 ce1", en: "Take/ride (transport)" }, { jp: "gau1 tung1 hing4 zik6", en: "Traffic jam" }, { jp: "hung4 luk6 dang1", en: "Traffic light" }
+    { jp: "ce1", en: "Car / Vehicle" },
+    { jp: "baa1 si2", en: "Bus" },
+    { jp: "fong4 ce1", en: "Taxi / Cab" },
+    { jp: "dik1 si2", en: "Taxi (HK colloquial)" },
+    { jp: "dit6 si2", en: "Tram" },
+    { jp: "dei6 tit3", en: "MTR / Subway" },
+    { jp: "sau1 fei3 zaam6", en: "Toll booth" },
+    { jp: "jau4 zaak3", en: "Petrol / Gasoline" },
+    { jp: "coeng4 ci4", en: "Car park" },
+    { jp: "zou6 ce1", en: "Drive (a car)" },
+    { jp: "daap3 ce1", en: "Take/ride (transport)" },
+    { jp: "gau1 tung1 hing4 zik6", en: "Traffic jam" },
+    { jp: "hung4 luk6 dang1", en: "Traffic light" }
   ],
+
   people: [
-    { jp: "jan4", en: "Person / People" }, { jp: "naam4 jan4", en: "Man" }, { jp: "neoi5 jan4", en: "Woman" },
-    { jp: "sai3 man4 zai2", en: "Child" }, { jp: "lou5 jan4", en: "Elderly person" }, { jp: "pang4 jau5", en: "Friend" },
-    { jp: "tung4 si6", en: "Colleague" }, { jp: "lou5 si1", en: "Teacher" }, { jp: "hohk6 sang1", en: "Student" },
-    { jp: "soeng1 jan4", en: "Businessman" }, { jp: "nei1 go3 jan4", en: "This person" }, { jp: "gou1 sau2", en: "Tall person / expert" }
+    { jp: "jan4", en: "Person / People" },
+    { jp: "naam4 jan4", en: "Man" },
+    { jp: "neoi5 jan4", en: "Woman" },
+    { jp: "sai3 man4 zai2", en: "Child" },
+    { jp: "lou5 jan4", en: "Elderly person" },
+    { jp: "pang4 jau5", en: "Friend" },
+    { jp: "tung4 si6", en: "Colleague" },
+    { jp: "lou5 si1", en: "Teacher" },
+    { jp: "hohk6 sang1", en: "Student" },
+    { jp: "soeng1 jan4", en: "Businessman" },
+    { jp: "nei1 go3 jan4", en: "This person" },
+    { jp: "gou1 sau2", en: "Tall person / expert" }
   ],
+
   places: [
-    { jp: "coeng4", en: "Market / Venue" }, { jp: "gung1 jyun2", en: "Park" }, { jp: "syu1 gun2", en: "Library" },
-    { jp: "bou3 guk6", en: "Post office" }, { jp: "ging2 caat3 guk6", en: "Police station" }, { jp: "cin4 ci4 lou6", en: "In front of / road" },
-    { jp: "zaap6 si5", en: "Night market / Bazaar" }, { jp: "siu2 sik6 zung1 sam1", en: "Food court" }, { jp: "kiu4", en: "Bridge" },
-    { jp: "hung1 zung1 faa1 jyun2", en: "Rooftop garden" }, { jp: "sing4 si5 zung1 sam1", en: "City centre" }
+    { jp: "coeng4", en: "Market / Venue" },
+    { jp: "gung1 jyun2", en: "Park" },
+    { jp: "syu1 gun2", en: "Library" },
+    { jp: "bou3 guk6", en: "Post office" },
+    { jp: "ging2 caat3 guk6", en: "Police station" },
+    { jp: "cin4 ci4 lou6", en: "In front of / road" },
+    { jp: "zaap6 si5", en: "Night market / Bazaar" },
+    { jp: "siu2 sik6 zung1 sam1", en: "Food court" },
+    { jp: "kiu4", en: "Bridge" },
+    { jp: "hung1 zung1 faa1 jyun2", en: "Rooftop garden" },
+    { jp: "sing4 si5 zung1 sam1", en: "City centre" }
   ],
+
   professions: [
-    { jp: "ji1 saang1", en: "Doctor" }, { jp: "wu6 si6", en: "Nurse" }, { jp: "lou5 si1", en: "Teacher" },
-    { jp: "leot6 si1", en: "Lawyer" }, { jp: "gung1 cing4 si1", en: "Engineer" }, { jp: "gaa3 si1", en: "Driver" },
-    { jp: "zyu2 ci4 jan4", en: "Chef / Cook" }, { jp: "gaai2 sau1 jyun4", en: "Cashier" }, { jp: "ging2 caat3", en: "Police officer" },
-    { jp: "siu1 fong4 jyun4", en: "Firefighter" }, { jp: "haak3 fuk6", en: "Flight attendant" }, { jp: "hon2 gei3 jyun4", en: "Journalist" }, { jp: "si6 gung1", en: "Accountant" }
+    { jp: "ji1 saang1", en: "Doctor" },
+    { jp: "wu6 si6", en: "Nurse" },
+    { jp: "lou5 si1", en: "Teacher" },
+    { jp: "leot6 si1", en: "Lawyer" },
+    { jp: "gung1 cing4 si1", en: "Engineer" },
+    { jp: "gaa3 si1", en: "Driver" },
+    { jp: "zyu2 ci4 jan4", en: "Chef / Cook" },
+    { jp: "gaai2 sau1 jyun4", en: "Cashier" },
+    { jp: "ging2 caat3", en: "Police officer" },
+    { jp: "siu1 fong4 jyun4", en: "Firefighter" },
+    { jp: "haak3 fuk6", en: "Flight attendant" },
+    { jp: "hon2 gei3 jyun4", en: "Journalist" },
+    { jp: "si6 gung1", en: "Accountant" }
   ],
+
   pronouns: [
-    { jp: "ngo5", en: "I / Me" }, { jp: "nei5", en: "You" }, { jp: "keoi5", en: "He / She / They (singular)" },
-    { jp: "ngo5 dei6", en: "We / Us" }, { jp: "nei5 dei6", en: "You all" }, { jp: "keoi5 dei6", en: "They / Them" },
-    { jp: "ngo5 ge3", en: "My / Mine" }, { jp: "nei5 ge3", en: "Your / Yours" }, { jp: "keoi5 ge3", en: "His / Her / Their" },
-    { jp: "zi6 gei2", en: "Yourself / Oneself" }, { jp: "daai6 gaa1", en: "Everyone" }
+    { jp: "ngo5", en: "I / Me" },
+    { jp: "nei5", en: "You" },
+    { jp: "keoi5", en: "He / She / They (singular)" },
+    { jp: "ngo5 dei6", en: "We / Us" },
+    { jp: "nei5 dei6", en: "You all" },
+    { jp: "keoi5 dei6", en: "They / Them" },
+    { jp: "ngo5 ge3", en: "My / Mine" },
+    { jp: "nei5 ge3", en: "Your / Yours" },
+    { jp: "keoi5 ge3", en: "His / Her / Their" },
+    { jp: "zi6 gei2", en: "Yourself / Oneself" },
+    { jp: "daai6 gaa1", en: "Everyone" }
   ],
+
   school: [
-    { jp: "hohk6 haau6", en: "School" }, { jp: "daai6 hohk6", en: "University" }, { jp: "fu3 zung1", en: "Secondary school" },
-    { jp: "siu2 hohk6", en: "Primary school" }, { jp: "fo1 muk6", en: "Subject" }, { jp: "syu1", en: "Book" },
-    { jp: "bat1", en: "Pen" }, { jp: "zi2", en: "Paper" }, { jp: "fe3 zit3", en: "Test / Exam" },
-    { jp: "baau4 gou3", en: "Report" }, { jp: "lo4 tap6 pok3", en: "Laptop" }, { jp: "fong3 hohk6", en: "After school" }
+    { jp: "hohk6 haau6", en: "School" },
+    { jp: "daai6 hohk6", en: "University" },
+    { jp: "fu3 zung1", en: "Secondary school" },
+    { jp: "siu2 hohk6", en: "Primary school" },
+    { jp: "fo1 muk6", en: "Subject" },
+    { jp: "syu1", en: "Book" },
+    { jp: "bat1", en: "Pen" },
+    { jp: "zi2", en: "Paper" },
+    { jp: "fe3 zit3", en: "Test / Exam" },
+    { jp: "baau4 gou3", en: "Report" },
+    { jp: "lo4 tap6 pok3", en: "Laptop" },
+    { jp: "fong3 hohk6", en: "After school" }
   ],
+
   seasons: [
-    { jp: "ceon1 tin1", en: "Spring" }, { jp: "haa6 tin1", en: "Summer" }, { jp: "cau1 tin1", en: "Autumn / Fall" },
-    { jp: "dung1 tin1", en: "Winter" }, { jp: "jyu5 gei4", en: "Rainy season" }, { jp: "taai3 fung1", en: "Typhoon" },
-    { jp: "jit6 dou6", en: "Heatwave" }, { jp: "laang5 dou6", en: "Cold spell" }
+    { jp: "ceon1 tin1", en: "Spring" },
+    { jp: "haa6 tin1", en: "Summer" },
+    { jp: "cau1 tin1", en: "Autumn / Fall" },
+    { jp: "dung1 tin1", en: "Winter" },
+    { jp: "jyu5 gei4", en: "Rainy season" },
+    { jp: "taai3 fung1", en: "Typhoon" },
+    { jp: "jit6 dou6", en: "Heatwave" },
+    { jp: "laang5 dou6", en: "Cold spell" }
   ],
+
   special_occasions: [
-    { jp: "san1 nin4 faai3 lok6", en: "Happy New Year" }, { jp: "san1 cin1 jyun4 daan6 faai3 lok6", en: "Happy Chinese New Year" },
-    { jp: "sang1 jat6 faai3 lok6", en: "Happy Birthday" }, { jp: "zuk1 nei5 san1 hei3", en: "Congratulations / Good luck to you" },
-    { jp: "gung1 hei2 faat3 coi4", en: "Wishing you prosperity (CNY)" }, { jp: "ceng2 man6 sing3 daan3", en: "Merry Christmas" },
-    { jp: "jung1 cau1 zit3", en: "Mid-Autumn Festival" }, { jp: "cing1 ming4 zit3", en: "Ching Ming Festival" },
-    { jp: "daan3 gou1", en: "Cake" }, { jp: "lai5 si6", en: "Red envelope (lucky money)" }
+    { jp: "san1 nin4 faai3 lok6", en: "Happy New Year" },
+    { jp: "san1 cin1 jyun4 daan6 faai3 lok6", en: "Happy Chinese New Year" },
+    { jp: "sang1 jat6 faai3 lok6", en: "Happy Birthday" },
+    { jp: "zuk1 nei5 san1 hei3", en: "Congratulations / Good luck to you" },
+    { jp: "gung1 hei2 faat3 coi4", en: "Wishing you prosperity (CNY)" },
+    { jp: "ceng2 man6 sing3 daan3", en: "Merry Christmas" },
+    { jp: "jung1 cau1 zit3", en: "Mid-Autumn Festival" },
+    { jp: "cing1 ming4 zit3", en: "Ching Ming Festival" },
+    { jp: "daan3 gou1", en: "Cake" },
+    { jp: "lai5 si6", en: "Red envelope (lucky money)" }
   ],
+
   sport: [
-    { jp: "zuk1 kau4", en: "Football / Soccer" }, { jp: "laam4 kau4", en: "Basketball" }, { jp: "bing1 ping4 kau4", en: "Table tennis" },
-    { jp: "jyu5 mo4 kau4", en: "Badminton" }, { jp: "mong5 kau4", en: "Tennis" }, { jp: "jau4 soeng1", en: "Swimming" },
-    { jp: "paau2 bou6", en: "Running" }, { jp: "zak1 cin3", en: "Cycling" }, { jp: "daa2 gung1 fu1", en: "Martial arts" },
-    { jp: "tai3 gik6 kyun4", en: "Tai chi" }, { jp: "waan4 syun1", en: "Exercise / Work out" }, { jp: "gaan3 zo2 go3 bui1", en: "Win a cup/trophy" }
+    { jp: "zuk1 kau4", en: "Football / Soccer" },
+    { jp: "laam4 kau4", en: "Basketball" },
+    { jp: "bing1 ping4 kau4", en: "Table tennis" },
+    { jp: "jyu5 mo4 kau4", en: "Badminton" },
+    { jp: "mong5 kau4", en: "Tennis" },
+    { jp: "jau4 soeng1", en: "Swimming" },
+    { jp: "paau2 bou6", en: "Running" },
+    { jp: "zak1 cin3", en: "Cycling" },
+    { jp: "daa2 gung1 fu1", en: "Martial arts" },
+    { jp: "tai3 gik6 kyun4", en: "Tai chi" },
+    { jp: "waan4 syun1", en: "Exercise / Work out" },
+    { jp: "gaan3 zo2 go3 bui1", en: "Win a cup/trophy" }
   ],
+
   christmas: [
-    { jp: "sing3 daan3 zit3", en: "Christmas" }, { jp: "sing3 daan3 syu6", en: "Christmas tree" }, { jp: "sing3 daan3 lou5 jan4", en: "Santa Claus" },
-    { jp: "lai5 mat6", en: "Gift / Present" }, { jp: "ceng2 man6 sing3 daan3", en: "Merry Christmas" }, { jp: "jin4 lik6 zok3", en: "Advent calendar" },
-    { jp: "sing3 daan3 ga3", en: "Christmas holiday" }, { jp: "joi6 gaa1", en: "At home (for Christmas)" }, { jp: "tim1 gaa1 nin4 sou3", en: "Have a good Christmas & New Year" }
+    { jp: "sing3 daan3 zit3", en: "Christmas" },
+    { jp: "sing3 daan3 syu6", en: "Christmas tree" },
+    { jp: "sing3 daan3 lou5 jan4", en: "Santa Claus" },
+    { jp: "lai5 mat6", en: "Gift / Present" },
+    { jp: "ceng2 man6 sing3 daan3", en: "Merry Christmas" },
+    { jp: "jin4 lik6 zok3", en: "Advent calendar" },
+    { jp: "sing3 daan3 ga3", en: "Christmas holiday" },
+    { jp: "joi6 gaa1", en: "At home (for Christmas)" },
+    { jp: "tim1 gaa1 nin4 sou3", en: "Have a good Christmas & New Year" }
   ],
+
   verbs: [
-    { jp: "heoi3", en: "Go" }, { jp: "lei4", en: "Come" }, { jp: "sik6", en: "Eat" },
-    { jp: "jam2", en: "Drink" }, { jp: "faan1", en: "Return / Go back" }, { jp: "gong2", en: "Speak / Say" },
-    { jp: "tai2", en: "See / Look" }, { jp: "teng1", en: "Hear / Listen" }, { jp: "maai5", en: "Buy" },
-    { jp: "maai6", en: "Sell" }, { jp: "zou6", en: "Do / Make" }, { jp: "hoi1", en: "Open" },
-    { jp: "saan1", en: "Close" }, { jp: "fan3", en: "Sleep" }, { jp: "hei2 san1", en: "Wake up / Get up" }, { jp: "tung4", en: "With / Together" }
+    { jp: "heoi3", en: "Go" },
+    { jp: "lei4", en: "Come" },
+    { jp: "sik6", en: "Eat" },
+    { jp: "jam2", en: "Drink" },
+    { jp: "faan1", en: "Return / Go back" },
+    { jp: "gong2", en: "Speak / Say" },
+    { jp: "tai2", en: "See / Look" },
+    { jp: "teng1", en: "Hear / Listen" },
+    { jp: "maai5", en: "Buy" },
+    { jp: "maai6", en: "Sell" },
+    { jp: "zou6", en: "Do / Make" },
+    { jp: "hoi1", en: "Open" },
+    { jp: "saan1", en: "Close" },
+    { jp: "fan3", en: "Sleep" },
+    { jp: "hei2 san1", en: "Wake up / Get up" },
+    { jp: "tung4", en: "With / Together" }
   ],
+
   weather: [
-    { jp: "tin1 hei3", en: "Weather" }, { jp: "cing1 tin1", en: "Sunny / Clear sky" }, { jp: "jam1 tin1", en: "Cloudy / Overcast" },
-    { jp: "lok6 jyu5", en: "Raining" }, { jp: "lok6 syut3", en: "Snowing" }, { jp: "daai6 fung1", en: "Strong wind" },
-    { jp: "taai3 fung1", en: "Typhoon" }, { jp: "gam1 jat6 hou2 jit6", en: "It's very hot today" }, { jp: "gam1 jat6 hou2 laang5", en: "It's very cold today" },
-    { jp: "dou6 gei2 do1 dou6?", en: "What's the temperature?" }, { jp: "fong3 saam1 hou6 fung1 kau4", en: "Typhoon signal no. 3" }, { jp: "baat3 hou6 fung1 kau4", en: "Typhoon signal no. 8 (HK)" }
+    { jp: "tin1 hei3", en: "Weather" },
+    { jp: "cing1 tin1", en: "Sunny / Clear sky" },
+    { jp: "jam1 tin1", en: "Cloudy / Overcast" },
+    { jp: "lok6 jyu5", en: "Raining" },
+    { jp: "lok6 syut3", en: "Snowing" },
+    { jp: "daai6 fung1", en: "Strong wind" },
+    { jp: "taai3 fung1", en: "Typhoon" },
+    { jp: "gam1 jat6 hou2 jit6", en: "It's very hot today" },
+    { jp: "gam1 jat6 hou2 laang5", en: "It's very cold today" },
+    { jp: "dou6 gei2 do1 dou6?", en: "What's the temperature?" },
+    { jp: "fong3 saam1 hou6 fung1 kau4", en: "Typhoon signal no. 3" },
+    { jp: "baat3 hou6 fung1 kau4", en: "Typhoon signal no. 8 (HK)" }
   ],
+
   classifiers: [
-    { jp: "go3", en: "General classifier (people, things)" }, { jp: "zek3", en: "Animals, one of a pair (e.g. one hand)" },
-    { jp: "tiu4", en: "Long thin objects (rope, fish, road)" }, { jp: "zoeng1", en: "Flat objects (paper, table, face)" },
-    { jp: "bun2", en: "Books, magazines" }, { jp: "gin6", en: "Clothing items" }, { jp: "go3 jat1", en: "A day" },
-    { jp: "bui1", en: "Cup of (drink)" }, { jp: "wun2", en: "Bowl of (food)" }, { jp: "dip6", en: "Plate / Dish of" }, { jp: "leoung5 go3", en: "Two of (use leoung not ji6 for 2)" }
+    { jp: "go3", en: "General classifier (people, things)" },
+    { jp: "zek3", en: "Animals, one of a pair (e.g. one hand)" },
+    { jp: "tiu4", en: "Long thin objects (rope, fish, road)" },
+    { jp: "zoeng1", en: "Flat objects (paper, table, face)" },
+    { jp: "bun2", en: "Books, magazines" },
+    { jp: "gin6", en: "Clothing items" },
+    { jp: "go3 jat1", en: "A day" },
+    { jp: "bui1", en: "Cup of (drink)" },
+    { jp: "wun2", en: "Bowl of (food)" },
+    { jp: "dip6", en: "Plate / Dish of" },
+    { jp: "leoung5 go3", en: "Two of (use leoung not ji6 for 2)" }
   ],
+
   idioms: [
-    { jp: "jat1 sek6 loeng5 niu5", en: "Kill two birds with one stone (一石兩鳥)" }, { jp: "mou4 gei1 bat1 faai3", en: "No news is good news (無雞不快)" },
-    { jp: "hau2 mat6", en: "Keep a secret (literally: mouth honey)" }, { jp: "git3 cou2 sik1 pang4 jau5", en: "Make friends everywhere (結草識朋友)" },
-    { jp: "oi3 muk6 kap4 wu1", en: "Love me, love my dog (愛屋及烏)" }, { jp: "soeng5 soeng5 haa6 haa6", en: "Mediocre / So-so (上上下下)" },
-    { jp: "haak1 jau4 baak6 jau4", en: "Flexible / Adaptable (黑油白油)" }, { jp: "mou5 mou6 ci4 fei1", en: "Without reason / Out of nowhere (無緣無故)" }
+    { jp: "jat1 sek6 loeng5 niu5", en: "Kill two birds with one stone (一石兩鳥)" },
+    { jp: "mou4 gei1 bat1 faai3", en: "No news is good news (無雞不快)" },
+    { jp: "hau2 mat6", en: "Keep a secret (literally: mouth honey)" },
+    { jp: "git3 cou2 sik1 pang4 jau5", en: "Make friends everywhere (結草識朋友)" },
+    { jp: "oi3 muk6 kap4 wu1", en: "Love me, love my dog (愛屋及烏)" },
+    { jp: "soeng5 soeng5 haa6 haa6", en: "Mediocre / So-so (上上下下)" },
+    { jp: "haak1 jau4 baak6 jau4", en: "Flexible / Adaptable (黑油白油)" },
+    { jp: "mou5 mou6 ci4 fei1", en: "Without reason / Out of nowhere (無緣無故)" }
   ],
+
   dimsum: [
-    { jp: "haa1 gaau2", en: "Prawn dumplings (har gow)" }, { jp: "siu1 mai2", en: "Pork & shrimp dumplings (siu mai)" },
-    { jp: "cing1 zing1 gai1 zaau2", en: "Steamed chicken feet" }, { jp: "lau4 saa1 baau1", en: "Custard bun (liu sha bao)" },
-    { jp: "lo4 bak6 go1", en: "Turnip cake (lo bak go)" }, { jp: "ceoeng2 fan2", en: "Rice noodle rolls (cheung fun)" },
-    { jp: "cin1 ceng1 fan2", en: "Steamed rice rolls" }, { jp: "dan6 taat3", en: "Egg tart" }, { jp: "maa4 lai4 go1", en: "Steamed sponge cake" },
-    { jp: "baak6 tong4 go1", en: "White sugar sponge cake" }, { jp: "wu4 gok3", en: "Taro puff" }, { jp: "caa4 siu1 baau1", en: "BBQ pork bun" },
-    { jp: "joeng4 laat6 gai1 jik6", en: "Chicken in black bean sauce" }, { jp: "jat1 lung4 caa4", en: "One pot of tea please" }
+    { jp: "haa1 gaau2", en: "Prawn dumplings (har gow)" },
+    { jp: "siu1 mai2", en: "Pork & shrimp dumplings (siu mai)" },
+    { jp: "cing1 zing1 gai1 zaau2", en: "Steamed chicken feet" },
+    { jp: "lau4 saa1 baau1", en: "Custard bun (liu sha bao)" },
+    { jp: "lo4 bak6 go1", en: "Turnip cake (lo bak go)" },
+    { jp: "ceoeng2 fan2", en: "Rice noodle rolls (cheung fun)" },
+    { jp: "cin1 ceng1 fan2", en: "Steamed rice rolls" },
+    { jp: "dan6 taat3", en: "Egg tart" },
+    { jp: "maa4 lai4 go1", en: "Steamed sponge cake" },
+    { jp: "baak6 tong4 go1", en: "White sugar sponge cake" },
+    { jp: "wu4 gok3", en: "Taro puff" },
+    { jp: "caa4 siu1 baau1", en: "BBQ pork bun" },
+    { jp: "joeng4 laat6 gai1 jik6", en: "Chicken in black bean sauce" },
+    { jp: "jat1 lung4 caa4", en: "One pot of tea please" }
   ]
 };
 
 // =============================================
-//  INTERMEDIATE SPECIAL CONTENT (same as your original but modified for recording buttons)
+//  INTERMEDIATE SPECIAL CONTENT
 // =============================================
 
 function renderCharacters() {
@@ -1071,33 +1578,73 @@ function renderCharacters() {
 
 function renderThisThat() {
   const items = [
-    { jp: "ni1 go3", en: "This (one)" }, { jp: "go2 go3", en: "That (one)" }, { jp: "ni1 dou6", en: "Here" },
-    { jp: "go2 dou6", en: "There" }, { jp: "ni1 go3 jan4", en: "This person" }, { jp: "go2 go3 je5", en: "That thing" },
-    { jp: "ni1 di1", en: "These (plural)" }, { jp: "go2 di1", en: "Those (plural)" }
+    { jp: "ni1 go3", en: "This (one)" },
+    { jp: "go2 go3", en: "That (one)" },
+    { jp: "ni1 dou6", en: "Here" },
+    { jp: "go2 dou6", en: "There" },
+    { jp: "ni1 go3 jan4", en: "This person" },
+    { jp: "go2 go3 je5", en: "That thing" },
+    { jp: "ni1 di1", en: "These (plural)" },
+    { jp: "go2 di1", en: "Those (plural)" },
   ];
   const cont = document.getElementById('grid-this_that');
-  cont.innerHTML = `<div class="wide-card"><h3>Demonstratives in Cantonese</h3><p>Cantonese uses <strong style="color:var(--accent)">ni1</strong> for 'this/here' and <strong style="color:var(--accent)">go2</strong> for 'that/there'. The classifier follows (go3 for people/things, dou6 for places, di1 for plurals).</p><div class="examples">${items.map(i => `<div class="example-row"><span class="ex-jp">${i.jp}</span><span class="ex-en">${i.en}</span><button class="ex-listen" onclick="speak('${i.jp}')">🔊</button><button class="ex-record" onclick="openRecordingModal('${i.jp}')">🎙️</button></div>`).join('')}</div></div>`;
+  cont.innerHTML = `
+    <div class="wide-card">
+      <h3>Demonstratives in Cantonese</h3>
+      <p>Cantonese uses <strong style="color:var(--accent)">ni1</strong> for 'this/here' and <strong style="color:var(--accent)">go2</strong> for 'that/there'. The classifier follows (go3 for people/things, dou6 for places, di1 for plurals).</p>
+      <div class="examples">
+        ${items.map(i => `<div class="example-row"><span class="ex-jp">${i.jp}</span><span class="ex-en">${i.en}</span><button class="ex-listen" onclick="speak('${i.jp}')">🔊</button><button class="ex-record" onclick="openRecordingModal('${i.jp}')">🎙️</button></div>`).join('')}
+      </div>
+    </div>`;
 }
 
 function renderParticles() {
   const particles = [
-    { jp: "aa3", en: "Softens statements. 'OK aa3' = 'OK then'" }, { jp: "aa1", en: "Exclamation/emphasis. 'Faai3 di1 aa1!' = 'Hurry up!'" },
-    { jp: "laa1", en: "Suggestion or mild command. 'Heoi3 sik6 faan6 laa1' = 'Let's go eat'" }, { jp: "ge3", en: "Assertion. 'Hou2 ge3' = 'It's good (you know)'" },
-    { jp: "maa3", en: "Tag question. 'Nei5 hou2 maa3?' = 'You OK?'" }, { jp: "lo3", en: "Obviously / Of course. 'Hai6 lo3' = 'Of course it is'" },
-    { jp: "gaa3", en: "Asserts a fact. 'Gam3 ge3 gaa3' = 'That's how it is'" }, { jp: "wo3", en: "Indicates something heard/surprising. 'Keoi5 lei4 wo3' = 'Oh, she's coming'" }
+    { jp: "aa3", en: "Softens statements. 'OK aa3' = 'OK then'" },
+    { jp: "aa1", en: "Exclamation/emphasis. 'Faai3 di1 aa1!' = 'Hurry up!'" },
+    { jp: "laa1", en: "Suggestion or mild command. 'Heoi3 sik6 faan6 laa1' = 'Let's go eat'" },
+    { jp: "ge3", en: "Assertion. 'Hou2 ge3' = 'It's good (you know)'" },
+    { jp: "maa3", en: "Tag question. 'Nei5 hou2 maa3?' = 'You OK?'" },
+    { jp: "lo3", en: "Obviously / Of course. 'Hai6 lo3' = 'Of course it is'" },
+    { jp: "gaa3", en: "Asserts a fact. 'Gam3 ge3 gaa3' = 'That's how it is'" },
+    { jp: "wo3", en: "Indicates something heard/surprising. 'Keoi5 lei4 wo3' = 'Oh, she's coming'" },
   ];
   const cont = document.getElementById('grid-particles');
-  cont.innerHTML = `<div class="wide-card"><h3>Sentence-final particles</h3><p>Particles at the end of Cantonese sentences carry nuance, emotion, and social meaning. They are essential for sounding natural.</p><div class="examples">${particles.map(p => `<div class="example-row"><span class="ex-jp">${p.jp}</span><span class="ex-en">${p.en}</span><button class="ex-listen" onclick="speak('${p.jp}')">🔊</button><button class="ex-record" onclick="openRecordingModal('${p.jp}')">🎙️</button></div>`).join('')}</div></div>`;
+  cont.innerHTML = `
+    <div class="wide-card">
+      <h3>Sentence-final particles</h3>
+      <p>Particles at the end of Cantonese sentences carry nuance, emotion, and social meaning. They are essential for sounding natural.</p>
+      <div class="examples">
+        ${particles.map(p => `<div class="example-row"><span class="ex-jp">${p.jp}</span><span class="ex-en">${p.en}</span><button class="ex-listen" onclick="speak('${p.jp}')">🔊</button><button class="ex-record" onclick="openRecordingModal('${p.jp}')">🎙️</button></div>`).join('')}
+      </div>
+    </div>`;
 }
 
 function renderToneMistakes() {
   const pairs = [
-    { a: "si6 (事)", a_en: "Thing / Matter", b: "si3 (試)", b_en: "Try" }, { a: "fan4 (焚)", a_en: "Burn", b: "fan3 (瞓)", b_en: "Sleep" },
-    { a: "maa5 (馬)", a_en: "Horse", b: "maa6 (罵)", b_en: "Scold" }, { a: "tong4 (糖)", a_en: "Sugar / Candy", b: "tong3 (燙)", b_en: "Scalding hot" },
-    { a: "gai1 (雞)", a_en: "Chicken", b: "gai3 (計)", b_en: "Plan / Calculate" }, { a: "fan2 (粉)", a_en: "Powder / Noodles", b: "fan6 (份)", b_en: "Portion / Copy" }
+    { a: "si6 (事)", a_en: "Thing / Matter", b: "si3 (試)", b_en: "Try" },
+    { a: "fan4 (焚)", a_en: "Burn", b: "fan3 (瞓)", b_en: "Sleep" },
+    { a: "maa5 (馬)", a_en: "Horse", b: "maa6 (罵)", b_en: "Scold" },
+    { a: "tong4 (糖)", a_en: "Sugar / Candy", b: "tong3 (燙)", b_en: "Scalding hot" },
+    { a: "gai1 (雞)", a_en: "Chicken", b: "gai3 (計)", b_en: "Plan / Calculate" },
+    { a: "fan2 (粉)", a_en: "Powder / Noodles", b: "fan6 (份)", b_en: "Portion / Copy" },
   ];
   const cont = document.getElementById('grid-tone_mistakes');
-  cont.innerHTML = `<div class="wide-card"><h3>Watch your tones!</h3><p>These pairs share the same consonant & vowel but different tones. Getting them wrong changes meaning completely.</p><div class="examples">${pairs.map(p => `<div class="example-row"><span class="ex-jp">${p.a}</span><span class="ex-en">${p.a_en}</span><span style="color:var(--text-dim);margin:0 0.5rem;">vs</span><span class="ex-jp">${p.b}</span><span class="ex-en">${p.b_en}</span></div>`).join('')}</div></div>`;
+  cont.innerHTML = `
+    <div class="wide-card">
+      <h3>Watch your tones!</h3>
+      <p>These pairs share the same consonant & vowel but different tones. Getting them wrong changes meaning completely.</p>
+      <div class="examples">
+        ${pairs.map(p => `
+          <div class="example-row">
+            <span class="ex-jp">${p.a}</span>
+            <span class="ex-en">${p.a_en}</span>
+            <span style="color:var(--text-dim);margin:0 0.5rem;">vs</span>
+            <span class="ex-jp">${p.b}</span>
+            <span class="ex-en">${p.b_en}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
 }
 
 function renderRiddles() {
@@ -1105,24 +1652,68 @@ function renderRiddles() {
     { q: "What has four legs in the morning, two in the afternoon, three in the evening?", a: "A person (baby crawls, adult walks, elder uses a cane). In Cantonese: jan4 (人)" },
     { q: "我係水，但唔係海。(ngo5 hai6 seoi2, daan6 m4 hai6 hoi2) — I am water but not the sea. What am I?", a: "jyu5 (雨) — Rain" },
     { q: "越舊越靚。(jyut6 gau6 jyut6 leng3) — The older, the more beautiful. What am I?", a: "古董 (gu2 dung2) — Antique" },
-    { q: "有腳唔識行。(jau5 goek3 m4 sik1 haang4) — Has legs but can't walk. What am I?", a: "toi2 (桌) — A table" }
+    { q: "有腳唔識行。(jau5 goek3 m4 sik1 haang4) — Has legs but can't walk. What am I?", a: "toi2 (桌) — A table" },
   ];
   const cont = document.getElementById('grid-riddles');
-  cont.innerHTML = riddles.map((r, i) => `<div class="wide-card"><h3>謎語 ${i+1}</h3><p><strong style="color:var(--text)">❓ ${r.q}</strong></p><details style="margin-top:0.8rem;"><summary style="cursor:pointer;color:var(--accent);font-size:0.88rem;">Reveal answer</summary><p style="margin-top:0.5rem;padding:0.5rem;background:var(--surface2);border-radius:6px;">💡 ${r.a}</p></details></div>`).join('');
+  cont.innerHTML = riddles.map((r, i) => `
+    <div class="wide-card">
+      <h3>謎語 ${i+1}</h3>
+      <p><strong style="color:var(--text)">❓ ${r.q}</strong></p>
+      <details style="margin-top:0.8rem;">
+        <summary style="cursor:pointer;color:var(--accent);font-size:0.88rem;">Reveal answer</summary>
+        <p style="margin-top:0.5rem;padding:0.5rem;background:var(--surface2);border-radius:6px;">💡 ${r.a}</p>
+      </details>
+    </div>`).join('');
 }
 
 function renderMTR() {
   const stations = [
-    { line: "Tsuen Wan", color: "#e60026", stations: [{ en: "Central", jp: "Zung1 Waan4" }, { en: "Admiralty", jp: "Gam1 Zung1" }, { en: "Wan Chai", jp: "Waan1 Zai2" }, { en: "Causeway Bay", jp: "Tung4 Lo4 Waan1" }, { en: "Tsim Sha Tsui", jp: "Zim1 Saa1 Zeoi2" }, { en: "Mong Kok", jp: "Wong6 Gok3" }, { en: "Tsuen Wan", jp: "Cyun4 Waan1" }] },
-    { line: "Island", color: "#006caf", stations: [{ en: "Kennedy Town", jp: "Gei1 nei4 dei6 sing4" }, { en: "Hong Kong", jp: "Hoeng1 Gong2 Zaam6" }, { en: "Sheung Wan", jp: "Soeng6 Waan1" }, { en: "Tai Koo", jp: "Taai3 Gu2" }, { en: "Shau Kei Wan", jp: "Sau3 Gei1 Waan1" }] },
-    { line: "Tung Chung", color: "#f58220", stations: [{ en: "Tung Chung", jp: "Dung1 Cung1" }, { en: "Tsing Yi", jp: "Cing1 Ji1" }, { en: "Lai King", jp: "Lai6 Ging2" }, { en: "Olympic", jp: "Ngaa4 Waan6 Sing4" }] }
+    { line: "Tsuen Wan", color: "#e60026", stations: [
+      { en: "Central", jp: "Zung1 Waan4" },
+      { en: "Admiralty", jp: "Gam1 Zung1" },
+      { en: "Wan Chai", jp: "Waan1 Zai2" },
+      { en: "Causeway Bay", jp: "Tung4 Lo4 Waan1" },
+      { en: "Tsim Sha Tsui", jp: "Zim1 Saa1 Zeoi2" },
+      { en: "Mong Kok", jp: "Wong6 Gok3" },
+      { en: "Tsuen Wan", jp: "Cyun4 Waan1" },
+    ]},
+    { line: "Island", color: "#006caf", stations: [
+      { en: "Kennedy Town", jp: "Gei1 nei4 dei6 sing4" },
+      { en: "Hong Kong", jp: "Hoeng1 Gong2 Zaam6" },
+      { en: "Sheung Wan", jp: "Soeng6 Waan1" },
+      { en: "Tai Koo", jp: "Taai3 Gu2" },
+      { en: "Shau Kei Wan", jp: "Sau3 Gei1 Waan1" },
+    ]},
+    { line: "Tung Chung", color: "#f58220", stations: [
+      { en: "Tung Chung", jp: "Dung1 Cung1" },
+      { en: "Tsing Yi", jp: "Cing1 Ji1" },
+      { en: "Lai King", jp: "Lai6 Ging2" },
+      { en: "Olympic", jp: "Ngaa4 Waan6 Sing4" },
+    ]},
   ];
   const cont = document.getElementById('grid-mtr');
-  cont.innerHTML = stations.map(line => `<div class="wide-card" style="margin-bottom:1rem;"><h3 style="display:flex;align-items:center;gap:0.6rem;"><span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>${line.line} Line</h3><table class="mtr-table" style="margin-top:0.8rem;"><thead><tr><th>Station</th><th>Jyutping</th><th>Listen</th><th>Record</th></tr></thead><tbody>${line.stations.map(s => `<tr><td>${s.en}</td><td style="font-family:'Space Mono',monospace;color:var(--accent);">${s.jp}</td><td><button class="ex-listen" onclick="speak('${s.jp}')">🔊</button></td><td><button class="ex-record" onclick="openRecordingModal('${s.jp}')">🎙️</button></td></tr>`).join('')}</tbody></table></div>`).join('');
+  cont.innerHTML = stations.map(line => `
+    <div class="wide-card" style="margin-bottom:1rem;">
+      <h3 style="display:flex;align-items:center;gap:0.6rem;">
+        <span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>
+        ${line.line} Line
+      </h3>
+      <table class="mtr-table" style="margin-top:0.8rem;">
+        <thead><tr><th>Station</th><th>Jyutping</th><th>Listen</th><th>Record</th></tr></thead>
+        <tbody>
+          ${line.stations.map(s => `<tr>
+            <td>${s.en}</td>
+            <td style="font-family:'Space Mono',monospace;color:var(--accent);">${s.jp}</td>
+            <td><button class="ex-listen" onclick="speak('${s.jp}')">🔊</button></td>
+            <td><button class="ex-record" onclick="openRecordingModal('${s.jp}')">🎙️</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`).join('');
 }
 
 // =============================================
-//  RENDER GRID FUNCTION (modified to add record button)
+//  GENERIC CARD RENDERER (MODIFIED WITH RECORD BUTTON)
 // =============================================
 function renderGrid(id, data) {
   const el = document.getElementById('grid-' + id);
@@ -1159,16 +1750,11 @@ let audioChunks = [];
 let currentRecordingPhrase = '';
 let recordedBlob = null;
 
-// Load custom recordings from localStorage
 function loadCustomRecordings() {
   const saved = localStorage.getItem('customAudio');
-  if (saved) {
-    return JSON.parse(saved);
-  }
-  return {};
+  return saved ? JSON.parse(saved) : {};
 }
 
-// Save a recording
 function saveRecordingToStorage(phrase, audioDataUrl) {
   const recordings = loadCustomRecordings();
   recordings[phrase] = audioDataUrl;
@@ -1176,13 +1762,11 @@ function saveRecordingToStorage(phrase, audioDataUrl) {
   updateStorageInfo();
 }
 
-// Get a recording
 function getRecording(phrase) {
   const recordings = loadCustomRecordings();
   return recordings[phrase];
 }
 
-// Delete all recordings
 function deleteAllRecordings() {
   if (confirm('⚠️ Delete ALL your voice recordings? This cannot be undone.')) {
     localStorage.removeItem('customAudio');
@@ -1191,7 +1775,6 @@ function deleteAllRecordings() {
   }
 }
 
-// Export all recordings to a file
 function exportAllRecordings() {
   const recordings = loadCustomRecordings();
   if (Object.keys(recordings).length === 0) {
@@ -1209,7 +1792,6 @@ function exportAllRecordings() {
   alert(`Exported ${Object.keys(recordings).length} recordings!`);
 }
 
-// Import recordings from a file
 function importRecordings(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -1227,17 +1809,13 @@ function importRecordings(file) {
   reader.readAsText(file);
 }
 
-// Update storage info display
 function updateStorageInfo() {
   const recordings = loadCustomRecordings();
   const count = Object.keys(recordings).length;
   const infoDiv = document.getElementById('storageInfo');
-  if (infoDiv) {
-    infoDiv.textContent = `📀 ${count} recording(s) saved`;
-  }
+  if (infoDiv) infoDiv.textContent = `📀 ${count} recording(s) saved locally`;
 }
 
-// Open recording modal
 function openRecordingModal(phrase) {
   currentRecordingPhrase = phrase;
   document.getElementById('recordingPhrase').textContent = phrase;
@@ -1303,7 +1881,7 @@ function saveRecording() {
     const reader = new FileReader();
     reader.onloadend = () => {
       saveRecordingToStorage(currentRecordingPhrase, reader.result);
-      alert(`✅ Recording saved for: ${currentRecordingPhrase}\nIt will play when you click Listen!`);
+      alert(`✅ Recording saved for: ${currentRecordingPhrase}\n\nIt will play when you click Listen!`);
       closeRecordingModal();
     };
     reader.readAsDataURL(recordedBlob);
@@ -1312,7 +1890,7 @@ function saveRecording() {
   }
 }
 
-// Modified speak function - plays custom recording if available
+// REPLACED speak function - checks for custom recordings first
 function speak(text) {
   const customRecording = getRecording(text);
   
@@ -1337,16 +1915,16 @@ function fallbackTTS(text) {
 }
 
 // =============================================
-//  QUIZ (same as original)
+//  QUIZ
 // =============================================
-
 const ALL_ITEMS = Object.values(VOCAB).flat();
 let quizIdx = 0, quizScore = 0, quizQuestions = [];
 
 function buildQuizQuestions(n = 15) {
   const shuffled = [...ALL_ITEMS].sort(() => Math.random() - 0.5).slice(0, n);
   return shuffled.map(item => {
-    const wrong = ALL_ITEMS.filter(x => x.en !== item.en).sort(() => Math.random() - 0.5).slice(0, 3);
+    const wrong = ALL_ITEMS.filter(x => x.en !== item.en)
+      .sort(() => Math.random() - 0.5).slice(0, 3);
     const opts = [...wrong, item].sort(() => Math.random() - 0.5);
     return { q: `What does "${item.jp}" mean?`, opts: opts.map(o => o.en), answer: item.en };
   });
@@ -1358,14 +1936,29 @@ function loadQuiz() {
   if (!wrap) return;
 
   if (quizIdx >= quizQuestions.length) {
-    wrap.innerHTML = `<div class="quiz-score-screen"><h3>🎉 Quiz complete!</h3><div class="score-big">${quizScore} / ${quizQuestions.length}</div><p>${quizScore >= quizQuestions.length * 0.8 ? '🌟 Excellent! You\'re really learning!' : '💪 Keep practising — you\'re improving!'}</p><button class="btn-primary" style="margin-top:1.2rem;" onclick="quizIdx=0;quizScore=0;loadQuiz()">🔄 Try again</button></div>`;
+    wrap.innerHTML = `
+      <div class="quiz-score-screen">
+        <h3>🎉 Quiz complete!</h3>
+        <div class="score-big">${quizScore} / ${quizQuestions.length}</div>
+        <p>${quizScore >= quizQuestions.length * 0.8 ? '🌟 Excellent! You\'re really learning!' : '💪 Keep practising — you\'re improving!'}</p>
+        <button class="btn-primary" style="margin-top:1.2rem;" onclick="quizIdx=0;quizScore=0;loadQuiz()">🔄 Try again</button>
+      </div>`;
     return;
   }
 
   const q = quizQuestions[quizIdx];
-  const pips = quizQuestions.map((_, i) => `<div class="quiz-pip ${i < quizIdx ? 'done' : ''}"></div>`).join('');
+  const pips = quizQuestions.map((_, i) =>
+    `<div class="quiz-pip ${i < quizIdx ? 'done' : ''}"></div>`).join('');
 
-  wrap.innerHTML = `<div class="quiz-progress">${pips}</div><div class="quiz-q">Question ${quizIdx + 1} of ${quizQuestions.length}<br><span style="color:var(--accent);font-family:'Space Mono',monospace;font-size:1.4rem;">${q.q.match(/"(.+)"/)[1]}</span></div><div class="quiz-options" id="qopts">${q.opts.map(o => `<button class="quiz-opt" onclick="answerQuiz(this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}',this.parentElement)">${o}</button>`).join('')}</div><div class="quiz-feedback" id="qfb"></div><button class="btn-primary" id="qnext" disabled onclick="quizIdx++;loadQuiz()">Next →</button>`;
+  wrap.innerHTML = `
+    <div class="quiz-progress">${pips}</div>
+    <div class="quiz-q">Question ${quizIdx + 1} of ${quizQuestions.length}<br><span style="color:var(--accent);font-family:'Space Mono',monospace;font-size:1.4rem;">${q.q.match(/"(.+)"/)[1]}</span></div>
+    <div class="quiz-options" id="qopts">
+      ${q.opts.map(o => `<button class="quiz-opt" onclick="answerQuiz(this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}',this.parentElement)">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="qfb"></div>
+    <button class="btn-primary" id="qnext" disabled onclick="quizIdx++;loadQuiz()">Next →</button>
+  `;
 }
 
 function answerQuiz(btn, chosen, correct, container) {
@@ -1390,7 +1983,6 @@ function answerQuiz(btn, chosen, correct, container) {
 // =============================================
 //  NAVIGATION
 // =============================================
-
 const sideItems = document.querySelectorAll('.sidebar-item');
 const panels = document.querySelectorAll('.panel');
 
@@ -1403,23 +1995,25 @@ sideItems.forEach(item => {
     const panel = document.getElementById('panel-' + target);
     if (panel) panel.classList.add('active');
     if (target === 'quiz') loadQuiz();
+    // close sidebar on mobile
     if (window.innerWidth <= 768) {
       document.getElementById('sidebar').classList.remove('open');
     }
   });
 });
 
+// Hamburger
 document.getElementById('hamburger').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
 });
 
 // =============================================
-//  SEARCH
+//  GLOBAL SEARCH
 // =============================================
-
 document.getElementById('globalSearch').addEventListener('input', function() {
   const q = this.value.toLowerCase().trim();
   if (!q) return;
+  // find first match
   for (const [category, items] of Object.entries(VOCAB)) {
     const match = items.find(i => i.jp.toLowerCase().includes(q) || i.en.toLowerCase().includes(q));
     if (match) {
@@ -1431,9 +2025,8 @@ document.getElementById('globalSearch').addEventListener('input', function() {
 });
 
 // =============================================
-//  STORAGE BUTTONS
+//  STORAGE BUTTONS & RECORDING BUTTONS
 // =============================================
-
 document.getElementById('exportAllBtn').addEventListener('click', exportAllRecordings);
 document.getElementById('importAllBtn').addEventListener('click', () => {
   const input = document.createElement('input');
@@ -1445,8 +2038,6 @@ document.getElementById('importAllBtn').addEventListener('click', () => {
   input.click();
 });
 document.getElementById('clearRecordingsBtn').addEventListener('click', deleteAllRecordings);
-
-// Recording modal buttons
 document.getElementById('startRecordBtn').addEventListener('click', startRecording);
 document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
 document.getElementById('saveRecordingBtn').addEventListener('click', saveRecording);
