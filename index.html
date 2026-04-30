@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cantonese Study Hub - With Voice Recording</title>
+  <title>Cantonese Study Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -20,508 +20,161 @@
       --green: #6dcc9e;
       --red: #e86d6d;
       --sidebar-w: 260px;
+      /* Tone colours */
+      --t1: #f5c842; /* high flat */
+      --t2: #6dcc9e; /* high rising */
+      --t3: #6d9ee8; /* mid flat */
+      --t4: #e86d6d; /* low falling */
+      --t5: #cc8dcc; /* low rising */
+      --t6: #e8b86d; /* low flat */
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* TOP HEADER */
-    .top-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0.85rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-    }
-
-    .hamburger {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .logo {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.02em;
-      flex: 1;
-    }
-
+    .top-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 200; }
+    .hamburger { display: none; background: none; border: none; color: var(--text); font-size: 1.4rem; cursor: pointer; }
+    .logo { font-family: 'Noto Serif TC', serif; font-size: 1.3rem; font-weight: 700; color: var(--accent); letter-spacing: 0.02em; flex: 1; }
     .logo span { color: var(--text-muted); font-size: 0.85rem; font-family: 'DM Sans', sans-serif; font-weight: 400; margin-left: 0.5rem; }
-
-    .top-search {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.4rem 0.9rem;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      width: 220px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .top-search { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.4rem 0.9rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; width: 220px; outline: none; transition: border-color 0.2s; }
     .top-search:focus { border-color: var(--accent); }
     .top-search::placeholder { color: var(--text-dim); }
 
-    /* LAYOUT */
-    .layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+    .layout { display: flex; flex: 1; overflow: hidden; }
 
-    /* SIDEBAR */
-    .sidebar {
-      width: var(--sidebar-w);
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      flex-shrink: 0;
-      height: calc(100vh - 54px);
-      position: sticky;
-      top: 54px;
-    }
-
+    .sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; height: calc(100vh - 54px); position: sticky; top: 54px; }
     .sidebar::-webkit-scrollbar { width: 4px; }
-    .sidebar::-webkit-scrollbar-track { background: transparent; }
     .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-    .sidebar-section {
-      padding: 1rem 0 0.5rem;
-    }
-
-    .sidebar-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      padding: 0 1rem 0.4rem;
-    }
-
-    .sidebar-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      border-left: 3px solid transparent;
-      transition: all 0.15s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .sidebar-item:hover {
-      background: var(--surface2);
-      color: var(--text);
-    }
-
-    .sidebar-item.active {
-      background: var(--surface2);
-      color: var(--accent);
-      border-left-color: var(--accent);
-      font-weight: 600;
-    }
-
+    .sidebar-section { padding: 1rem 0 0.5rem; }
+    .sidebar-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); padding: 0 1rem 0.4rem; }
+    .sidebar-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.88rem; color: var(--text-muted); border-left: 3px solid transparent; transition: all 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+    .sidebar-item.active { background: var(--surface2); color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
     .sidebar-item .icon { font-size: 0.95rem; flex-shrink: 0; }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 0.5rem 1rem; }
 
-    .sidebar-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 0.5rem 1rem;
-    }
-
-    /* MAIN CONTENT */
-    .main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 2rem;
-    }
-
+    .main { flex: 1; overflow-y: auto; padding: 2rem; }
     .main::-webkit-scrollbar { width: 6px; }
-    .main::-webkit-scrollbar-track { background: transparent; }
     .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    /* PANEL */
     .panel { display: none; animation: fadein 0.2s ease; }
     .panel.active { display: block; }
+    @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .panel-header { margin-bottom: 1.5rem; }
+    .panel-header h2 { font-family: 'Noto Serif TC', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 0.3rem; }
+    .panel-header p { color: var(--text-muted); font-size: 0.9rem; }
 
-    .panel-header {
-      margin-bottom: 1.5rem;
+    /* TONE LEGEND */
+    .tone-legend {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 1rem;
     }
-
-    .panel-header h2 {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 1.6rem;
-      color: var(--accent);
-      margin-bottom: 0.3rem;
-    }
-
-    .panel-header p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
+    .tone-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-muted); }
+    .tone-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
     /* CARD GRID */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1rem;
-    }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
 
     .vocab-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.1rem;
-      transition: border-color 0.2s, transform 0.2s;
-      position: relative;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.1rem; transition: border-color 0.2s, transform 0.2s;
     }
+    .vocab-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 
-    .vocab-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
+    /* Jyutping with per-syllable tone colouring */
     .card-jyutping {
-      font-family: 'Space Mono', monospace;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
+      font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.4rem; line-height: 1.5; display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline;
     }
-
-    .card-meaning {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      border-left: 2px solid var(--accent2);
-      padding-left: 0.6rem;
-      line-height: 1.5;
+    .syllable { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 1px; }
+    .syl-text { font-size: 0.95rem; font-weight: 700; }
+    .tone-bar {
+      height: 3px; width: 100%; border-radius: 2px; min-width: 12px;
     }
+    .t1 { color: var(--t1); } .t1 .tone-bar { background: var(--t1); }
+    .t2 { color: var(--t2); } .t2 .tone-bar { background: var(--t2); }
+    .t3 { color: var(--t3); } .t3 .tone-bar { background: var(--t3); }
+    .t4 { color: var(--t4); } .t4 .tone-bar { background: var(--t4); }
+    .t5 { color: var(--t5); } .t5 .tone-bar { background: var(--t5); }
+    .t6 { color: var(--t6); } .t6 .tone-bar { background: var(--t6); }
+    .t0 { color: var(--text-muted); } .t0 .tone-bar { background: var(--text-dim); }
 
-    .card-buttons {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.8rem;
-    }
+    /* Tone shape SVGs inline */
+    .tone-shape { display: block; width: 100%; height: 8px; }
 
+    .card-hanzi { font-family: 'Noto Serif TC', serif; font-size: 1.3rem; color: var(--text-muted); margin-bottom: 0.4rem; letter-spacing: 0.05em; }
+    .card-meaning { font-size: 0.88rem; color: var(--text-muted); border-left: 2px solid var(--accent2); padding-left: 0.6rem; line-height: 1.5; margin-bottom: 0.8rem; }
+    .card-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .card-listen, .card-record {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.3rem 0.8rem;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.3rem 0.8rem; color: var(--text-muted); font-size: 0.78rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s; font-family: 'DM Sans', sans-serif;
     }
-
     .card-listen:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
     .card-record:hover { background: var(--accent2); color: var(--bg); border-color: var(--accent2); }
 
-    /* INTERMEDIATE CARDS (wider) */
-    .wide-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.3rem;
-      margin-bottom: 1rem;
-    }
-
-    .wide-card h3 {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.95rem;
-      color: var(--accent2);
-      margin-bottom: 0.6rem;
-    }
-
-    .wide-card p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-
-    .wide-card .examples {
-      margin-top: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .example-row {
-      display: flex;
-      gap: 1rem;
-      align-items: baseline;
-      padding: 0.4rem 0.7rem;
-      background: var(--surface2);
-      border-radius: 7px;
-      flex-wrap: wrap;
-    }
-
-    .ex-jp {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.88rem;
-      color: var(--accent);
-      min-width: 180px;
-    }
-
-    .ex-en {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .ex-listen, .ex-record {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-size: 0.9rem;
-      padding: 0.1rem 0.3rem;
-      transition: color 0.15s;
-      flex-shrink: 0;
-    }
+    /* WIDE CARDS */
+    .wide-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.3rem; margin-bottom: 1rem; }
+    .wide-card h3 { font-family: 'Space Mono', monospace; font-size: 0.95rem; color: var(--accent2); margin-bottom: 0.6rem; }
+    .wide-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+    .wide-card .examples { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .example-row { display: flex; gap: 1rem; align-items: center; padding: 0.4rem 0.7rem; background: var(--surface2); border-radius: 7px; flex-wrap: wrap; }
+    .ex-jp { font-family: 'Space Mono', monospace; font-size: 0.88rem; color: var(--accent); min-width: 160px; }
+    .ex-en { font-size: 0.85rem; color: var(--text-muted); flex: 1; }
+    .ex-listen, .ex-record { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.9rem; padding: 0.1rem 0.3rem; transition: color 0.15s; flex-shrink: 0; }
     .ex-listen:hover { color: var(--accent); }
     .ex-record:hover { color: var(--accent2); }
 
     /* QUIZ */
-    .quiz-wrap {
-      max-width: 640px;
-    }
-
-    .quiz-progress {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 1.5rem;
-    }
-
-    .quiz-pip {
-      height: 4px;
-      flex: 1;
-      background: var(--border);
-      border-radius: 2px;
-      transition: background 0.3s;
-    }
-
+    .quiz-wrap { max-width: 640px; }
+    .quiz-progress { display: flex; gap: 4px; margin-bottom: 1.5rem; }
+    .quiz-pip { height: 4px; flex: 1; background: var(--border); border-radius: 2px; transition: background 0.3s; }
     .quiz-pip.done { background: var(--accent); }
-    .quiz-pip.correct { background: var(--green); }
-    .quiz-pip.wrong { background: var(--red); }
-
-    .quiz-q {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1.2rem;
-      line-height: 1.5;
-    }
-
-    .quiz-options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .quiz-opt {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 0.75rem 1.1rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      color: var(--text);
-      text-align: left;
-      transition: all 0.15s;
-    }
-
+    .quiz-q { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.2rem; line-height: 1.5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
+    .quiz-opt { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 0.75rem 1.1rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); text-align: left; transition: all 0.15s; }
     .quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
     .quiz-opt.correct { border-color: var(--green); background: rgba(109,204,158,0.1); color: var(--green); }
     .quiz-opt.wrong { border-color: var(--red); background: rgba(232,109,109,0.1); color: var(--red); }
     .quiz-opt:disabled { cursor: not-allowed; }
-
-    .quiz-feedback {
-      font-size: 0.95rem;
-      min-height: 1.5rem;
-      margin-bottom: 0.8rem;
-      font-weight: 500;
-    }
-
+    .quiz-feedback { font-size: 0.95rem; min-height: 1.5rem; margin-bottom: 0.8rem; font-weight: 500; }
     .quiz-feedback.ok { color: var(--green); }
     .quiz-feedback.nope { color: var(--red); }
-
-    .btn-primary {
-      background: var(--accent);
-      border: none;
-      border-radius: 8px;
-      padding: 0.6rem 1.5rem;
-      color: var(--bg);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
+    .btn-primary { background: var(--accent); border: none; border-radius: 8px; padding: 0.6rem 1.5rem; color: var(--bg); font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: opacity 0.15s; }
     .btn-primary:hover { opacity: 0.85; }
     .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    .quiz-score-screen {
-      text-align: center;
-      padding: 2rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-    }
-
-    .quiz-score-screen h3 {
-      font-size: 1.8rem;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-
-    .score-big {
-      font-size: 3.5rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0.5rem 0;
-    }
+    .quiz-score-screen { text-align: center; padding: 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+    .quiz-score-screen h3 { font-size: 1.8rem; color: var(--accent); margin-bottom: 0.5rem; }
+    .score-big { font-size: 3.5rem; font-weight: 700; color: var(--text); margin: 0.5rem 0; }
 
     /* MTR TABLE */
-    .mtr-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-    }
-
-    .mtr-table th {
-      background: var(--surface2);
-      padding: 0.6rem 1rem;
-      text-align: left;
-      color: var(--accent);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .mtr-table td {
-      padding: 0.55rem 1rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-muted);
-    }
-
+    .mtr-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .mtr-table th { background: var(--surface2); padding: 0.6rem 1rem; text-align: left; color: var(--accent); font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+    .mtr-table td { padding: 0.55rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
     .mtr-table tr:hover td { background: var(--surface2); }
 
-    .mtr-line {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      font-family: 'Space Mono', monospace;
-    }
-
-    .tag {
-      display: inline-block;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.1rem 0.5rem;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      font-family: 'Space Mono', monospace;
-      margin-left: 0.5rem;
-    }
-
     /* STORAGE PANEL */
-    .storage-panel {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--surface);
-      padding: 1rem;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      z-index: 100;
-      max-width: 280px;
-      font-size: 0.8rem;
-    }
-
-    .storage-panel h4 {
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
-      color: var(--accent);
-    }
-
-    .storage-buttons {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .small-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.2rem 0.5rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.7rem;
-      flex: 1;
-      text-align: center;
-    }
-
+    .storage-panel { position: fixed; bottom: 20px; right: 20px; background: var(--surface); padding: 1rem; border-radius: 12px; border: 1px solid var(--border); z-index: 100; max-width: 280px; font-size: 0.8rem; }
+    .storage-panel h4 { font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--accent); }
+    .storage-buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    .small-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.5rem; color: var(--text-muted); cursor: pointer; font-size: 0.7rem; flex: 1; text-align: center; }
     .small-btn:hover { background: var(--accent2); color: var(--bg); }
 
-    /* RESPONSIVE */
+    /* TONE GUIDE PAGE */
+    .tone-guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .tone-guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center; }
+    .tone-guide-card .tone-num { font-size: 2rem; font-weight: 700; font-family: 'Space Mono', monospace; }
+    .tone-guide-card .tone-name { font-size: 0.8rem; color: var(--text-muted); margin: 0.2rem 0; }
+    .tone-guide-card .tone-desc { font-size: 0.75rem; color: var(--text-dim); }
+    .tone-contour { margin: 0.5rem auto; }
+
     @media (max-width: 768px) {
       .hamburger { display: block; }
       .top-search { width: 140px; }
-
-      .sidebar {
-        position: fixed;
-        left: -100%;
-        top: 54px;
-        height: calc(100vh - 54px);
-        z-index: 300;
-        transition: left 0.25s ease;
-      }
-
+      .sidebar { position: fixed; left: -100%; top: 54px; height: calc(100vh - 54px); z-index: 300; transition: left 0.25s ease; }
       .sidebar.open { left: 0; }
-
       .main { padding: 1.2rem; }
       .card-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
-      .ex-jp { min-width: 120px; }
       .storage-panel { bottom: 10px; right: 10px; max-width: 260px; padding: 0.8rem; }
     }
   </style>
@@ -535,11 +188,7 @@
 </div>
 
 <div class="layout">
-
-  <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
-
-    <!-- BASICS -->
     <div class="sidebar-section">
       <div class="sidebar-label">Basics</div>
       <div class="sidebar-item active" data-panel="numbers"><span class="icon">🔢</span>Numbers</div>
@@ -549,10 +198,7 @@
       <div class="sidebar-item" data-panel="directions"><span class="icon">🧭</span>Directions</div>
       <div class="sidebar-item" data-panel="time"><span class="icon">⏰</span>Time</div>
     </div>
-
     <div class="sidebar-divider"></div>
-
-    <!-- BEGINNERS -->
     <div class="sidebar-section">
       <div class="sidebar-label">Beginners</div>
       <div class="sidebar-item" data-panel="adjectives"><span class="icon">✨</span>Adjectives</div>
@@ -586,279 +232,108 @@
       <div class="sidebar-item" data-panel="verbs"><span class="icon">🏃</span>Verbs</div>
       <div class="sidebar-item" data-panel="weather"><span class="icon">🌤️</span>Weather</div>
     </div>
-
     <div class="sidebar-divider"></div>
-
-    <!-- INTERMEDIATE -->
     <div class="sidebar-section">
       <div class="sidebar-label">Intermediate</div>
+      <div class="sidebar-item" data-panel="tones_guide"><span class="icon">🎵</span>Tone Guide</div>
       <div class="sidebar-item" data-panel="intro_intermediate"><span class="icon">📖</span>Introduction</div>
-      <div class="sidebar-item" data-panel="characters"><span class="icon">字</span>Characters & Compound Words</div>
+      <div class="sidebar-item" data-panel="characters"><span class="icon">字</span>Characters & Compounds</div>
       <div class="sidebar-item" data-panel="classifiers"><span class="icon">🔢</span>Numerical Classifiers</div>
       <div class="sidebar-item" data-panel="this_that"><span class="icon">👉</span>"This" and "That"</div>
       <div class="sidebar-item" data-panel="particles"><span class="icon">💬</span>Cantonese Particles</div>
-      <div class="sidebar-item" data-panel="tone_mistakes"><span class="icon">🎵</span>Common Tone Mistakes</div>
+      <div class="sidebar-item" data-panel="tone_mistakes"><span class="icon">⚠️</span>Common Tone Mistakes</div>
       <div class="sidebar-item" data-panel="idioms"><span class="icon">🀄</span>Chinese Idioms</div>
       <div class="sidebar-item" data-panel="riddles"><span class="icon">🔮</span>Chinese Riddles</div>
       <div class="sidebar-item" data-panel="dimsum"><span class="icon">🥟</span>Dim Sum Menu</div>
       <div class="sidebar-item" data-panel="mtr"><span class="icon">🚇</span>Hong Kong MTR</div>
     </div>
-
     <div class="sidebar-divider"></div>
-
-    <!-- EXTRAS -->
     <div class="sidebar-section">
       <div class="sidebar-label">Practice</div>
       <div class="sidebar-item" data-panel="quiz"><span class="icon">📝</span>Quiz</div>
     </div>
-
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main class="main" id="mainContent">
 
-    <!-- ========== BASICS ========== -->
-
-    <div class="panel active" id="panel-numbers">
-      <div class="panel-header"><h2>🔢 Numbers</h2><p>Counting in Cantonese</p></div>
-      <div class="card-grid" id="grid-numbers"></div>
+    <!-- TONE GUIDE -->
+    <div class="panel" id="panel-tones_guide">
+      <div class="panel-header"><h2>🎵 The 6 Cantonese Tones</h2><p>Master tones to speak naturally — same sound, different pitch = different word!</p></div>
+      <div class="tone-guide-grid" id="toneGuideGrid"></div>
+      <div class="wide-card" style="margin-top:1rem;">
+        <h3>How to read the tone colours on every card</h3>
+        <p>Every syllable on every vocabulary card is colour-coded by its tone number. The small coloured bar under each syllable shows its tone. Use the legend at the top of any vocab page as a quick reference.</p>
+        <div style="margin-top:0.8rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
+          <span style="background:var(--t1);color:#000;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;">T1 High Flat ─</span>
+          <span style="background:var(--t2);color:#000;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;">T2 High Rising ↗</span>
+          <span style="background:var(--t3);color:#000;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;">T3 Mid Flat ─</span>
+          <span style="background:var(--t4);color:#000;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;">T4 Low Falling ↘</span>
+          <span style="background:var(--t5);color:#000;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;">T5 Low Rising ↗</span>
+          <span style="background:var(--t6);color:#000;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;">T6 Low Flat ─</span>
+        </div>
+      </div>
     </div>
 
-    <div class="panel" id="panel-natural">
-      <div class="panel-header"><h2>🌿 Natural Objects</h2><p>Nature vocabulary</p></div>
-      <div class="card-grid" id="grid-natural"></div>
-    </div>
+    <!-- BASICS -->
+    <div class="panel active" id="panel-numbers"><div class="panel-header"><h2>🔢 Numbers</h2><p>Counting in Cantonese — from zero to ten million</p></div><div id="tone-legend-numbers"></div><div class="card-grid" id="grid-numbers"></div></div>
+    <div class="panel" id="panel-natural"><div class="panel-header"><h2>🌿 Natural Objects</h2><p>Nature vocabulary</p></div><div id="tone-legend-natural"></div><div class="card-grid" id="grid-natural"></div></div>
+    <div class="panel" id="panel-dates"><div class="panel-header"><h2>📅 Dates</h2><p>Days, months and calendar</p></div><div id="tone-legend-dates"></div><div class="card-grid" id="grid-dates"></div></div>
+    <div class="panel" id="panel-quantities"><div class="panel-header"><h2>📏 Quantities & Sizes</h2><p>Describing amounts and dimensions</p></div><div id="tone-legend-quantities"></div><div class="card-grid" id="grid-quantities"></div></div>
+    <div class="panel" id="panel-directions"><div class="panel-header"><h2>🧭 Directions</h2><p>Getting around</p></div><div id="tone-legend-directions"></div><div class="card-grid" id="grid-directions"></div></div>
+    <div class="panel" id="panel-time"><div class="panel-header"><h2>⏰ Time</h2><p>Telling time and time expressions</p></div><div id="tone-legend-time"></div><div class="card-grid" id="grid-time"></div></div>
 
-    <div class="panel" id="panel-dates">
-      <div class="panel-header"><h2>📅 Dates</h2><p>Days, months and calendar</p></div>
-      <div class="card-grid" id="grid-dates"></div>
-    </div>
+    <!-- BEGINNERS -->
+    <div class="panel" id="panel-adjectives"><div class="panel-header"><h2>✨ Adjectives</h2><p>Describing words</p></div><div id="tone-legend-adjectives"></div><div class="card-grid" id="grid-adjectives"></div></div>
+    <div class="panel" id="panel-animals"><div class="panel-header"><h2>🐾 Animals</h2><p>Common animals</p></div><div id="tone-legend-animals"></div><div class="card-grid" id="grid-animals"></div></div>
+    <div class="panel" id="panel-basic_conversation"><div class="panel-header"><h2>💬 Basic Conversation</h2><p>Everyday exchanges</p></div><div id="tone-legend-basic_conversation"></div><div class="card-grid" id="grid-basic_conversation"></div></div>
+    <div class="panel" id="panel-body"><div class="panel-header"><h2>🫀 Body</h2><p>Parts of the body</p></div><div id="tone-legend-body"></div><div class="card-grid" id="grid-body"></div></div>
+    <div class="panel" id="panel-buildings"><div class="panel-header"><h2>🏢 Buildings</h2><p>Places and structures</p></div><div id="tone-legend-buildings"></div><div class="card-grid" id="grid-buildings"></div></div>
+    <div class="panel" id="panel-colours"><div class="panel-header"><h2>🎨 Colours</h2><p>Colour vocabulary</p></div><div id="tone-legend-colours"></div><div class="card-grid" id="grid-colours"></div></div>
+    <div class="panel" id="panel-common_phrases"><div class="panel-header"><h2>🗣️ Common Phrases</h2><p>Must-know everyday phrases</p></div><div id="tone-legend-common_phrases"></div><div class="card-grid" id="grid-common_phrases"></div></div>
+    <div class="panel" id="panel-cooking"><div class="panel-header"><h2>🍳 Cooking</h2><p>Kitchen and cooking vocabulary</p></div><div id="tone-legend-cooking"></div><div class="card-grid" id="grid-cooking"></div></div>
+    <div class="panel" id="panel-countries"><div class="panel-header"><h2>🌍 Countries</h2><p>Countries and nationalities</p></div><div id="tone-legend-countries"></div><div class="card-grid" id="grid-countries"></div></div>
+    <div class="panel" id="panel-drinks"><div class="panel-header"><h2>🥤 Drinks</h2><p>Beverages in Cantonese</p></div><div id="tone-legend-drinks"></div><div class="card-grid" id="grid-drinks"></div></div>
+    <div class="panel" id="panel-eating_out"><div class="panel-header"><h2>🍜 Eating Out</h2><p>Restaurant phrases and food ordering</p></div><div id="tone-legend-eating_out"></div><div class="card-grid" id="grid-eating_out"></div></div>
+    <div class="panel" id="panel-emotions"><div class="panel-header"><h2>😊 Emotions</h2><p>Feelings and states of mind</p></div><div id="tone-legend-emotions"></div><div class="card-grid" id="grid-emotions"></div></div>
+    <div class="panel" id="panel-family"><div class="panel-header"><h2>👨‍👩‍👧 Family</h2><p>Family members and relationships</p></div><div id="tone-legend-family"></div><div class="card-grid" id="grid-family"></div></div>
+    <div class="panel" id="panel-greetings"><div class="panel-header"><h2>👋 Greetings</h2><p>Hellos, goodbyes and pleasantries</p></div><div id="tone-legend-greetings"></div><div class="card-grid" id="grid-greetings"></div></div>
+    <div class="panel" id="panel-health"><div class="panel-header"><h2>🏥 Health</h2><p>Medical and health vocabulary</p></div><div id="tone-legend-health"></div><div class="card-grid" id="grid-health"></div></div>
+    <div class="panel" id="panel-holidays"><div class="panel-header"><h2>🏖️ Holidays</h2><p>Travel and holiday phrases</p></div><div id="tone-legend-holidays"></div><div class="card-grid" id="grid-holidays"></div></div>
+    <div class="panel" id="panel-home"><div class="panel-header"><h2>🏠 Home</h2><p>Rooms, furniture and household items</p></div><div id="tone-legend-home"></div><div class="card-grid" id="grid-home"></div></div>
+    <div class="panel" id="panel-machines"><div class="panel-header"><h2>⚙️ Machines</h2><p>Technology and devices</p></div><div id="tone-legend-machines"></div><div class="card-grid" id="grid-machines"></div></div>
+    <div class="panel" id="panel-motoring"><div class="panel-header"><h2>🚗 Motoring</h2><p>Cars and transport vocabulary</p></div><div id="tone-legend-motoring"></div><div class="card-grid" id="grid-motoring"></div></div>
+    <div class="panel" id="panel-people"><div class="panel-header"><h2>👥 People</h2><p>Describing people</p></div><div id="tone-legend-people"></div><div class="card-grid" id="grid-people"></div></div>
+    <div class="panel" id="panel-places"><div class="panel-header"><h2>📍 Places</h2><p>Locations around town</p></div><div id="tone-legend-places"></div><div class="card-grid" id="grid-places"></div></div>
+    <div class="panel" id="panel-professions"><div class="panel-header"><h2>💼 Professions</h2><p>Jobs and occupations</p></div><div id="tone-legend-professions"></div><div class="card-grid" id="grid-professions"></div></div>
+    <div class="panel" id="panel-pronouns"><div class="panel-header"><h2>🔤 Pronouns</h2><p>Personal and possessive pronouns</p></div><div id="tone-legend-pronouns"></div><div class="card-grid" id="grid-pronouns"></div></div>
+    <div class="panel" id="panel-school"><div class="panel-header"><h2>🎒 School</h2><p>Education vocabulary</p></div><div id="tone-legend-school"></div><div class="card-grid" id="grid-school"></div></div>
+    <div class="panel" id="panel-seasons"><div class="panel-header"><h2>🌸 Seasons</h2><p>Seasons and weather vocabulary</p></div><div id="tone-legend-seasons"></div><div class="card-grid" id="grid-seasons"></div></div>
+    <div class="panel" id="panel-special_occasions"><div class="panel-header"><h2>🎉 Special Occasions</h2><p>Celebrations and festivals</p></div><div id="tone-legend-special_occasions"></div><div class="card-grid" id="grid-special_occasions"></div></div>
+    <div class="panel" id="panel-sport"><div class="panel-header"><h2>⚽ Sport</h2><p>Sports and activities</p></div><div id="tone-legend-sport"></div><div class="card-grid" id="grid-sport"></div></div>
+    <div class="panel" id="panel-christmas"><div class="panel-header"><h2>🎄 Christmas</h2><p>Christmas vocabulary in Cantonese</p></div><div id="tone-legend-christmas"></div><div class="card-grid" id="grid-christmas"></div></div>
+    <div class="panel" id="panel-verbs"><div class="panel-header"><h2>🏃 Verbs</h2><p>Common action words</p></div><div id="tone-legend-verbs"></div><div class="card-grid" id="grid-verbs"></div></div>
+    <div class="panel" id="panel-weather"><div class="panel-header"><h2>🌤️ Weather</h2><p>Weather expressions</p></div><div id="tone-legend-weather"></div><div class="card-grid" id="grid-weather"></div></div>
 
-    <div class="panel" id="panel-quantities">
-      <div class="panel-header"><h2>📏 Quantities & Sizes</h2><p>Describing amounts and dimensions</p></div>
-      <div class="card-grid" id="grid-quantities"></div>
-    </div>
-
-    <div class="panel" id="panel-directions">
-      <div class="panel-header"><h2>🧭 Directions</h2><p>Getting around</p></div>
-      <div class="card-grid" id="grid-directions"></div>
-    </div>
-
-    <div class="panel" id="panel-time">
-      <div class="panel-header"><h2>⏰ Time</h2><p>Telling time and time expressions</p></div>
-      <div class="card-grid" id="grid-time"></div>
-    </div>
-
-    <!-- ========== BEGINNERS ========== -->
-
-    <div class="panel" id="panel-adjectives">
-      <div class="panel-header"><h2>✨ Adjectives</h2><p>Describing words</p></div>
-      <div class="card-grid" id="grid-adjectives"></div>
-    </div>
-
-    <div class="panel" id="panel-animals">
-      <div class="panel-header"><h2>🐾 Animals</h2><p>Common animals</p></div>
-      <div class="card-grid" id="grid-animals"></div>
-    </div>
-
-    <div class="panel" id="panel-basic_conversation">
-      <div class="panel-header"><h2>💬 Basic Conversation</h2><p>Everyday exchanges</p></div>
-      <div class="card-grid" id="grid-basic_conversation"></div>
-    </div>
-
-    <div class="panel" id="panel-body">
-      <div class="panel-header"><h2>🫀 Body</h2><p>Parts of the body</p></div>
-      <div class="card-grid" id="grid-body"></div>
-    </div>
-
-    <div class="panel" id="panel-buildings">
-      <div class="panel-header"><h2>🏢 Buildings</h2><p>Places and structures</p></div>
-      <div class="card-grid" id="grid-buildings"></div>
-    </div>
-
-    <div class="panel" id="panel-colours">
-      <div class="panel-header"><h2>🎨 Colours</h2><p>Colour vocabulary</p></div>
-      <div class="card-grid" id="grid-colours"></div>
-    </div>
-
-    <div class="panel" id="panel-common_phrases">
-      <div class="panel-header"><h2>🗣️ Common Phrases</h2><p>Must-know everyday phrases</p></div>
-      <div class="card-grid" id="grid-common_phrases"></div>
-    </div>
-
-    <div class="panel" id="panel-cooking">
-      <div class="panel-header"><h2>🍳 Cooking</h2><p>Kitchen and cooking vocabulary</p></div>
-      <div class="card-grid" id="grid-cooking"></div>
-    </div>
-
-    <div class="panel" id="panel-countries">
-      <div class="panel-header"><h2>🌍 Countries</h2><p>Countries and nationalities</p></div>
-      <div class="card-grid" id="grid-countries"></div>
-    </div>
-
-    <div class="panel" id="panel-drinks">
-      <div class="panel-header"><h2>🥤 Drinks</h2><p>Beverages in Cantonese</p></div>
-      <div class="card-grid" id="grid-drinks"></div>
-    </div>
-
-    <div class="panel" id="panel-eating_out">
-      <div class="panel-header"><h2>🍜 Eating Out</h2><p>Restaurant phrases and food ordering</p></div>
-      <div class="card-grid" id="grid-eating_out"></div>
-    </div>
-
-    <div class="panel" id="panel-emotions">
-      <div class="panel-header"><h2>😊 Emotions</h2><p>Feelings and states of mind</p></div>
-      <div class="card-grid" id="grid-emotions"></div>
-    </div>
-
-    <div class="panel" id="panel-family">
-      <div class="panel-header"><h2>👨‍👩‍👧 Family</h2><p>Family members and relationships</p></div>
-      <div class="card-grid" id="grid-family"></div>
-    </div>
-
-    <div class="panel" id="panel-greetings">
-      <div class="panel-header"><h2>👋 Greetings</h2><p>Hellos, goodbyes and pleasantries</p></div>
-      <div class="card-grid" id="grid-greetings"></div>
-    </div>
-
-    <div class="panel" id="panel-health">
-      <div class="panel-header"><h2>🏥 Health</h2><p>Medical and health vocabulary</p></div>
-      <div class="card-grid" id="grid-health"></div>
-    </div>
-
-    <div class="panel" id="panel-holidays">
-      <div class="panel-header"><h2>🏖️ Holidays</h2><p>Travel and holiday phrases</p></div>
-      <div class="card-grid" id="grid-holidays"></div>
-    </div>
-
-    <div class="panel" id="panel-home">
-      <div class="panel-header"><h2>🏠 Home</h2><p>Rooms, furniture and household items</p></div>
-      <div class="card-grid" id="grid-home"></div>
-    </div>
-
-    <div class="panel" id="panel-machines">
-      <div class="panel-header"><h2>⚙️ Machines</h2><p>Technology and devices</p></div>
-      <div class="card-grid" id="grid-machines"></div>
-    </div>
-
-    <div class="panel" id="panel-motoring">
-      <div class="panel-header"><h2>🚗 Motoring</h2><p>Cars and transport vocabulary</p></div>
-      <div class="card-grid" id="grid-motoring"></div>
-    </div>
-
-    <div class="panel" id="panel-people">
-      <div class="panel-header"><h2>👥 People</h2><p>Describing people</p></div>
-      <div class="card-grid" id="grid-people"></div>
-    </div>
-
-    <div class="panel" id="panel-places">
-      <div class="panel-header"><h2>📍 Places</h2><p>Locations around town</p></div>
-      <div class="card-grid" id="grid-places"></div>
-    </div>
-
-    <div class="panel" id="panel-professions">
-      <div class="panel-header"><h2>💼 Professions</h2><p>Jobs and occupations</p></div>
-      <div class="card-grid" id="grid-professions"></div>
-    </div>
-
-    <div class="panel" id="panel-pronouns">
-      <div class="panel-header"><h2>🔤 Pronouns</h2><p>Personal and possessive pronouns</p></div>
-      <div class="card-grid" id="grid-pronouns"></div>
-    </div>
-
-    <div class="panel" id="panel-school">
-      <div class="panel-header"><h2>🎒 School</h2><p>Education vocabulary</p></div>
-      <div class="card-grid" id="grid-school"></div>
-    </div>
-
-    <div class="panel" id="panel-seasons">
-      <div class="panel-header"><h2>🌸 Seasons</h2><p>Seasons and weather vocabulary</p></div>
-      <div class="card-grid" id="grid-seasons"></div>
-    </div>
-
-    <div class="panel" id="panel-special_occasions">
-      <div class="panel-header"><h2>🎉 Special Occasions</h2><p>Celebrations and festivals</p></div>
-      <div class="card-grid" id="grid-special_occasions"></div>
-    </div>
-
-    <div class="panel" id="panel-sport">
-      <div class="panel-header"><h2>⚽ Sport</h2><p>Sports and activities</p></div>
-      <div class="card-grid" id="grid-sport"></div>
-    </div>
-
-    <div class="panel" id="panel-christmas">
-      <div class="panel-header"><h2>🎄 Christmas</h2><p>Christmas vocabulary in Cantonese</p></div>
-      <div class="card-grid" id="grid-christmas"></div>
-    </div>
-
-    <div class="panel" id="panel-verbs">
-      <div class="panel-header"><h2>🏃 Verbs</h2><p>Common action words</p></div>
-      <div class="card-grid" id="grid-verbs"></div>
-    </div>
-
-    <div class="panel" id="panel-weather">
-      <div class="panel-header"><h2>🌤️ Weather</h2><p>Weather expressions</p></div>
-      <div class="card-grid" id="grid-weather"></div>
-    </div>
-
-    <!-- ========== INTERMEDIATE ========== -->
-
+    <!-- INTERMEDIATE -->
     <div class="panel" id="panel-intro_intermediate">
       <div class="panel-header"><h2>📖 Intermediate Introduction</h2><p>Moving beyond basics</p></div>
       <div style="max-width:640px;">
         <div class="wide-card">
           <h3>Welcome to Intermediate Cantonese</h3>
           <p>At this level you already know core vocabulary and can hold basic conversations. The intermediate section focuses on <strong style="color:var(--accent)">grammar patterns</strong>, <strong style="color:var(--accent)">sentence structure</strong>, and <strong style="color:var(--accent)">natural-sounding Cantonese</strong>.</p>
-          <p style="margin-top:0.8rem;">Cantonese is a tonal language with <strong style="color:var(--accent)">6 tones</strong> (plus 3 entering tones). Jyutping numbers 1–6 indicate tone: <code style="color:var(--accent2)">1</code> high flat, <code style="color:var(--accent2)">2</code> high rising, <code style="color:var(--accent2)">3</code> mid flat, <code style="color:var(--accent2)">4</code> low falling, <code style="color:var(--accent2)">5</code> low rising, <code style="color:var(--accent2)">6</code> low flat.</p>
-          <p style="margin-top:0.8rem;">Topics at this level: classifiers, particles, "this/that", compound words, idioms, riddles, dim sum, and the MTR.</p>
+          <p style="margin-top:0.8rem;">Jyutping numbers 1–6 indicate tone: <code style="color:var(--t1)">1</code> high flat, <code style="color:var(--t2)">2</code> high rising, <code style="color:var(--t3)">3</code> mid flat, <code style="color:var(--t4)">4</code> low falling, <code style="color:var(--t5)">5</code> low rising, <code style="color:var(--t6)">6</code> low flat.</p>
         </div>
       </div>
     </div>
-
-    <div class="panel" id="panel-characters">
-      <div class="panel-header"><h2>字 Characters & Compound Words</h2><p>How Chinese words are built</p></div>
-      <div id="grid-characters"></div>
-    </div>
-
-    <div class="panel" id="panel-classifiers">
-      <div class="panel-header"><h2>🔢 Numerical Classifiers</h2><p>Measure words (量詞 leong6 ci4)</p></div>
-      <div class="card-grid" id="grid-classifiers"></div>
-    </div>
-
-    <div class="panel" id="panel-this_that">
-      <div class="panel-header"><h2>👉 "This" and "That"</h2><p>Demonstrative pronouns</p></div>
-      <div id="grid-this_that"></div>
-    </div>
-
-    <div class="panel" id="panel-particles">
-      <div class="panel-header"><h2>💬 Cantonese Particles</h2><p>Sentence-final particles (語氣助詞)</p></div>
-      <div id="grid-particles"></div>
-    </div>
-
-    <div class="panel" id="panel-tone_mistakes">
-      <div class="panel-header"><h2>🎵 Common Tone Mistakes</h2><p>Pairs that are easy to confuse</p></div>
-      <div id="grid-tone_mistakes"></div>
-    </div>
-
-    <div class="panel" id="panel-idioms">
-      <div class="panel-header"><h2>🀄 Chinese Idioms</h2><p>4-character 成語 (sing4 jyu5)</p></div>
-      <div class="card-grid" id="grid-idioms"></div>
-    </div>
-
-    <div class="panel" id="panel-riddles">
-      <div class="panel-header"><h2>🔮 Chinese Riddles</h2><p>謎語 (mai4 jyu5) — fun wordplay</p></div>
-      <div id="grid-riddles"></div>
-    </div>
-
-    <div class="panel" id="panel-dimsum">
-      <div class="panel-header"><h2>🥟 Dim Sum Menu</h2><p>Order like a local at yum cha</p></div>
-      <div class="card-grid" id="grid-dimsum"></div>
-    </div>
-
-    <div class="panel" id="panel-mtr">
-      <div class="panel-header"><h2>🚇 Hong Kong MTR</h2><p>Station names in Jyutping</p></div>
-      <div id="grid-mtr"></div>
-    </div>
+    <div class="panel" id="panel-characters"><div class="panel-header"><h2>字 Characters & Compound Words</h2><p>How Chinese words are built</p></div><div id="grid-characters"></div></div>
+    <div class="panel" id="panel-classifiers"><div class="panel-header"><h2>🔢 Numerical Classifiers</h2><p>Measure words (量詞 loeng6 ci4)</p></div><div id="tone-legend-classifiers"></div><div class="card-grid" id="grid-classifiers"></div></div>
+    <div class="panel" id="panel-this_that"><div class="panel-header"><h2>👉 "This" and "That"</h2><p>Demonstrative pronouns</p></div><div id="grid-this_that"></div></div>
+    <div class="panel" id="panel-particles"><div class="panel-header"><h2>💬 Cantonese Particles</h2><p>Sentence-final particles (語氣助詞)</p></div><div id="grid-particles"></div></div>
+    <div class="panel" id="panel-tone_mistakes"><div class="panel-header"><h2>⚠️ Common Tone Mistakes</h2><p>Pairs that are easy to confuse</p></div><div id="grid-tone_mistakes"></div></div>
+    <div class="panel" id="panel-idioms"><div class="panel-header"><h2>🀄 Chinese Idioms</h2><p>4-character 成語 (sing4 jyu5)</p></div><div id="tone-legend-idioms"></div><div class="card-grid" id="grid-idioms"></div></div>
+    <div class="panel" id="panel-riddles"><div class="panel-header"><h2>🔮 Chinese Riddles</h2><p>謎語 (mai4 jyu5) — fun wordplay</p></div><div id="grid-riddles"></div></div>
+    <div class="panel" id="panel-dimsum"><div class="panel-header"><h2>🥟 Dim Sum Menu</h2><p>Order like a local at yum cha</p></div><div id="tone-legend-dimsum"></div><div class="card-grid" id="grid-dimsum"></div></div>
+    <div class="panel" id="panel-mtr"><div class="panel-header"><h2>🚇 Hong Kong MTR</h2><p>Station names in Jyutping</p></div><div id="grid-mtr"></div></div>
 
     <!-- QUIZ -->
     <div class="panel" id="panel-quiz">
@@ -885,855 +360,986 @@
   </div>
 </div>
 
-<!-- STORAGE PANEL -->
 <div class="storage-panel">
   <h4>💾 Your Voice Recordings</h4>
   <div class="storage-buttons">
-    <button id="exportAllBtn" class="small-btn">📥 Export Backup</button>
-    <button id="importAllBtn" class="small-btn">📤 Import Backup</button>
+    <button id="exportAllBtn" class="small-btn">📥 Export</button>
+    <button id="importAllBtn" class="small-btn">📤 Import</button>
     <button id="clearRecordingsBtn" class="small-btn">🗑️ Clear All</button>
   </div>
   <div id="storageInfo" style="font-size:0.7rem; margin-top:0.5rem; color:var(--text-muted);"></div>
-  <div style="font-size:0.65rem; margin-top:0.5rem; color:var(--text-dim);">✓ Recordings save automatically<br>✓ Export to keep forever</div>
 </div>
 
 <script>
 // =============================================
-//  ALL VOCABULARY DATA (COMPLETE - NOTHING REMOVED)
+//  VOCABULARY — jp = Jyutping, hz = Chinese characters, en = English
+//  Expanded with more words per category
 // =============================================
-
 const VOCAB = {
-
   numbers: [
-    { jp: "ling4", en: "Zero (0)" },
-    { jp: "jat1", en: "One (1)" },
-    { jp: "ji6", en: "Two (2)" },
-    { jp: "saam1", en: "Three (3)" },
-    { jp: "sei3", en: "Four (4)" },
-    { jp: "ng5", en: "Five (5)" },
-    { jp: "luk6", en: "Six (6)" },
-    { jp: "cat1", en: "Seven (7)" },
-    { jp: "baat3", en: "Eight (8)" },
-    { jp: "gau2", en: "Nine (9)" },
-    { jp: "sap6", en: "Ten (10)" },
-    { jp: "sap6 jat1", en: "Eleven (11)" },
-    { jp: "ji6 sap6", en: "Twenty (20)" },
-    { jp: "baak3", en: "Hundred (100)" },
-    { jp: "cin1", en: "Thousand (1000)" },
-    { jp: "maan6", en: "Ten thousand (10,000)" },
-    { jp: "daai6", en: "Ordinal: big / senior" },
-    { jp: "siu2", en: "Ordinal: small / junior" }
+    { jp:"ling4", hz:"零", en:"Zero (0)" },
+    { jp:"jat1", hz:"一", en:"One (1)" },
+    { jp:"ji6", hz:"二", en:"Two (2)" },
+    { jp:"saam1", hz:"三", en:"Three (3)" },
+    { jp:"sei3", hz:"四", en:"Four (4)" },
+    { jp:"ng5", hz:"五", en:"Five (5)" },
+    { jp:"luk6", hz:"六", en:"Six (6)" },
+    { jp:"cat1", hz:"七", en:"Seven (7)" },
+    { jp:"baat3", hz:"八", en:"Eight (8)" },
+    { jp:"gau2", hz:"九", en:"Nine (9)" },
+    { jp:"sap6", hz:"十", en:"Ten (10)" },
+    { jp:"sap6 jat1", hz:"十一", en:"Eleven (11)" },
+    { jp:"sap6 ji6", hz:"十二", en:"Twelve (12)" },
+    { jp:"sap6 saam1", hz:"十三", en:"Thirteen (13)" },
+    { jp:"sap6 sei3", hz:"十四", en:"Fourteen (14)" },
+    { jp:"sap6 ng5", hz:"十五", en:"Fifteen (15)" },
+    { jp:"ji6 sap6", hz:"二十", en:"Twenty (20)" },
+    { jp:"saam1 sap6", hz:"三十", en:"Thirty (30)" },
+    { jp:"sei3 sap6", hz:"四十", en:"Forty (40)" },
+    { jp:"ng5 sap6", hz:"五十", en:"Fifty (50)" },
+    { jp:"baak3", hz:"百", en:"Hundred (100)" },
+    { jp:"loeng5 baak3", hz:"兩百", en:"Two hundred (200)" },
+    { jp:"cin1", hz:"千", en:"Thousand (1,000)" },
+    { jp:"loeng5 cin1", hz:"兩千", en:"Two thousand (2,000)" },
+    { jp:"maan6", hz:"萬", en:"Ten thousand (10,000)" },
+    { jp:"jat1 baak3 maan6", hz:"一百萬", en:"One million (1,000,000)" },
+    { jp:"daai6 jat1", hz:"第一", en:"First (ordinal)" },
+    { jp:"daai6 ji6", hz:"第二", en:"Second (ordinal)" },
+    { jp:"daai6 saam1", hz:"第三", en:"Third (ordinal)" },
   ],
-
   natural: [
-    { jp: "tou2", en: "Earth / Ground" },
-    { jp: "seoi2", en: "Water" },
-    { jp: "fo2", en: "Fire" },
-    { jp: "fung1", en: "Wind" },
-    { jp: "wan4", en: "Cloud" },
-    { jp: "jyu5", en: "Rain" },
-    { jp: "syut3", en: "Snow" },
-    { jp: "taai3 joeng4", en: "Sun" },
-    { jp: "jyut6 loeng4", en: "Moon" },
-    { jp: "sing1", en: "Star" },
-    { jp: "saan1", en: "Mountain" },
-    { jp: "hoi2", en: "Sea / Ocean" },
-    { jp: "ho4", en: "River" },
-    { jp: "lam4", en: "Forest / Jungle" },
-    { jp: "fa1", en: "Flower" },
-    { jp: "syu6", en: "Tree" },
-    { jp: "cou2", en: "Grass" },
-    { jp: "sek6", en: "Stone / Rock" }
+    { jp:"tou2", hz:"土", en:"Earth / Ground" },
+    { jp:"seoi2", hz:"水", en:"Water" },
+    { jp:"fo2", hz:"火", en:"Fire" },
+    { jp:"fung1", hz:"風", en:"Wind" },
+    { jp:"wan4", hz:"雲", en:"Cloud" },
+    { jp:"jyu5", hz:"雨", en:"Rain" },
+    { jp:"syut3", hz:"雪", en:"Snow" },
+    { jp:"taai3 joeng4", hz:"太陽", en:"Sun" },
+    { jp:"jyut6 loeng4", hz:"月亮", en:"Moon" },
+    { jp:"sing1", hz:"星", en:"Star" },
+    { jp:"tin1 hung4", hz:"天虹", en:"Rainbow" },
+    { jp:"saan1", hz:"山", en:"Mountain" },
+    { jp:"hoi2", hz:"海", en:"Sea / Ocean" },
+    { jp:"ho4", hz:"河", en:"River" },
+    { jp:"wu4", hz:"湖", en:"Lake" },
+    { jp:"sam4 lam4", hz:"森林", en:"Forest / Jungle" },
+    { jp:"sa1 mok6", hz:"沙漠", en:"Desert" },
+    { jp:"fa1", hz:"花", en:"Flower" },
+    { jp:"syu6", hz:"樹", en:"Tree" },
+    { jp:"cou2", hz:"草", en:"Grass" },
+    { jp:"sek6", hz:"石", en:"Stone / Rock" },
+    { jp:"tou4 dei6", hz:"土地", en:"Land / Soil" },
   ],
-
   dates: [
-    { jp: "sing1 kei4 jat1", en: "Monday" },
-    { jp: "sing1 kei4 ji6", en: "Tuesday" },
-    { jp: "sing1 kei4 saam1", en: "Wednesday" },
-    { jp: "sing1 kei4 sei3", en: "Thursday" },
-    { jp: "sing1 kei4 ng5", en: "Friday" },
-    { jp: "sing1 kei4 luk6", en: "Saturday" },
-    { jp: "sing1 kei4 jat6", en: "Sunday" },
-    { jp: "jat1 jyut6", en: "January" },
-    { jp: "ji6 jyut6", en: "February" },
-    { jp: "saam1 jyut6", en: "March" },
-    { jp: "sei3 jyut6", en: "April" },
-    { jp: "ng5 jyut6", en: "May" },
-    { jp: "luk6 jyut6", en: "June" },
-    { jp: "cat1 jyut6", en: "July" },
-    { jp: "baat3 jyut6", en: "August" },
-    { jp: "gau2 jyut6", en: "September" },
-    { jp: "sap6 jyut6", en: "October" },
-    { jp: "sap6 jat1 jyut6", en: "November" },
-    { jp: "sap6 ji6 jyut6", en: "December" },
-    { jp: "nin4", en: "Year" },
-    { jp: "jyut6", en: "Month" },
-    { jp: "jat6", en: "Day" }
+    { jp:"sing1 kei4 jat1", hz:"星期一", en:"Monday" },
+    { jp:"sing1 kei4 ji6", hz:"星期二", en:"Tuesday" },
+    { jp:"sing1 kei4 saam1", hz:"星期三", en:"Wednesday" },
+    { jp:"sing1 kei4 sei3", hz:"星期四", en:"Thursday" },
+    { jp:"sing1 kei4 ng5", hz:"星期五", en:"Friday" },
+    { jp:"sing1 kei4 luk6", hz:"星期六", en:"Saturday" },
+    { jp:"sing1 kei4 jat6", hz:"星期日", en:"Sunday" },
+    { jp:"jat1 jyut6", hz:"一月", en:"January" },
+    { jp:"ji6 jyut6", hz:"二月", en:"February" },
+    { jp:"saam1 jyut6", hz:"三月", en:"March" },
+    { jp:"sei3 jyut6", hz:"四月", en:"April" },
+    { jp:"ng5 jyut6", hz:"五月", en:"May" },
+    { jp:"luk6 jyut6", hz:"六月", en:"June" },
+    { jp:"cat1 jyut6", hz:"七月", en:"July" },
+    { jp:"baat3 jyut6", hz:"八月", en:"August" },
+    { jp:"gau2 jyut6", hz:"九月", en:"September" },
+    { jp:"sap6 jyut6", hz:"十月", en:"October" },
+    { jp:"sap6 jat1 jyut6", hz:"十一月", en:"November" },
+    { jp:"sap6 ji6 jyut6", hz:"十二月", en:"December" },
+    { jp:"nin4", hz:"年", en:"Year" },
+    { jp:"jyut6", hz:"月", en:"Month" },
+    { jp:"jat6", hz:"日", en:"Day" },
+    { jp:"gam1 nin4", hz:"今年", en:"This year" },
+    { jp:"haa6 go3 jyut6", hz:"下個月", en:"Next month" },
+    { jp:"soeng6 go3 sing1 kei4", hz:"上個星期", en:"Last week" },
   ],
-
   quantities: [
-    { jp: "do1", en: "Many / More" },
-    { jp: "siu2", en: "Few / Less / Small" },
-    { jp: "daai6", en: "Big / Large" },
-    { jp: "sai3", en: "Small (for people)" },
-    { jp: "coeng4", en: "Long" },
-    { jp: "dyun2", en: "Short (length)" },
-    { jp: "gou1", en: "Tall / High" },
-    { jp: "dai1", en: "Low / Short (height)" },
-    { jp: "fung1 mun5", en: "Full / Ample" },
-    { jp: "hung1", en: "Empty" },
-    { jp: "hou2 do1", en: "A lot" },
-    { jp: "jat1 dik1 dik1", en: "A tiny bit" },
-    { jp: "jat1 bun3", en: "Half" },
-    { jp: "cyun4 bouh6", en: "All / Entirely" },
-    { jp: "gok3 zo2", en: "Each / Every" }
+    { jp:"do1", hz:"多", en:"Many / More" },
+    { jp:"siu2", hz:"少", en:"Few / Less" },
+    { jp:"daai6", hz:"大", en:"Big / Large" },
+    { jp:"sai3", hz:"細", en:"Small" },
+    { jp:"coeng4", hz:"長", en:"Long" },
+    { jp:"dyun2", hz:"短", en:"Short (length)" },
+    { jp:"gou1", hz:"高", en:"Tall / High" },
+    { jp:"dai1", hz:"低", en:"Low / Short (height)" },
+    { jp:"mun5", hz:"滿", en:"Full" },
+    { jp:"hung1", hz:"空", en:"Empty" },
+    { jp:"hou2 do1", hz:"好多", en:"A lot / Very many" },
+    { jp:"jat1 di1", hz:"一啲", en:"A little bit" },
+    { jp:"jat1 bun3", hz:"一半", en:"Half" },
+    { jp:"cyun4 bouh6", hz:"全部", en:"All / Entirely" },
+    { jp:"mui5 go3", hz:"每個", en:"Each / Every one" },
+    { jp:"gau3", hz:"夠", en:"Enough / Sufficient" },
+    { jp:"m4 gau3", hz:"唔夠", en:"Not enough" },
+    { jp:"hou2 siu2", hz:"好少", en:"Very few / Rarely" },
+    { jp:"dou1 hai6", hz:"都係", en:"All are / Both are" },
   ],
-
   directions: [
-    { jp: "zuo2", en: "Left" },
-    { jp: "jau6", en: "Right" },
-    { jp: "cin4", en: "Front / Ahead" },
-    { jp: "hau6", en: "Behind / Back" },
-    { jp: "soeng6", en: "Up / Above" },
-    { jp: "haa6", en: "Down / Below" },
-    { jp: "dung1", en: "East" },
-    { jp: "naam4", en: "South" },
-    { jp: "sai1", en: "West" },
-    { jp: "bak1", en: "North" },
-    { jp: "jyun5", en: "Far" },
-    { jp: "gaan6", en: "Near / Close" },
-    { jp: "jat1 zik6 haang4", en: "Go straight" },
-    { jp: "zoeng3 zuo2 zyun3", en: "Turn left" },
-    { jp: "zoeng3 jau6 zyun3", en: "Turn right" },
-    { jp: "lo4 hau2", en: "Junction / Intersection" }
+    { jp:"zo2", hz:"左", en:"Left" },
+    { jp:"jau6", hz:"右", en:"Right" },
+    { jp:"cin4 min6", hz:"前面", en:"In front / Ahead" },
+    { jp:"hau6 min6", hz:"後面", en:"Behind / Back" },
+    { jp:"soeng6 min6", hz:"上面", en:"Above / On top" },
+    { jp:"haa6 min6", hz:"下面", en:"Below / Under" },
+    { jp:"dung1", hz:"東", en:"East" },
+    { jp:"naam4", hz:"南", en:"South" },
+    { jp:"sai1", hz:"西", en:"West" },
+    { jp:"bak1", hz:"北", en:"North" },
+    { jp:"jyun5", hz:"遠", en:"Far" },
+    { jp:"gaan6", hz:"近", en:"Near / Close" },
+    { jp:"jat1 zik6 haang4", hz:"一直行", en:"Go straight" },
+    { jp:"zoeng3 zo2 zyun3", hz:"向左轉", en:"Turn left" },
+    { jp:"zoeng3 jau6 zyun3", hz:"向右轉", en:"Turn right" },
+    { jp:"lo4 hau2", hz:"路口", en:"Junction / Intersection" },
+    { jp:"gwai3 lok6", hz:"過落", en:"Cross over" },
+    { jp:"faan1 tau4", hz:"返頭", en:"Turn back / U-turn" },
   ],
-
   time: [
-    { jp: "ji4 gaa1", en: "Now" },
-    { jp: "gam1 jat6", en: "Today" },
-    { jp: "ting1 jat6", en: "Tomorrow" },
-    { jp: "cam4 jat6", en: "Yesterday" },
-    { jp: "hau6 jat6", en: "The day after tomorrow" },
-    { jp: "cin4 jat6", en: "The day before yesterday" },
-    { jp: "ziu1", en: "Morning" },
-    { jp: "ng5 aan3", en: "Noon / Midday" },
-    { jp: "haa6 zau3", en: "Afternoon" },
-    { jp: "maan5 haa6", en: "Evening / Night" },
-    { jp: "jat1 go3 zung1", en: "One o'clock" },
-    { jp: "bun3", en: "Half past (30 mins)" },
-    { jp: "gei2 dim2 zung1", en: "What time is it?" },
-    { jp: "faai3 di1", en: "Quickly / Hurry" },
-    { jp: "maan6 di1", en: "Slowly" }
+    { jp:"ji4 gaa1", hz:"而家", en:"Now" },
+    { jp:"gam1 jat6", hz:"今日", en:"Today" },
+    { jp:"ting1 jat6", hz:"聽日", en:"Tomorrow" },
+    { jp:"cam4 jat6", hz:"尋日", en:"Yesterday" },
+    { jp:"hau6 jat6", hz:"後日", en:"Day after tomorrow" },
+    { jp:"cin4 jat6", hz:"前日", en:"Day before yesterday" },
+    { jp:"ziu1 zou2", hz:"朝早", en:"Morning (early)" },
+    { jp:"ng5 aan3", hz:"午晏", en:"Noon / Midday" },
+    { jp:"haa6 zau3", hz:"下晝", en:"Afternoon" },
+    { jp:"maan5 haa6", hz:"晚下", en:"Evening / Night" },
+    { jp:"gei2 dim2 zung1", hz:"幾點鐘", en:"What time is it?" },
+    { jp:"jat1 dim2 zung1", hz:"一點鐘", en:"One o'clock" },
+    { jp:"loeng5 dim2 bun3", hz:"兩點半", en:"Two thirty" },
+    { jp:"bun3", hz:"半", en:"Half past" },
+    { jp:"gwat1", hz:"骨", en:"Quarter (15 min)" },
+    { jp:"faai3 di1", hz:"快啲", en:"Quickly / Hurry" },
+    { jp:"maan6 di1", hz:"慢啲", en:"Slowly" },
+    { jp:"jat1 go3 zung1 tau4", hz:"一個鐘頭", en:"One hour" },
+    { jp:"bun3 go3 zung1", hz:"半個鐘", en:"Half an hour" },
+    { jp:"jat1 fan1 zung1", hz:"一分鐘", en:"One minute" },
   ],
-
   adjectives: [
-    { jp: "leng3", en: "Beautiful / Pretty" },
-    { jp: "cau1", en: "Ugly" },
-    { jp: "hoi1 sam1", en: "Happy" },
-    { jp: "siu1 sam1", en: "Sad" },
-    { jp: "gwai3", en: "Expensive" },
-    { jp: "peng4", en: "Cheap" },
-    { jp: "san1", en: "New" },
-    { jp: "gau6", en: "Old (things)" },
-    { jp: "laan6", en: "Lazy" },
-    { jp: "kaan4 lik6", en: "Hard-working" },
-    { jp: "zung1", en: "Heavy" },
-    { jp: "heng1", en: "Light (weight)" },
-    { jp: "yit6", en: "Hot" },
-    { jp: "laang5", en: "Cold" },
-    { jp: "nyn5", en: "Warm" },
-    { jp: "gwong3", en: "Wide / Broad" },
-    { jp: "zaak3", en: "Narrow" },
-    { jp: "leng3 gwai3", en: "Gorgeous / Stunning" }
+    { jp:"leng3", hz:"靚", en:"Beautiful / Pretty" },
+    { jp:"cau1", hz:"醜", en:"Ugly" },
+    { jp:"hoi1 sam1", hz:"開心", en:"Happy" },
+    { jp:"naan4 gwo3", hz:"難過", en:"Sad" },
+    { jp:"gwai3", hz:"貴", en:"Expensive" },
+    { jp:"peng4", hz:"平", en:"Cheap" },
+    { jp:"san1", hz:"新", en:"New" },
+    { jp:"gau6", hz:"舊", en:"Old (things)" },
+    { jp:"laan6", hz:"懶", en:"Lazy" },
+    { jp:"kan4 lik6", hz:"勤力", en:"Hard-working" },
+    { jp:"zung6", hz:"重", en:"Heavy" },
+    { jp:"heng1", hz:"輕", en:"Light (weight)" },
+    { jp:"jit6", hz:"熱", en:"Hot" },
+    { jp:"laang5", hz:"冷", en:"Cold" },
+    { jp:"nyun5", hz:"暖", en:"Warm" },
+    { jp:"gwong3", hz:"廣", en:"Wide / Broad" },
+    { jp:"zaak3", hz:"窄", en:"Narrow" },
+    { jp:"gon1 zing6", hz:"乾淨", en:"Clean / Tidy" },
+    { jp:"laan6 maai4", hz:"亂", en:"Messy / Dirty" },
+    { jp:"faai3", hz:"快", en:"Fast / Quick" },
+    { jp:"maan6", hz:"慢", en:"Slow" },
+    { jp:"hou2", hz:"好", en:"Good / Fine" },
+    { jp:"waai6", hz:"壞", en:"Bad / Broken" },
+    { jp:"ngaam1", hz:"啱", en:"Correct / Right" },
+    { jp:"co3", hz:"錯", en:"Wrong / Mistaken" },
   ],
-
   animals: [
-    { jp: "gau2", en: "Dog" },
-    { jp: "maau1", en: "Cat" },
-    { jp: "jyu2", en: "Fish" },
-    { jp: "gai1", en: "Chicken" },
-    { jp: "ngau4", en: "Cow / Beef" },
-    { jp: "zyu1", en: "Pig" },
-    { jp: "jeoung4", en: "Sheep / Goat" },
-    { jp: "maa5", en: "Horse" },
-    { jp: "lo4 bok6", en: "Rabbit (colloquial)" },
-    { jp: "fu2", en: "Tiger" },
-    { jp: "si3 zi2", en: "Lion" },
-    { jp: "daai6 soeng6", en: "Elephant" },
-    { jp: "baan1 maa5", en: "Zebra" },
-    { jp: "hang4 hang4", en: "Penguin" },
-    { jp: "paang4 jyu5", en: "Crab" },
-    { jp: "haa1", en: "Shrimp / Prawn" }
+    { jp:"gau2", hz:"狗", en:"Dog" },
+    { jp:"maau1", hz:"貓", en:"Cat" },
+    { jp:"jyu2", hz:"魚", en:"Fish" },
+    { jp:"gai1", hz:"雞", en:"Chicken" },
+    { jp:"ngau4", hz:"牛", en:"Cow / Beef" },
+    { jp:"zyu1", hz:"豬", en:"Pig" },
+    { jp:"joeng4", hz:"羊", en:"Sheep / Goat" },
+    { jp:"maa5", hz:"馬", en:"Horse" },
+    { jp:"tou3 zai2", hz:"兔仔", en:"Rabbit" },
+    { jp:"fu2", hz:"虎", en:"Tiger" },
+    { jp:"si1 zi2", hz:"獅子", en:"Lion" },
+    { jp:"daai6 zoeng6", hz:"大象", en:"Elephant" },
+    { jp:"baan1 maa5", hz:"斑馬", en:"Zebra" },
+    { jp:"kei5 ngo4", hz:"企鵝", en:"Penguin" },
+    { jp:"haai5", hz:"蟹", en:"Crab" },
+    { jp:"haa1", hz:"蝦", en:"Shrimp / Prawn" },
+    { jp:"se4", hz:"蛇", en:"Snake" },
+    { jp:"luk6 gui1", hz:"陸龜", en:"Turtle / Tortoise" },
+    { jp:"dung6 mat6", hz:"動物", en:"Animal (general)" },
+    { jp:"zing2 zing2", hz:"猩猩", en:"Monkey / Ape" },
   ],
-
   basic_conversation: [
-    { jp: "nei5 hou2", en: "Hello / How are you?" },
-    { jp: "ngo5 hou2, nei5 le1?", en: "I'm fine, and you?" },
-    { jp: "nei5 giu3 me1 meng2?", en: "What's your name?" },
-    { jp: "ngo5 giu3 ___.", en: "My name is ___." },
-    { jp: "nei5 hai6 bin1 dou6 jan4?", en: "Where are you from?" },
-    { jp: "ngo5 sik1 gong2 siu2 siu2 gwong2 dung1 waa2", en: "I speak a little Cantonese" },
-    { jp: "nei5 ho2 m4 ho2 ji5 gong2 maan6 di1?", en: "Can you speak slower?" },
-    { jp: "ngo5 teng1 m4 ming4", en: "I don't understand" },
-    { jp: "dang2 zan6", en: "Wait a moment" },
-    { jp: "haau2 oi3 bin6 hai2 bin1?", en: "Where is the toilet?" },
-    { jp: "gei2 do1 cin2?", en: "How much?" },
-    { jp: "m4 goi1 saai3", en: "Thank you very much" }
+    { jp:"nei5 hou2", hz:"你好", en:"Hello / How are you?" },
+    { jp:"ngo5 hou2, nei5 le1?", hz:"我好，你呢？", en:"I'm fine, and you?" },
+    { jp:"nei5 giu3 me1 meng2?", hz:"你叫咩名？", en:"What's your name?" },
+    { jp:"ngo5 giu3 ___.", hz:"我叫___。", en:"My name is ___." },
+    { jp:"nei5 hai6 bin1 dou6 jan4?", hz:"你係邊度人？", en:"Where are you from?" },
+    { jp:"ngo5 sik1 gong2 siu2 siu2 gwong2 dung1 waa2", hz:"我識講少少廣東話", en:"I speak a little Cantonese" },
+    { jp:"nei5 ho2 m4 ho2 ji5 gong2 maan6 di1?", hz:"你可唔可以講慢啲？", en:"Can you speak slower?" },
+    { jp:"ngo5 m4 ming4 baak6", hz:"我唔明白", en:"I don't understand" },
+    { jp:"dang2 dang2", hz:"等等", en:"Wait a moment" },
+    { jp:"ci4 so2 hai2 bin1 dou6?", hz:"廁所喺邊度？", en:"Where is the toilet?" },
+    { jp:"gei2 do1 cin2?", hz:"幾多錢？", en:"How much money?" },
+    { jp:"m4 goi1 saai3", hz:"唔該晒", en:"Thank you very much" },
+    { jp:"hai6 ge3", hz:"係嘅", en:"That's right / Exactly" },
+    { jp:"m4 hai6 ge3", hz:"唔係嘅", en:"That's not right" },
+    { jp:"ngo5 m4 zi1", hz:"我唔知", en:"I don't know" },
   ],
-
   body: [
-    { jp: "tau4", en: "Head" },
-    { jp: "min6", en: "Face" },
-    { jp: "ngaan5", en: "Eye(s)" },
-    { jp: "ji5", en: "Ear(s)" },
-    { jp: "bei6", en: "Nose" },
-    { jp: "zui2", en: "Mouth" },
-    { jp: "nga4", en: "Teeth" },
-    { jp: "sau2", en: "Hand" },
-    { jp: "goek3", en: "Foot / Leg" },
-    { jp: "bei3", en: "Back" },
-    { jp: "tou5", en: "Stomach / Belly" },
-    { jp: "sam1", en: "Heart" },
-    { jp: "san1", en: "Body" },
-    { jp: "bak1", en: "Neck (colloquial)" },
-    { jp: "jiu1", en: "Waist" }
+    { jp:"tau4", hz:"頭", en:"Head" },
+    { jp:"min6", hz:"面", en:"Face" },
+    { jp:"ngaan5", hz:"眼", en:"Eye(s)" },
+    { jp:"ji5", hz:"耳", en:"Ear(s)" },
+    { jp:"bei6", hz:"鼻", en:"Nose" },
+    { jp:"zui2", hz:"嘴", en:"Mouth" },
+    { jp:"nga4", hz:"牙", en:"Teeth" },
+    { jp:"sau2", hz:"手", en:"Hand" },
+    { jp:"goek3", hz:"腳", en:"Foot / Leg" },
+    { jp:"bei3", hz:"背", en:"Back" },
+    { jp:"tou5", hz:"肚", en:"Stomach / Belly" },
+    { jp:"sam1", hz:"心", en:"Heart" },
+    { jp:"san1 tai2", hz:"身體", en:"Body" },
+    { jp:"geng2", hz:"頸", en:"Neck" },
+    { jp:"jiu1", hz:"腰", en:"Waist" },
+    { jp:"bong3", hz:"膀", en:"Shoulder" },
+    { jp:"zang1", hz:"蒸", en:"Chest / Breast" },
+    { jp:"sik6 zi2", hz:"手指", en:"Finger" },
+    { jp:"geoi2", hz:"趾", en:"Toe" },
+    { jp:"fut3", hz:"膝", en:"Knee" },
   ],
-
   buildings: [
-    { jp: "uk1", en: "House" },
-    { jp: "daai6 haa4", en: "Block / Tower (residential)" },
-    { jp: "coeng4", en: "Factory / Warehouse" },
-    { jp: "hohk6 haau6", en: "School" },
-    { jp: "ji1 jyun2", en: "Hospital" },
-    { jp: "zing3 fu2", en: "Government building" },
-    { jp: "ngan4 hong4", en: "Bank" },
-    { jp: "soeng1 dim3", en: "Shop" },
-    { jp: "zaau6 dim3", en: "Hotel" },
-    { jp: "caan1 teng1", en: "Restaurant" },
-    { jp: "tau4 dang1 zaam6", en: "Bus stop" },
-    { jp: "tit3 lou6 zaam6", en: "Train / MTR station" },
-    { jp: "fei1 gei1 coeng4", en: "Airport" },
-    { jp: "hoi2 gong2", en: "Harbour / Port" }
+    { jp:"uk1", hz:"屋", en:"House" },
+    { jp:"daai6 haa4", hz:"大廈", en:"Block / Tower (residential)" },
+    { jp:"gung1 cong2", hz:"工廠", en:"Factory" },
+    { jp:"hohk6 haau6", hz:"學校", en:"School" },
+    { jp:"ji1 jyun2", hz:"醫院", en:"Hospital" },
+    { jp:"zing3 fu2", hz:"政府", en:"Government building" },
+    { jp:"ngan4 hong4", hz:"銀行", en:"Bank" },
+    { jp:"soeng1 dim3", hz:"商店", en:"Shop" },
+    { jp:"zau2 dim3", hz:"酒店", en:"Hotel" },
+    { jp:"caan1 teng1", hz:"餐廳", en:"Restaurant" },
+    { jp:"baa1 si2 zaam6", hz:"巴士站", en:"Bus stop" },
+    { jp:"dei6 tit3 zaam6", hz:"地鐵站", en:"MTR station" },
+    { jp:"fei1 gei1 coeng4", hz:"飛機場", en:"Airport" },
+    { jp:"ma4 tau4", hz:"碼頭", en:"Harbour / Port" },
+    { jp:"jau4 gung1 si1", hz:"郵公司", en:"Post office" },
+    { jp:"ging2 caat3 guk6", hz:"警察局", en:"Police station" },
   ],
-
   colours: [
-    { jp: "hung4 sik1", en: "Red" },
-    { jp: "lam4 sik1", en: "Blue" },
-    { jp: "lyuk6 sik1", en: "Green" },
-    { jp: "wong4 sik1", en: "Yellow" },
-    { jp: "haak1 sik1", en: "Black" },
-    { jp: "baak6 sik1", en: "White" },
-    { jp: "fui1 sik1", en: "Grey" },
-    { jp: "cang4 sik1", en: "Orange" },
-    { jp: "fan2 hung4", en: "Pink" },
-    { jp: "zi2 sik1", en: "Purple" },
-    { jp: "caam3 sik1", en: "Brown" },
-    { jp: "gam1 sik1", en: "Gold" },
-    { jp: "ngan4 sik1", en: "Silver" },
-    { jp: "cin1 lam4", en: "Light blue" }
+    { jp:"hung4 sik1", hz:"紅色", en:"Red" },
+    { jp:"laam4 sik1", hz:"藍色", en:"Blue" },
+    { jp:"luk6 sik1", hz:"綠色", en:"Green" },
+    { jp:"wong4 sik1", hz:"黃色", en:"Yellow" },
+    { jp:"haak1 sik1", hz:"黑色", en:"Black" },
+    { jp:"baak6 sik1", hz:"白色", en:"White" },
+    { jp:"fui1 sik1", hz:"灰色", en:"Grey" },
+    { jp:"cang4 sik1", hz:"橙色", en:"Orange" },
+    { jp:"fan2 hung4 sik1", hz:"粉紅色", en:"Pink" },
+    { jp:"zi2 sik1", hz:"紫色", en:"Purple" },
+    { jp:"caam3 sik1", hz:"棕色", en:"Brown" },
+    { jp:"gam1 sik1", hz:"金色", en:"Gold" },
+    { jp:"ngan4 sik1", hz:"銀色", en:"Silver" },
+    { jp:"cin1 laam4 sik1", hz:"淺藍色", en:"Light blue" },
+    { jp:"sam1 luk6", hz:"深綠", en:"Dark green" },
+    { jp:"sam1 hung4", hz:"深紅", en:"Dark red / Crimson" },
   ],
-
   common_phrases: [
-    { jp: "m4 goi1", en: "Excuse me / Thank you (for service)" },
-    { jp: "do1 ze6", en: "Thank you (for a gift/favour)" },
-    { jp: "m4 sai2 haak3 hei3", en: "You're welcome" },
-    { jp: "deoi3 m4 zyu6", en: "Sorry / Excuse me" },
-    { jp: "mou5 man6 tai4", en: "No problem" },
-    { jp: "hou2 aa3", en: "OK / Alright" },
-    { jp: "hai6 aa3", en: "Yes / That's right" },
-    { jp: "m4 hai6", en: "No / That's not it" },
-    { jp: "mou5 aa3", en: "There isn't any" },
-    { jp: "jau5 aa3", en: "There is / I have" },
-    { jp: "dang2 jat6", en: "One moment" },
-    { jp: "zing6 hai6", en: "Exactly / Precisely" },
-    { jp: "bat1 gwai2 dak1", en: "No wonder!" },
-    { jp: "saan3 lo3!", en: "Awesome! Great!" }
+    { jp:"m4 goi1", hz:"唔該", en:"Excuse me / Thanks (for service)" },
+    { jp:"do1 ze6", hz:"多謝", en:"Thank you (for a gift/favour)" },
+    { jp:"m4 sai2 haak3 hei3", hz:"唔使客氣", en:"You're welcome" },
+    { jp:"deoi3 m4 zyu6", hz:"對唔住", en:"Sorry / Excuse me" },
+    { jp:"mou5 man6 tai4", hz:"冇問題", en:"No problem" },
+    { jp:"hou2 aa3", hz:"好啊", en:"OK / Alright" },
+    { jp:"hai6 aa3", hz:"係啊", en:"Yes / That's right" },
+    { jp:"m4 hai6", hz:"唔係", en:"No / That's not it" },
+    { jp:"mou5 aa3", hz:"冇啊", en:"There isn't any" },
+    { jp:"jau5 aa3", hz:"有啊", en:"Yes there is / I have" },
+    { jp:"dang2 dang2", hz:"等等", en:"One moment" },
+    { jp:"zan1 hai6", hz:"真係", en:"Really / Seriously" },
+    { jp:"gei2 hou2 aa3!", hz:"幾好啊！", en:"That's great!" },
+    { jp:"ho2 m4 ho2 ji5?", hz:"可唔可以？", en:"Is it OK / May I?" },
+    { jp:"ngo5 soeng2 jiu3...", hz:"我想要…", en:"I would like..." },
+    { jp:"gau3 ming6 aa3!", hz:"救命啊！", en:"Help!" },
   ],
-
   cooking: [
-    { jp: "zyu2 faan6", en: "Cook rice" },
-    { jp: "cin1", en: "Fry (pan fry)" },
-    { jp: "zaau2", en: "Stir fry" },
-    { jp: "zin1", en: "Steam" },
-    { jp: "hung4 siu1", en: "Roast / BBQ" },
-    { jp: "tong1", en: "Soup / Broth" },
-    { jp: "mun6", en: "Braise / Stew" },
-    { jp: "liu2", en: "Ingredients" },
-    { jp: "jim4", en: "Salt" },
-    { jp: "tong4", en: "Sugar" },
-    { jp: "jau4", en: "Oil" },
-    { jp: "coeng1", en: "Spring onion / Ginger context" },
-    { jp: "soeng1 jau4", en: "Soy sauce" },
-    { jp: "laat6 ziu1", en: "Chili pepper" },
-    { jp: "syun3", en: "Garlic" }
+    { jp:"zyu2 faan6", hz:"煮飯", en:"Cook rice" },
+    { jp:"cin1", hz:"煎", en:"Pan fry" },
+    { jp:"caau2", hz:"炒", en:"Stir fry" },
+    { jp:"zing1", hz:"蒸", en:"Steam" },
+    { jp:"siu1", hz:"燒", en:"Roast / BBQ" },
+    { jp:"tong1", hz:"湯", en:"Soup / Broth" },
+    { jp:"mun6", hz:"燜", en:"Braise / Stew" },
+    { jp:"liu2", hz:"料", en:"Ingredients" },
+    { jp:"jim4", hz:"鹽", en:"Salt" },
+    { jp:"tong4", hz:"糖", en:"Sugar" },
+    { jp:"jau4", hz:"油", en:"Oil" },
+    { jp:"coeng1", hz:"葱", en:"Spring onion" },
+    { jp:"si6 jau4", hz:"豉油", en:"Soy sauce" },
+    { jp:"laat6 ziu1", hz:"辣椒", en:"Chili pepper" },
+    { jp:"syun3", hz:"蒜", en:"Garlic" },
+    { jp:"zoeng1", hz:"薑", en:"Ginger" },
+    { jp:"fo2 luk6", hz:"火鍋", en:"Hot pot" },
+    { jp:"faan6", hz:"飯", en:"Cooked rice" },
+    { jp:"min6", hz:"麵", en:"Noodles" },
   ],
-
   countries: [
-    { jp: "Zung1 Gwok3", en: "China" },
-    { jp: "Hoeng1 Gong2", en: "Hong Kong" },
-    { jp: "Jing1 Gwok3", en: "United Kingdom" },
-    { jp: "Mei5 Gwok3", en: "United States" },
-    { jp: "Faat3 Gwok3", en: "France" },
-    { jp: "Dak1 Gwok3", en: "Germany" },
-    { jp: "Jat6 Bun2", en: "Japan" },
-    { jp: "Hohn4 Gwok3", en: "Korea" },
-    { jp: "Ou3 Zau1", en: "Australia" },
-    { jp: "Gaa1 Naa4 Daai6", en: "Canada" },
-    { jp: "Jing3 Dou6", en: "India" },
-    { jp: "Sai1 Baan1 Ngaa4", en: "Spain" },
-    { jp: "Jyi5 Daai6 Lei6", en: "Italy" },
-    { jp: "Naam4 Fei1", en: "South Africa" },
-    { jp: "Baa1 Sai1", en: "Brazil" }
+    { jp:"Zung1 Gwok3", hz:"中國", en:"China" },
+    { jp:"Hoeng1 Gong2", hz:"香港", en:"Hong Kong" },
+    { jp:"Jing1 Gwok3", hz:"英國", en:"United Kingdom" },
+    { jp:"Mei5 Gwok3", hz:"美國", en:"United States" },
+    { jp:"Faat3 Gwok3", hz:"法國", en:"France" },
+    { jp:"Dak1 Gwok3", hz:"德國", en:"Germany" },
+    { jp:"Jat6 Bun2", hz:"日本", en:"Japan" },
+    { jp:"Hohn4 Gwok3", hz:"韓國", en:"Korea" },
+    { jp:"Ou3 Zau1", hz:"澳洲", en:"Australia" },
+    { jp:"Gaa1 Naa4 Daai6", hz:"加拿大", en:"Canada" },
+    { jp:"Jing3 Dou6", hz:"印度", en:"India" },
+    { jp:"Sai1 Baan1 Ngaa4", hz:"西班牙", en:"Spain" },
+    { jp:"Ji3 Daai6 Lei6", hz:"意大利", en:"Italy" },
+    { jp:"Naam4 Fei1", hz:"南非", en:"South Africa" },
+    { jp:"Baa1 Sai1", hz:"巴西", en:"Brazil" },
+    { jp:"Zung1 Gwok3 Daai6 Luk6", hz:"中國大陸", en:"Mainland China" },
+    { jp:"Toi4 Waan1", hz:"台灣", en:"Taiwan" },
+    { jp:"Sin1 Gaa1 Bo1", hz:"新加坡", en:"Singapore" },
   ],
-
   drinks: [
-    { jp: "seoi2", en: "Water" },
-    { jp: "caa4", en: "Tea" },
-    { jp: "gaa3 fe1", en: "Coffee" },
-    { jp: "naai5 caa4", en: "Milk tea" },
-    { jp: "naai5", en: "Milk" },
-    { jp: "gwok3 zap1", en: "Fruit juice" },
-    { jp: "be1 ziu2", en: "Beer" },
-    { jp: "hong4 ziu2", en: "Red wine" },
-    { jp: "baak6 ziu2", en: "White wine" },
-    { jp: "zeng1", en: "Spirits / Liquor" },
-    { jp: "beng1 gok3 lo4", en: "Coca-Cola" },
-    { jp: "bing1 seoi2", en: "Ice water" },
-    { jp: "jyun4 joeng1", en: "Yuenyeung (coffee + tea)" },
-    { jp: "dong4 zeng3", en: "Sugarcane juice" }
+    { jp:"seoi2", hz:"水", en:"Water" },
+    { jp:"caa4", hz:"茶", en:"Tea" },
+    { jp:"gaa3 fe1", hz:"咖啡", en:"Coffee" },
+    { jp:"naai5 caa4", hz:"奶茶", en:"Milk tea" },
+    { jp:"naai5", hz:"奶", en:"Milk" },
+    { jp:"gwok3 zap1", hz:"果汁", en:"Fruit juice" },
+    { jp:"be1 jau2", hz:"啤酒", en:"Beer" },
+    { jp:"hung4 jau2", hz:"紅酒", en:"Red wine" },
+    { jp:"baak6 jau2", hz:"白酒", en:"White wine" },
+    { jp:"bo1 bo1 caa4", hz:"波波茶", en:"Bubble tea" },
+    { jp:"ho2 lok6", hz:"可樂", en:"Coca-Cola" },
+    { jp:"bing1 seoi2", hz:"冰水", en:"Ice water" },
+    { jp:"jyun4 joeng1", hz:"鴛鴦", en:"Yuenyeung (coffee + tea)" },
+    { jp:"ze1 zap1", hz:"蔗汁", en:"Sugarcane juice" },
+    { jp:"leng4 mung1 seoi2", hz:"檸檬水", en:"Lemon water / Lemonade" },
+    { jp:"geng1 caa4", hz:"薑茶", en:"Ginger tea" },
   ],
-
   eating_out: [
-    { jp: "jau5 mou5 wai2?", en: "Do you have a table?" },
-    { jp: "loeng5 wai2", en: "Table for two" },
-    { jp: "tung4 daan1", en: "Menu" },
-    { jp: "dim2 coi3?", en: "What would you like to order?" },
-    { jp: "ngo5 soeng2 jiu3...", en: "I'd like..." },
-    { jp: "m4 goi1 maai4 daan1", en: "Check please" },
-    { jp: "hou2 hoeng1", en: "Delicious" },
-    { jp: "taan4 tei4 faan6", en: "Set meal / Fixed menu" },
-    { jp: "jaau6 gaak3 faan6", en: "Lunch box" },
-    { jp: "ziu2 caan1", en: "Breakfast" },
-    { jp: "ng5 caan1", en: "Lunch" },
-    { jp: "maan5 faan6", en: "Dinner" },
-    { jp: "daai6 baau1 / siu2 baau1", en: "To go / Takeaway" },
-    { jp: "mou5 haa1 / mou5 niu5 naai5", en: "No shrimp / No dairy" },
-    { jp: "laat6", en: "Spicy" }
+    { jp:"jau5 mou5 wai2?", hz:"有冇位？", en:"Do you have a table?" },
+    { jp:"loeng5 wai2", hz:"兩位", en:"Table for two" },
+    { jp:"caan1 paai4", hz:"餐牌", en:"Menu" },
+    { jp:"dim2 coi3?", hz:"點菜？", en:"Ready to order?" },
+    { jp:"ngo5 soeng2 jiu3...", hz:"我想要…", en:"I'd like..." },
+    { jp:"m4 goi1 maai4 daan1", hz:"唔該埋單", en:"Check please" },
+    { jp:"hou2 mei6", hz:"好味", en:"Delicious" },
+    { jp:"hou2 hoeng1", hz:"好香", en:"Smells good / Aromatic" },
+    { jp:"tou5 ngo6", hz:"肚餓", en:"Hungry" },
+    { jp:"ziu2 caan1", hz:"早餐", en:"Breakfast" },
+    { jp:"ng5 caan1", hz:"午餐", en:"Lunch" },
+    { jp:"maan5 caan1", hz:"晚餐", en:"Dinner" },
+    { jp:"daai3 zau2", hz:"帶走", en:"Takeaway" },
+    { jp:"laat6", hz:"辣", en:"Spicy" },
+    { jp:"m4 laat6", hz:"唔辣", en:"Not spicy" },
+    { jp:"tian4", hz:"甜", en:"Sweet" },
+    { jp:"syun1", hz:"酸", en:"Sour" },
+    { jp:"fu2", hz:"苦", en:"Bitter" },
   ],
-
   emotions: [
-    { jp: "hoi1 sam1", en: "Happy" },
-    { jp: "naan4 gwo3", en: "Sad / Upset" },
-    { jp: "po3 nouh6", en: "Angry" },
-    { jp: "pa3", en: "Scared / Afraid" },
-    { jp: "geng1", en: "Surprised / Shocked" },
-    { jp: "oi3", en: "Love" },
-    { jp: "hang3", en: "Hate" },
-    { jp: "gu2 duk6", en: "Lonely" },
-    { jp: "fan3", en: "Tired / Sleepy" },
-    { jp: "hung4 mung6", en: "Excited" },
-    { jp: "gaan2 dung6", en: "Touched / Moved" },
-    { jp: "zau6 haak3", en: "Embarrassed" },
-    { jp: "baat3 gwo3", en: "Nervous (HK colloquial)" },
-    { jp: "fong3 sung1", en: "Relaxed" }
+    { jp:"hoi1 sam1", hz:"開心", en:"Happy" },
+    { jp:"naan4 gwo3", hz:"難過", en:"Sad / Upset" },
+    { jp:"nau1", hz:"嬲", en:"Angry" },
+    { jp:"pa3", hz:"怕", en:"Scared / Afraid" },
+    { jp:"geng1", hz:"驚", en:"Surprised / Shocked" },
+    { jp:"oi3", hz:"愛", en:"Love" },
+    { jp:"zang1", hz:"憎", en:"Hate / Dislike" },
+    { jp:"gu1 duk6", hz:"孤獨", en:"Lonely" },
+    { jp:"gui6", hz:"攰", en:"Tired" },
+    { jp:"hung1 fun5", hz:"興奮", en:"Excited" },
+    { jp:"gam2 dung6", hz:"感動", en:"Touched / Moved" },
+    { jp:"caan3 gou1", hz:"尷尬", en:"Embarrassed" },
+    { jp:"geng1 zoeng1", hz:"驚張", en:"Nervous" },
+    { jp:"fong3 sung1", hz:"放鬆", en:"Relaxed" },
+    { jp:"zan1 hei1", hz:"震喜", en:"Pleasantly surprised" },
+    { jp:"san1 fu2", hz:"辛苦", en:"Exhausted / Suffering" },
   ],
-
   family: [
-    { jp: "baa4 baa1", en: "Dad" },
-    { jp: "maa1 maa1", en: "Mum" },
-    { jp: "go1 go1", en: "Older brother" },
-    { jp: "ze1 ze1", en: "Older sister" },
-    { jp: "sai3 lou6", en: "Younger brother" },
-    { jp: "sai3 mui4", en: "Younger sister" },
-    { jp: "je4 je4", en: "Paternal grandfather" },
-    { jp: "naai4 naai4", en: "Paternal grandmother" },
-    { jp: "ngoi6 gung1", en: "Maternal grandfather" },
-    { jp: "ngoi6 pou4", en: "Maternal grandmother" },
-    { jp: "suk1 suk1", en: "Uncle (paternal)" },
-    { jp: "aa4 jyi4", en: "Aunt (maternal)" },
-    { jp: "pou4 pou4", en: "Grandmother (general)" },
-    { jp: "lou5 gung1", en: "Husband" },
-    { jp: "lou5 po4", en: "Wife" }
+    { jp:"baa4 baa1", hz:"爸爸", en:"Dad / Father" },
+    { jp:"maa1 maa1", hz:"媽媽", en:"Mum / Mother" },
+    { jp:"go1 go1", hz:"哥哥", en:"Older brother" },
+    { jp:"ze4 ze1", hz:"姐姐", en:"Older sister" },
+    { jp:"sai3 lou6", hz:"細佬", en:"Younger brother" },
+    { jp:"sai3 mui4", hz:"細妹", en:"Younger sister" },
+    { jp:"je4 je4", hz:"爺爺", en:"Paternal grandfather" },
+    { jp:"naai4 naai4", hz:"奶奶", en:"Paternal grandmother" },
+    { jp:"ngoi6 gung1", hz:"外公", en:"Maternal grandfather" },
+    { jp:"ngoi6 pou4", hz:"外婆", en:"Maternal grandmother" },
+    { jp:"suk1 suk1", hz:"叔叔", en:"Uncle (paternal)" },
+    { jp:"aa4 ji4", hz:"阿姨", en:"Aunt (maternal)" },
+    { jp:"lou5 gung1", hz:"老公", en:"Husband" },
+    { jp:"lou5 po4", hz:"老婆", en:"Wife" },
+    { jp:"zai2", hz:"仔", en:"Son" },
+    { jp:"neoi2", hz:"女", en:"Daughter" },
+    { jp:"sun1 zi2", hz:"孫子", en:"Grandchild" },
+    { jp:"biu2 go1", hz:"表哥", en:"Older male cousin" },
   ],
-
   greetings: [
-    { jp: "nei5 hou2", en: "Hello / Hi" },
-    { jp: "zou2 san4", en: "Good morning" },
-    { jp: "ng5 on1", en: "Good afternoon" },
-    { jp: "maan5 on1", en: "Good evening" },
-    { jp: "zou2 tau4", en: "Good night (bedtime)" },
-    { jp: "bai1 bai3", en: "Bye bye" },
-    { jp: "zou6 gin3", en: "Goodbye (formal)" },
-    { jp: "hou2 hoi1 sam1 gin3 dou3 nei5", en: "Nice to meet you" },
-    { jp: "hou2 noi6 mou5 gin3", en: "Long time no see" },
-    { jp: "sik6 zo2 maa3?", en: "Have you eaten? (common greeting)" },
-    { jp: "keoi5 dei6 dou1 hou2", en: "They are all well" },
-    { jp: "jyu5 nei5 hei3", en: "Best wishes to you" }
+    { jp:"nei5 hou2", hz:"你好", en:"Hello / Hi" },
+    { jp:"zou2 san4", hz:"早晨", en:"Good morning" },
+    { jp:"ng5 on1", hz:"午安", en:"Good afternoon" },
+    { jp:"maan5 on1", hz:"晚安", en:"Good evening" },
+    { jp:"zou2 tau4", hz:"早抖", en:"Good night (bedtime)" },
+    { jp:"bai1 bai3", hz:"拜拜", en:"Bye bye" },
+    { jp:"zou6 gin3", hz:"再見", en:"Goodbye (formal)" },
+    { jp:"hou2 hoi1 sam1 gin3 dou3 nei5", hz:"好開心見到你", en:"Nice to meet you" },
+    { jp:"hou2 noi6 mou5 gin3", hz:"好耐冇見", en:"Long time no see" },
+    { jp:"sik6 zo2 maa3?", hz:"食咗未？", en:"Have you eaten? (HK greeting)" },
+    { jp:"dak1 m4 dak1 haan4?", hz:"得唔得閒？", en:"Are you free / available?" },
+    { jp:"jyu6 nei5 seon6 lei6", hz:"祝你順利", en:"Wishing you all the best" },
+    { jp:"bou2 zung6 san1 tai2", hz:"保重身體", en:"Take care of yourself" },
   ],
-
   health: [
-    { jp: "tung3", en: "Pain / Hurt" },
-    { jp: "beng6", en: "Sick / Ill" },
-    { jp: "faat3 siu1", en: "Have a fever" },
-    { jp: "haat3 chai4", en: "Sneeze" },
-    { jp: "haat3 so3", en: "Cough" },
-    { jp: "tau4 tung3", en: "Headache" },
-    { jp: "tou5 tung3", en: "Stomachache" },
-    { jp: "ji1 saang1", en: "Doctor" },
-    { jp: "ji1 jyun2", en: "Hospital" },
-    { jp: "joek6 fong4", en: "Pharmacy" },
-    { jp: "joek6", en: "Medicine" },
-    { jp: "siu1 duk6 gou1", en: "Disinfectant" },
-    { jp: "kau3 fo3 ce1", en: "Ambulance" },
-    { jp: "mou5 si6", en: "It's OK / Nothing serious" }
+    { jp:"tung3", hz:"痛", en:"Pain / Hurt" },
+    { jp:"beng6", hz:"病", en:"Sick / Ill" },
+    { jp:"faat3 siu1", hz:"發燒", en:"Have a fever" },
+    { jp:"daa2 hat1 ci1", hz:"打乞嗤", en:"Sneeze" },
+    { jp:"kaat3", hz:"咳", en:"Cough" },
+    { jp:"tau4 tung3", hz:"頭痛", en:"Headache" },
+    { jp:"tou5 tung3", hz:"肚痛", en:"Stomachache" },
+    { jp:"bak1 tung3", hz:"背痛", en:"Backache" },
+    { jp:"ji1 saang1", hz:"醫生", en:"Doctor" },
+    { jp:"ji1 jyun2", hz:"醫院", en:"Hospital" },
+    { jp:"joek6 fong4", hz:"藥房", en:"Pharmacy" },
+    { jp:"joek6", hz:"藥", en:"Medicine" },
+    { jp:"gau3 seong1 ce1", hz:"救傷車", en:"Ambulance" },
+    { jp:"mou5 si6", hz:"冇事", en:"Nothing serious / I'm OK" },
+    { jp:"seon6 hei3", hz:"順氣", en:"Breathe properly" },
+    { jp:"hyut3 ngaat3", hz:"血壓", en:"Blood pressure" },
   ],
-
   holidays: [
-    { jp: "gaa3 kei4", en: "Holiday / Vacation" },
-    { jp: "leoi5 jau4", en: "Travel / Tourism" },
-    { jp: "fei1 gei1", en: "Aeroplane" },
-    { jp: "zau6 dim3", en: "Hotel" },
-    { jp: "hoi2 taan1", en: "Beach" },
-    { jp: "bo3 wu6 ziu3", en: "Passport" },
-    { jp: "gai2 jyun4", en: "Currency exchange" },
-    { jp: "saam1 lung4", en: "Luggage / Suitcase" },
-    { jp: "dai1 gaa3 liu4", en: "Budget (travel)" },
-    { jp: "caan2 gun2", en: "Tourist attraction" },
-    { jp: "faan1 gwok3", en: "Return to home country" },
-    { jp: "ceot1 gwok3", en: "Go abroad" }
+    { jp:"gaa3 kei4", hz:"假期", en:"Holiday / Vacation" },
+    { jp:"leoi5 haang4", hz:"旅行", en:"Travel / Trip" },
+    { jp:"fei1 gei1", hz:"飛機", en:"Aeroplane" },
+    { jp:"zau2 dim3", hz:"酒店", en:"Hotel" },
+    { jp:"hoi2 taan1", hz:"海灘", en:"Beach" },
+    { jp:"wu6 ziu3", hz:"護照", en:"Passport" },
+    { jp:"wun6 cin2", hz:"換錢", en:"Currency exchange" },
+    { jp:"heng4 lei5", hz:"行李", en:"Luggage" },
+    { jp:"gaan2 gaa3", hz:"減價", en:"Discount / Budget" },
+    { jp:"leoi5 jau4 bou1", hz:"旅遊巴", en:"Tour bus" },
+    { jp:"faan1 gwok3", hz:"返國", en:"Return home" },
+    { jp:"ceot1 gwok3", hz:"出國", en:"Go abroad" },
+    { jp:"daap3 fei1 gei1", hz:"搭飛機", en:"Take a flight" },
+    { jp:"gwo3 hoi2 gwaan1", hz:"過海關", en:"Go through customs" },
   ],
-
   home: [
-    { jp: "uk1 kei2", en: "Home / House" },
-    { jp: "cyu5 fong2", en: "Kitchen" },
-    { jp: "fan3 fong2", en: "Bedroom" },
-    { jp: "haak3 teng1", en: "Living room" },
-    { jp: "ci4 so2", en: "Toilet / Bathroom" },
-    { jp: "mun4", en: "Door" },
-    { jp: "coeng1", en: "Window" },
-    { jp: "toi2", en: "Table" },
-    { jp: "yi2", en: "Chair" },
-    { jp: "cong4", en: "Bed" },
-    { jp: "saat1 faa1", en: "Sofa" },
-    { jp: "gwaai6", en: "Wardrobe / Cabinet" },
-    { jp: "san6 gwai6", en: "Bookshelf" },
-    { jp: "bing1 soeng1", en: "Refrigerator" },
-    { jp: "faan6 bou1", en: "Rice cooker" }
+    { jp:"uk1 kei2", hz:"屋企", en:"Home / House" },
+    { jp:"cyu5 fong2", hz:"廚房", en:"Kitchen" },
+    { jp:"fan3 fong2", hz:"瞓房", en:"Bedroom" },
+    { jp:"haak3 teng1", hz:"客廳", en:"Living room" },
+    { jp:"ci4 so2", hz:"廁所", en:"Toilet / Bathroom" },
+    { jp:"mun4", hz:"門", en:"Door" },
+    { jp:"coeng1", hz:"窗", en:"Window" },
+    { jp:"toi2", hz:"枱", en:"Table" },
+    { jp:"yi2", hz:"椅", en:"Chair" },
+    { jp:"cong4", hz:"床", en:"Bed" },
+    { jp:"saa1 faa1", hz:"沙發", en:"Sofa" },
+    { jp:"gwai6", hz:"櫃", en:"Wardrobe / Cabinet" },
+    { jp:"syu1 gwai6", hz:"書櫃", en:"Bookshelf" },
+    { jp:"bing1 siang1", hz:"冰箱", en:"Refrigerator" },
+    { jp:"faan6 bou1", hz:"飯煲", en:"Rice cooker" },
+    { jp:"jyut6 toi4", hz:"浴台", en:"Bathtub" },
+    { jp:"lau4 toi1", hz:"樓梯", en:"Stairs" },
   ],
-
   machines: [
-    { jp: "din6 nou5", en: "Computer" },
-    { jp: "sau2 gei1", en: "Mobile phone" },
-    { jp: "din6 si6", en: "Television" },
-    { jp: "din6 toi4", en: "Telephone (landline)" },
-    { jp: "tin4 lei5", en: "Air conditioner (A/C)" },
-    { jp: "sin3 sat1 gei1", en: "Washing machine" },
-    { jp: "kei3 sin3 gei1", en: "Vacuum cleaner" },
-    { jp: "lou4 fu1", en: "Microwave oven" },
-    { jp: "sang1 jat6", en: "Birthday" },
-    { jp: "din6 ti1", en: "Elevator / Lift" },
-    { jp: "daa2 jing3 gei1", en: "Printer" },
-    { jp: "sing4 ling4", en: "Camera" }
+    { jp:"din6 nou5", hz:"電腦", en:"Computer" },
+    { jp:"sau2 gei1", hz:"手機", en:"Mobile phone" },
+    { jp:"din6 si6", hz:"電視", en:"Television" },
+    { jp:"din6 waa6", hz:"電話", en:"Telephone (landline)" },
+    { jp:"laang5 hei3 gei1", hz:"冷氣機", en:"Air conditioner (A/C)" },
+    { jp:"sai2 ji1 gei1", hz:"洗衣機", en:"Washing machine" },
+    { jp:"kap1 can4 gei1", hz:"吸塵機", en:"Vacuum cleaner" },
+    { jp:"mei4 bo1 lou4", hz:"微波爐", en:"Microwave oven" },
+    { jp:"din6 tai1", hz:"電梯", en:"Elevator / Lift" },
+    { jp:"daa2 jing3 gei1", hz:"打印機", en:"Printer" },
+    { jp:"soeng2 gei1", hz:"相機", en:"Camera" },
+    { jp:"ipad", hz:"平板", en:"Tablet / iPad" },
+    { jp:"jyun4 can4 gei1", hz:"音樂機", en:"Speaker / Sound system" },
+    { jp:"ceong3 din6 gei1", hz:"充電機", en:"Charger" },
   ],
-
   motoring: [
-    { jp: "ce1", en: "Car / Vehicle" },
-    { jp: "baa1 si2", en: "Bus" },
-    { jp: "fong4 ce1", en: "Taxi / Cab" },
-    { jp: "dik1 si2", en: "Taxi (HK colloquial)" },
-    { jp: "dit6 si2", en: "Tram" },
-    { jp: "dei6 tit3", en: "MTR / Subway" },
-    { jp: "sau1 fei3 zaam6", en: "Toll booth" },
-    { jp: "jau4 zaak3", en: "Petrol / Gasoline" },
-    { jp: "coeng4 ci4", en: "Car park" },
-    { jp: "zou6 ce1", en: "Drive (a car)" },
-    { jp: "daap3 ce1", en: "Take/ride (transport)" },
-    { jp: "gau1 tung1 hing4 zik6", en: "Traffic jam" },
-    { jp: "hung4 luk6 dang1", en: "Traffic light" }
+    { jp:"ce1", hz:"車", en:"Car / Vehicle" },
+    { jp:"baa1 si2", hz:"巴士", en:"Bus" },
+    { jp:"dik1 si2", hz:"的士", en:"Taxi" },
+    { jp:"dit6 ce1", hz:"電車", en:"Tram" },
+    { jp:"dei6 tit3", hz:"地鐵", en:"MTR / Subway" },
+    { jp:"faat3 dung6 ce1", hz:"發動車", en:"Motorcycle" },
+    { jp:"daan1 ce1", hz:"單車", en:"Bicycle" },
+    { jp:"sau1 fei3 zaam6", hz:"收費站", en:"Toll booth" },
+    { jp:"jau4 zaak3", hz:"油站", en:"Petrol station" },
+    { jp:"ce1 coeng4", hz:"車場", en:"Car park" },
+    { jp:"daap3 ce1", hz:"搭車", en:"Take / ride transport" },
+    { jp:"sak1 ce1", hz:"塞車", en:"Traffic jam" },
+    { jp:"hung4 luk6 dang1", hz:"紅綠燈", en:"Traffic light" },
+    { jp:"siu2 sim4", hz:"小心", en:"Be careful / Caution" },
   ],
-
   people: [
-    { jp: "jan4", en: "Person / People" },
-    { jp: "naam4 jan4", en: "Man" },
-    { jp: "neoi5 jan4", en: "Woman" },
-    { jp: "sai3 man4 zai2", en: "Child" },
-    { jp: "lou5 jan4", en: "Elderly person" },
-    { jp: "pang4 jau5", en: "Friend" },
-    { jp: "tung4 si6", en: "Colleague" },
-    { jp: "lou5 si1", en: "Teacher" },
-    { jp: "hohk6 sang1", en: "Student" },
-    { jp: "soeng1 jan4", en: "Businessman" },
-    { jp: "nei1 go3 jan4", en: "This person" },
-    { jp: "gou1 sau2", en: "Tall person / expert" }
+    { jp:"jan4", hz:"人", en:"Person / People" },
+    { jp:"naam4 jan4", hz:"男人", en:"Man" },
+    { jp:"neoi5 jan4", hz:"女人", en:"Woman" },
+    { jp:"sai3 man2 zai2", hz:"細蚊仔", en:"Child" },
+    { jp:"lou5 jan4", hz:"老人", en:"Elderly person" },
+    { jp:"pang4 jau5", hz:"朋友", en:"Friend" },
+    { jp:"tung4 si6", hz:"同事", en:"Colleague" },
+    { jp:"lou5 si1", hz:"老師", en:"Teacher" },
+    { jp:"hohk6 saang1", hz:"學生", en:"Student" },
+    { jp:"soeng1 jan4", hz:"商人", en:"Businessman" },
+    { jp:"jyun4 gung1", hz:"員工", en:"Employee" },
+    { jp:"hang1 hei3 jan4", hz:"幸運人", en:"Lucky person" },
+    { jp:"pou5 tung1 jan4", hz:"普通人", en:"Ordinary person" },
+    { jp:"zoeng2 gei1", hz:"掌機", en:"Boss / Manager" },
   ],
-
   places: [
-    { jp: "coeng4", en: "Market / Venue" },
-    { jp: "gung1 jyun2", en: "Park" },
-    { jp: "syu1 gun2", en: "Library" },
-    { jp: "bou3 guk6", en: "Post office" },
-    { jp: "ging2 caat3 guk6", en: "Police station" },
-    { jp: "cin4 ci4 lou6", en: "In front of / road" },
-    { jp: "zaap6 si5", en: "Night market / Bazaar" },
-    { jp: "siu2 sik6 zung1 sam1", en: "Food court" },
-    { jp: "kiu4", en: "Bridge" },
-    { jp: "hung1 zung1 faa1 jyun2", en: "Rooftop garden" },
-    { jp: "sing4 si5 zung1 sam1", en: "City centre" }
+    { jp:"si5 coeng4", hz:"市場", en:"Market" },
+    { jp:"gung1 jyun2", hz:"公園", en:"Park" },
+    { jp:"tou4 syu1 gun2", hz:"圖書館", en:"Library" },
+    { jp:"jau4 zing3 guk6", hz:"郵政局", en:"Post office" },
+    { jp:"ging2 caat3 guk6", hz:"警察局", en:"Police station" },
+    { jp:"gau1 tung1 zung1 sam1", hz:"交通中心", en:"Transport hub" },
+    { jp:"siu2 sik6 zung1 sam1", hz:"小食中心", en:"Food court" },
+    { jp:"kiu2", hz:"橋", en:"Bridge" },
+    { jp:"sing4 si5 zung1 sam1", hz:"城市中心", en:"City centre" },
+    { jp:"gong2 bin1", hz:"港邊", en:"Waterfront / Harbourside" },
+    { jp:"gwo3 bin1", hz:"過邊", en:"Over there / Across" },
+    { jp:"cin4 min6 ge3", hz:"前面嘅", en:"The one in front" },
   ],
-
   professions: [
-    { jp: "ji1 saang1", en: "Doctor" },
-    { jp: "wu6 si6", en: "Nurse" },
-    { jp: "lou5 si1", en: "Teacher" },
-    { jp: "leot6 si1", en: "Lawyer" },
-    { jp: "gung1 cing4 si1", en: "Engineer" },
-    { jp: "gaa3 si1", en: "Driver" },
-    { jp: "zyu2 ci4 jan4", en: "Chef / Cook" },
-    { jp: "gaai2 sau1 jyun4", en: "Cashier" },
-    { jp: "ging2 caat3", en: "Police officer" },
-    { jp: "siu1 fong4 jyun4", en: "Firefighter" },
-    { jp: "haak3 fuk6", en: "Flight attendant" },
-    { jp: "hon2 gei3 jyun4", en: "Journalist" },
-    { jp: "si6 gung1", en: "Accountant" }
+    { jp:"ji1 saang1", hz:"醫生", en:"Doctor" },
+    { jp:"wu6 si6", hz:"護士", en:"Nurse" },
+    { jp:"lou5 si1", hz:"老師", en:"Teacher" },
+    { jp:"leot6 si1", hz:"律師", en:"Lawyer" },
+    { jp:"gung1 cing4 si1", hz:"工程師", en:"Engineer" },
+    { jp:"si6 gei1", hz:"司機", en:"Driver" },
+    { jp:"cui4 si1", hz:"廚師", en:"Chef / Cook" },
+    { jp:"sau1 ngan4 jyun4", hz:"收銀員", en:"Cashier" },
+    { jp:"ging2 caat3", hz:"警察", en:"Police officer" },
+    { jp:"siu1 fong4 jyun4", hz:"消防員", en:"Firefighter" },
+    { jp:"haak3 can4 jyun4", hz:"客艙員", en:"Flight attendant" },
+    { jp:"gei3 ze2", hz:"記者", en:"Journalist" },
+    { jp:"wui6 gai3 si1", hz:"會計師", en:"Accountant" },
+    { jp:"cin4 toi4", hz:"前台", en:"Receptionist" },
+    { jp:"jaa2 si1", hz:"牙醫", en:"Dentist" },
   ],
-
   pronouns: [
-    { jp: "ngo5", en: "I / Me" },
-    { jp: "nei5", en: "You" },
-    { jp: "keoi5", en: "He / She / They (singular)" },
-    { jp: "ngo5 dei6", en: "We / Us" },
-    { jp: "nei5 dei6", en: "You all" },
-    { jp: "keoi5 dei6", en: "They / Them" },
-    { jp: "ngo5 ge3", en: "My / Mine" },
-    { jp: "nei5 ge3", en: "Your / Yours" },
-    { jp: "keoi5 ge3", en: "His / Her / Their" },
-    { jp: "zi6 gei2", en: "Yourself / Oneself" },
-    { jp: "daai6 gaa1", en: "Everyone" }
+    { jp:"ngo5", hz:"我", en:"I / Me" },
+    { jp:"nei5", hz:"你", en:"You (singular)" },
+    { jp:"keoi5", hz:"佢", en:"He / She / They (singular)" },
+    { jp:"ngo5 dei6", hz:"我哋", en:"We / Us" },
+    { jp:"nei5 dei6", hz:"你哋", en:"You all" },
+    { jp:"keoi5 dei6", hz:"佢哋", en:"They / Them" },
+    { jp:"ngo5 ge3", hz:"我嘅", en:"My / Mine" },
+    { jp:"nei5 ge3", hz:"你嘅", en:"Your / Yours" },
+    { jp:"keoi5 ge3", hz:"佢嘅", en:"His / Her / Their" },
+    { jp:"zi6 gei2", hz:"自己", en:"Yourself / Oneself" },
+    { jp:"daai6 gaa1", hz:"大家", en:"Everyone" },
+    { jp:"ngo5 dei6 ge3", hz:"我哋嘅", en:"Our / Ours" },
   ],
-
   school: [
-    { jp: "hohk6 haau6", en: "School" },
-    { jp: "daai6 hohk6", en: "University" },
-    { jp: "fu3 zung1", en: "Secondary school" },
-    { jp: "siu2 hohk6", en: "Primary school" },
-    { jp: "fo1 muk6", en: "Subject" },
-    { jp: "syu1", en: "Book" },
-    { jp: "bat1", en: "Pen" },
-    { jp: "zi2", en: "Paper" },
-    { jp: "fe3 zit3", en: "Test / Exam" },
-    { jp: "baau4 gou3", en: "Report" },
-    { jp: "lo4 tap6 pok3", en: "Laptop" },
-    { jp: "fong3 hohk6", en: "After school" }
+    { jp:"hohk6 haau6", hz:"學校", en:"School" },
+    { jp:"daai6 hohk6", hz:"大學", en:"University" },
+    { jp:"zung1 hohk6", hz:"中學", en:"Secondary school" },
+    { jp:"siu2 hohk6", hz:"小學", en:"Primary school" },
+    { jp:"fo1 muk6", hz:"科目", en:"Subject" },
+    { jp:"syu1", hz:"書", en:"Book" },
+    { jp:"bat1", hz:"筆", en:"Pen" },
+    { jp:"zi2", hz:"紙", en:"Paper" },
+    { jp:"haau6 si5", hz:"考試", en:"Exam / Test" },
+    { jp:"baau4 gou3", hz:"報告", en:"Report" },
+    { jp:"fu6 koi3", hz:"功課", en:"Homework" },
+    { jp:"fong3 hohk6", hz:"放學", en:"After school / School out" },
+    { jp:"lo4 tap6 pok3", hz:"攞tebook", en:"Notebook / Laptop" },
+    { jp:"baak2 baan2", hz:"白板", en:"Whiteboard" },
+    { jp:"fan1 zung1", hz:"班中", en:"Classroom" },
   ],
-
   seasons: [
-    { jp: "ceon1 tin1", en: "Spring" },
-    { jp: "haa6 tin1", en: "Summer" },
-    { jp: "cau1 tin1", en: "Autumn / Fall" },
-    { jp: "dung1 tin1", en: "Winter" },
-    { jp: "jyu5 gei4", en: "Rainy season" },
-    { jp: "taai3 fung1", en: "Typhoon" },
-    { jp: "jit6 dou6", en: "Heatwave" },
-    { jp: "laang5 dou6", en: "Cold spell" }
+    { jp:"ceon1 tin1", hz:"春天", en:"Spring" },
+    { jp:"haa6 tin1", hz:"夏天", en:"Summer" },
+    { jp:"cau1 tin1", hz:"秋天", en:"Autumn / Fall" },
+    { jp:"dung1 tin1", hz:"冬天", en:"Winter" },
+    { jp:"jyu5 gei3", hz:"雨季", en:"Rainy season" },
+    { jp:"taai3 fung1", hz:"颱風", en:"Typhoon" },
+    { jp:"jit6 dou6", hz:"熱浪", en:"Heatwave" },
+    { jp:"laang5 dou6", hz:"冷度", en:"Cold snap" },
+    { jp:"faa1 faa1 sai3 jyu5", hz:"花花細雨", en:"Light drizzle / Flower rain (spring)" },
+    { jp:"lo4 jip6", hz:"落葉", en:"Falling leaves (autumn)" },
   ],
-
   special_occasions: [
-    { jp: "san1 nin4 faai3 lok6", en: "Happy New Year" },
-    { jp: "san1 cin1 jyun4 daan6 faai3 lok6", en: "Happy Chinese New Year" },
-    { jp: "sang1 jat6 faai3 lok6", en: "Happy Birthday" },
-    { jp: "zuk1 nei5 san1 hei3", en: "Congratulations / Good luck to you" },
-    { jp: "gung1 hei2 faat3 coi4", en: "Wishing you prosperity (CNY)" },
-    { jp: "ceng2 man6 sing3 daan3", en: "Merry Christmas" },
-    { jp: "jung1 cau1 zit3", en: "Mid-Autumn Festival" },
-    { jp: "cing1 ming4 zit3", en: "Ching Ming Festival" },
-    { jp: "daan3 gou1", en: "Cake" },
-    { jp: "lai5 si6", en: "Red envelope (lucky money)" }
+    { jp:"san1 nin4 faai3 lok6", hz:"新年快樂", en:"Happy New Year" },
+    { jp:"gung1 hei2 faat3 coi4", hz:"恭喜發財", en:"Happy Chinese New Year / Prosperity" },
+    { jp:"saang1 jat6 faai3 lok6", hz:"生日快樂", en:"Happy Birthday" },
+    { jp:"zuk1 nei5 san1 hei3", hz:"祝你新喜", en:"Congratulations" },
+    { jp:"sing3 daan3 faai3 lok6", hz:"聖誕快樂", en:"Merry Christmas" },
+    { jp:"zung1 cau1 zit3", hz:"中秋節", en:"Mid-Autumn Festival" },
+    { jp:"cing1 ming4 zit3", hz:"清明節", en:"Ching Ming Festival" },
+    { jp:"daan3 gou1", hz:"蛋糕", en:"Cake" },
+    { jp:"lai5 si6", hz:"利是", en:"Red envelope / Lucky money" },
+    { jp:"biu2 jin2", hz:"表演", en:"Performance / Show" },
+    { jp:"yim4 jau5 wui2", hz:"飲酒會", en:"Drinks party" },
+    { jp:"paak3 tok3", hz:"拍拖", en:"Couple / Go on a date" },
   ],
-
   sport: [
-    { jp: "zuk1 kau4", en: "Football / Soccer" },
-    { jp: "laam4 kau4", en: "Basketball" },
-    { jp: "bing1 ping4 kau4", en: "Table tennis" },
-    { jp: "jyu5 mo4 kau4", en: "Badminton" },
-    { jp: "mong5 kau4", en: "Tennis" },
-    { jp: "jau4 soeng1", en: "Swimming" },
-    { jp: "paau2 bou6", en: "Running" },
-    { jp: "zak1 cin3", en: "Cycling" },
-    { jp: "daa2 gung1 fu1", en: "Martial arts" },
-    { jp: "tai3 gik6 kyun4", en: "Tai chi" },
-    { jp: "waan4 syun1", en: "Exercise / Work out" },
-    { jp: "gaan3 zo2 go3 bui1", en: "Win a cup/trophy" }
+    { jp:"zuk1 kau4", hz:"足球", en:"Football / Soccer" },
+    { jp:"laam4 kau4", hz:"籃球", en:"Basketball" },
+    { jp:"ping1 pong1", hz:"乒乓", en:"Table tennis" },
+    { jp:"jyu5 mou4 kau4", hz:"羽毛球", en:"Badminton" },
+    { jp:"mong5 kau4", hz:"網球", en:"Tennis" },
+    { jp:"jau4 soeng1", hz:"游泳", en:"Swimming" },
+    { jp:"paau2 bou6", hz:"跑步", en:"Running" },
+    { jp:"daan1 ce1", hz:"單車", en:"Cycling" },
+    { jp:"mou5 soet6", hz:"武術", en:"Martial arts" },
+    { jp:"taai3 gik6 kyun4", hz:"太極拳", en:"Tai chi" },
+    { jp:"wan6 dung6", hz:"運動", en:"Exercise / Work out" },
+    { jp:"gim4 naan4", hz:"健身房", en:"Gym / Fitness centre" },
+    { jp:"yuu4 gaa1", hz:"瑜伽", en:"Yoga" },
+    { jp:"paa4 saan1", hz:"爬山", en:"Hiking / Mountain climbing" },
   ],
-
   christmas: [
-    { jp: "sing3 daan3 zit3", en: "Christmas" },
-    { jp: "sing3 daan3 syu6", en: "Christmas tree" },
-    { jp: "sing3 daan3 lou5 jan4", en: "Santa Claus" },
-    { jp: "lai5 mat6", en: "Gift / Present" },
-    { jp: "ceng2 man6 sing3 daan3", en: "Merry Christmas" },
-    { jp: "jin4 lik6 zok3", en: "Advent calendar" },
-    { jp: "sing3 daan3 ga3", en: "Christmas holiday" },
-    { jp: "joi6 gaa1", en: "At home (for Christmas)" },
-    { jp: "tim1 gaa1 nin4 sou3", en: "Have a good Christmas & New Year" }
+    { jp:"sing3 daan3 zit3", hz:"聖誕節", en:"Christmas" },
+    { jp:"sing3 daan3 syu6", hz:"聖誕樹", en:"Christmas tree" },
+    { jp:"sing3 daan3 lou5 jan4", hz:"聖誕老人", en:"Santa Claus" },
+    { jp:"lai5 mat6", hz:"禮物", en:"Gift / Present" },
+    { jp:"sing3 daan3 faai3 lok6", hz:"聖誕快樂", en:"Merry Christmas" },
+    { jp:"sing3 daan3 ga3", hz:"聖誕假", en:"Christmas holiday" },
+    { jp:"san1 nin4 faai3 lok6", hz:"新年快樂", en:"Happy New Year" },
+    { jp:"sing3 daan3 caan1", hz:"聖誕餐", en:"Christmas dinner" },
+    { jp:"haa4 him3", hz:"掛飾", en:"Christmas decorations" },
   ],
-
   verbs: [
-    { jp: "heoi3", en: "Go" },
-    { jp: "lei4", en: "Come" },
-    { jp: "sik6", en: "Eat" },
-    { jp: "jam2", en: "Drink" },
-    { jp: "faan1", en: "Return / Go back" },
-    { jp: "gong2", en: "Speak / Say" },
-    { jp: "tai2", en: "See / Look" },
-    { jp: "teng1", en: "Hear / Listen" },
-    { jp: "maai5", en: "Buy" },
-    { jp: "maai6", en: "Sell" },
-    { jp: "zou6", en: "Do / Make" },
-    { jp: "hoi1", en: "Open" },
-    { jp: "saan1", en: "Close" },
-    { jp: "fan3", en: "Sleep" },
-    { jp: "hei2 san1", en: "Wake up / Get up" },
-    { jp: "tung4", en: "With / Together" }
+    { jp:"heoi3", hz:"去", en:"Go" },
+    { jp:"lei4", hz:"嚟", en:"Come" },
+    { jp:"sik6", hz:"食", en:"Eat" },
+    { jp:"jam2", hz:"飲", en:"Drink" },
+    { jp:"faan1", hz:"返", en:"Return / Go back" },
+    { jp:"gong2", hz:"講", en:"Speak / Say" },
+    { jp:"tai2", hz:"睇", en:"See / Watch / Read" },
+    { jp:"teng1", hz:"聽", en:"Hear / Listen" },
+    { jp:"maai5", hz:"買", en:"Buy" },
+    { jp:"maai6", hz:"賣", en:"Sell" },
+    { jp:"zou6", hz:"做", en:"Do / Make" },
+    { jp:"hoi1", hz:"開", en:"Open" },
+    { jp:"saan1", hz:"閂", en:"Close / Shut" },
+    { jp:"fan3", hz:"瞓", en:"Sleep" },
+    { jp:"hei2 san1", hz:"起身", en:"Wake up / Get up" },
+    { jp:"haang4", hz:"行", en:"Walk" },
+    { jp:"paau2", hz:"跑", en:"Run" },
+    { jp:"sai2", hz:"洗", en:"Wash" },
+    { jp:"sik1", hz:"識", en:"Know how to / Can" },
+    { jp:"soeng2", hz:"想", en:"Want / Think" },
+    { jp:"zung1 ji3", hz:"鍾意", en:"Like / Love (colloquial)" },
+    { jp:"m4 zung1 ji3", hz:"唔鍾意", en:"Dislike / Don't like" },
+    { jp:"jiu3", hz:"要", en:"Need / Want" },
   ],
-
   weather: [
-    { jp: "tin1 hei3", en: "Weather" },
-    { jp: "cing1 tin1", en: "Sunny / Clear sky" },
-    { jp: "jam1 tin1", en: "Cloudy / Overcast" },
-    { jp: "lok6 jyu5", en: "Raining" },
-    { jp: "lok6 syut3", en: "Snowing" },
-    { jp: "daai6 fung1", en: "Strong wind" },
-    { jp: "taai3 fung1", en: "Typhoon" },
-    { jp: "gam1 jat6 hou2 jit6", en: "It's very hot today" },
-    { jp: "gam1 jat6 hou2 laang5", en: "It's very cold today" },
-    { jp: "dou6 gei2 do1 dou6?", en: "What's the temperature?" },
-    { jp: "fong3 saam1 hou6 fung1 kau4", en: "Typhoon signal no. 3" },
-    { jp: "baat3 hou6 fung1 kau4", en: "Typhoon signal no. 8 (HK)" }
+    { jp:"tin1 hei3", hz:"天氣", en:"Weather" },
+    { jp:"cing1 tin1", hz:"晴天", en:"Sunny / Clear" },
+    { jp:"jam1 tin1", hz:"陰天", en:"Cloudy / Overcast" },
+    { jp:"lok6 jyu5", hz:"落雨", en:"Raining" },
+    { jp:"lok6 syut3", hz:"落雪", en:"Snowing" },
+    { jp:"daai6 fung1", hz:"大風", en:"Strong wind" },
+    { jp:"taai3 fung1", hz:"颱風", en:"Typhoon" },
+    { jp:"gam1 jat6 hou2 jit6", hz:"今日好熱", en:"It's very hot today" },
+    { jp:"gam1 jat6 hou2 laang5", hz:"今日好冷", en:"It's very cold today" },
+    { jp:"gei2 do1 dou6?", hz:"幾多度？", en:"What's the temperature?" },
+    { jp:"baat3 hou6 fung1 kau4", hz:"八號風球", en:"Typhoon signal no. 8" },
+    { jp:"mou5 fung1 mou5 jyu5", hz:"冇風冇雨", en:"No wind, no rain (calm)" },
+    { jp:"tin1 joeng4 jit6", hz:"天陽熱", en:"Sunny and hot" },
+    { jp:"dung3", hz:"凍", en:"Cold (feeling cold)" },
   ],
-
   classifiers: [
-    { jp: "go3", en: "General classifier (people, things)" },
-    { jp: "zek3", en: "Animals, one of a pair (e.g. one hand)" },
-    { jp: "tiu4", en: "Long thin objects (rope, fish, road)" },
-    { jp: "zoeng1", en: "Flat objects (paper, table, face)" },
-    { jp: "bun2", en: "Books, magazines" },
-    { jp: "gin6", en: "Clothing items" },
-    { jp: "go3 jat1", en: "A day" },
-    { jp: "bui1", en: "Cup of (drink)" },
-    { jp: "wun2", en: "Bowl of (food)" },
-    { jp: "dip6", en: "Plate / Dish of" },
-    { jp: "leoung5 go3", en: "Two of (use leoung not ji6 for 2)" }
+    { jp:"go3", hz:"個", en:"General — people, objects" },
+    { jp:"zek3", hz:"隻", en:"Animals; one of a pair" },
+    { jp:"tiu4", hz:"條", en:"Long/thin — rope, fish, roads" },
+    { jp:"zoeng1", hz:"張", en:"Flat — paper, table, face" },
+    { jp:"bun2", hz:"本", en:"Books, magazines" },
+    { jp:"gin6", hz:"件", en:"Clothing items" },
+    { jp:"bui1", hz:"杯", en:"Cup of (drink)" },
+    { jp:"wun2", hz:"碗", en:"Bowl of food" },
+    { jp:"dip6", hz:"碟", en:"Plate of food" },
+    { jp:"gaan1", hz:"間", en:"Rooms, shops, restaurants" },
+    { jp:"loeng5 go3", hz:"兩個", en:"Two (use loeng5 not ji6 before classifiers)" },
+    { jp:"fan6", hz:"份", en:"Portions, servings, copies" },
+    { jp:"leon4", hz:"輪", en:"Rounds, turns" },
   ],
-
   idioms: [
-    { jp: "jat1 sek6 loeng5 niu5", en: "Kill two birds with one stone (一石兩鳥)" },
-    { jp: "mou4 gei1 bat1 faai3", en: "No news is good news (無雞不快)" },
-    { jp: "hau2 mat6", en: "Keep a secret (literally: mouth honey)" },
-    { jp: "git3 cou2 sik1 pang4 jau5", en: "Make friends everywhere (結草識朋友)" },
-    { jp: "oi3 muk6 kap4 wu1", en: "Love me, love my dog (愛屋及烏)" },
-    { jp: "soeng5 soeng5 haa6 haa6", en: "Mediocre / So-so (上上下下)" },
-    { jp: "haak1 jau4 baak6 jau4", en: "Flexible / Adaptable (黑油白油)" },
-    { jp: "mou5 mou6 ci4 fei1", en: "Without reason / Out of nowhere (無緣無故)" }
+    { jp:"jat1 sek6 loeng5 niu5", hz:"一石兩鳥", en:"Kill two birds with one stone" },
+    { jp:"oi3 uk1 kap6 wu1", hz:"愛屋及烏", en:"Love me, love my dog" },
+    { jp:"baak6 faat3 baak6 zung1", hz:"百發百中", en:"Never miss / 100% accurate" },
+    { jp:"mou4 fung1 bat1 hei2 long6", hz:"無風不起浪", en:"No smoke without fire" },
+    { jp:"soeng5 soeng5 haa6 haa6", hz:"上上下下", en:"Mediocre / So-so" },
+    { jp:"mou4 jing4 mou4 gung6", hz:"無影無蹤", en:"Without a trace / Vanished" },
+    { jp:"sam1 hung1 jyun4 caang4", hz:"心雄願成", en:"If you want it enough, you'll get it" },
+    { jp:"gau2 hau2 sik6 joeng4 juk6", hz:"狗口食羊肉", en:"You can't change someone's nature" },
   ],
-
   dimsum: [
-    { jp: "haa1 gaau2", en: "Prawn dumplings (har gow)" },
-    { jp: "siu1 mai2", en: "Pork & shrimp dumplings (siu mai)" },
-    { jp: "cing1 zing1 gai1 zaau2", en: "Steamed chicken feet" },
-    { jp: "lau4 saa1 baau1", en: "Custard bun (liu sha bao)" },
-    { jp: "lo4 bak6 go1", en: "Turnip cake (lo bak go)" },
-    { jp: "ceoeng2 fan2", en: "Rice noodle rolls (cheung fun)" },
-    { jp: "cin1 ceng1 fan2", en: "Steamed rice rolls" },
-    { jp: "dan6 taat3", en: "Egg tart" },
-    { jp: "maa4 lai4 go1", en: "Steamed sponge cake" },
-    { jp: "baak6 tong4 go1", en: "White sugar sponge cake" },
-    { jp: "wu4 gok3", en: "Taro puff" },
-    { jp: "caa4 siu1 baau1", en: "BBQ pork bun" },
-    { jp: "joeng4 laat6 gai1 jik6", en: "Chicken in black bean sauce" },
-    { jp: "jat1 lung4 caa4", en: "One pot of tea please" }
-  ]
+    { jp:"haa1 gaau2", hz:"蝦餃", en:"Prawn dumplings (har gow)" },
+    { jp:"siu1 maai2", hz:"燒賣", en:"Pork & shrimp dumplings (siu mai)" },
+    { jp:"fung6 zaau2", hz:"鳳爪", en:"Steamed chicken feet" },
+    { jp:"lau4 saa1 baau1", hz:"流沙包", en:"Custard lava bun" },
+    { jp:"lo4 baak6 gou1", hz:"蘿蔔糕", en:"Turnip cake" },
+    { jp:"coeng4 fan2", hz:"腸粉", en:"Rice noodle rolls" },
+    { jp:"daan6 taat3", hz:"蛋撻", en:"Egg tart" },
+    { jp:"maa4 lai4 gou1", hz:"馬拉糕", en:"Steamed sponge cake" },
+    { jp:"wu4 gok3", hz:"芋角", en:"Taro puff" },
+    { jp:"caa4 siu1 baau1", hz:"叉燒包", en:"BBQ pork bun" },
+    { jp:"paai4 gwat1", hz:"排骨", en:"Spare ribs in black bean sauce" },
+    { jp:"zaa3 loeng2", hz:"炸兩", en:"Fried dough in rice roll" },
+    { jp:"jat1 wut6 caa4", hz:"一壺茶", en:"One pot of tea (order first!)" },
+    { jp:"joeng4 baau1", hz:"腸包", en:"Sticky rice in lotus leaf" },
+  ],
 };
 
-// =============================================
-//  INTERMEDIATE SPECIAL CONTENT
-// =============================================
+// ==============================================
+//  TONE ENGINE
+//  Extracts tone number from end of each syllable
+//  and maps it to a CSS class and colour label
+// ==============================================
+const TONE_NAMES = {
+  1: { label:"High Flat", symbol:"─", desc:"High level pitch, like saying 'hm' firmly" },
+  2: { label:"High Rising", symbol:"↗", desc:"Rises like asking a question in English" },
+  3: { label:"Mid Flat", symbol:"─", desc:"Medium level, relaxed and steady" },
+  4: { label:"Low Falling", symbol:"↘", desc:"Starts low and drops further" },
+  5: { label:"Low Rising", symbol:"↗", desc:"Starts low then rises gently" },
+  6: { label:"Low Flat", symbol:"─", desc:"Low and flat, like a low murmur" },
+};
 
+// SVG tone contour paths (simplified pitch curves)
+const TONE_PATHS = {
+  1: "M2,2 L18,2",           // flat high
+  2: "M2,8 L18,2",           // rising
+  3: "M2,5 L18,5",           // flat mid
+  4: "M2,4 L18,10",          // falling
+  5: "M2,10 L10,8 L18,4",   // low rising
+  6: "M2,8 L18,8",           // flat low
+};
+
+function getToneNum(syllable) {
+  const m = syllable.match(/([1-6])$/);
+  return m ? parseInt(m[1]) : 0;
+}
+
+function stripTone(syllable) {
+  return syllable.replace(/[1-6]$/, '');
+}
+
+// Render a Jyutping string with colour-coded, tone-indicated syllables
+function renderJyutping(jp) {
+  const syllables = jp.split(' ');
+  return syllables.map(syl => {
+    const t = getToneNum(syl);
+    const cls = t > 0 ? `t${t}` : 't0';
+    const base = stripTone(syl);
+    const toneInfo = TONE_NAMES[t];
+    const title = toneInfo ? `Tone ${t}: ${toneInfo.label} ${toneInfo.symbol}` : '';
+    const path = TONE_PATHS[t] || '';
+    return `<span class="syllable ${cls}" title="${title}">
+      <span class="syl-text">${base}<sup style="font-size:0.6em;opacity:0.7;">${t||''}</sup></span>
+      ${t > 0 ? `<svg class="tone-shape" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg"><path d="${path}" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>` : '<div class="tone-bar"></div>'}
+    </span>`;
+  }).join(' ');
+}
+
+// Render the tone legend for a panel
+function renderLegend(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `<div class="tone-legend">
+    <span style="font-size:0.72rem;color:var(--text-dim);margin-right:0.3rem;">Tone key:</span>
+    ${Object.entries(TONE_NAMES).map(([n,t])=>`<div class="tone-legend-item"><div class="tone-dot" style="background:var(--t${n})"></div><span><b style="color:var(--t${n})">T${n}</b> ${t.label} ${t.symbol}</span></div>`).join('')}
+  </div>`;
+}
+
+// Render the full tone guide page
+function renderToneGuide() {
+  const el = document.getElementById('toneGuideGrid');
+  if (!el) return;
+  const examples = {1:"jat1 (一 — one)",2:"nei5 (你 — you)",3:"sei3 (四 — four)",4:"jan4 (人 — person)",5:"ng5 (五 — five)",6:"luk6 (六 — six)"};
+  el.innerHTML = Object.entries(TONE_NAMES).map(([n,t])=>`
+    <div class="tone-guide-card">
+      <div class="tone-num" style="color:var(--t${n})">${n}</div>
+      <div class="tone-name" style="color:var(--t${n})">${t.label} ${t.symbol}</div>
+      <svg class="tone-contour" width="80" height="30" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0.4rem auto;">
+        <path d="${TONE_PATHS[n]}" stroke="var(--t${n})" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div class="tone-desc">${t.desc}</div>
+      <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-dim);">e.g. ${examples[n]}</div>
+    </div>`).join('');
+}
+
+// ==============================================
+//  CARD RENDERER — with hanzi + tone display
+// ==============================================
+function renderGrid(id, data) {
+  const el = document.getElementById('grid-' + id);
+  if (!el) return;
+  renderLegend('tone-legend-' + id);
+  el.innerHTML = data.map(item => {
+    const jpHtml = renderJyutping(item.jp);
+    const speakText = item.hz || item.jp;
+    return `<div class="vocab-card">
+      <div class="card-jyutping">${jpHtml}</div>
+      ${item.hz ? `<div class="card-hanzi">${item.hz}</div>` : ''}
+      <div class="card-meaning">${item.en}</div>
+      <div class="card-buttons">
+        <button class="card-listen" onclick="speak('${speakText.replace(/'/g,"\\'")}','${item.jp.replace(/'/g,"\\'")}')">🔊 Listen</button>
+        <button class="card-record" onclick="openRecordingModal('${item.jp.replace(/'/g,"\\'")}')">🎙️ Record</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+Object.keys(VOCAB).forEach(key => renderGrid(key, VOCAB[key]));
+
+// ==============================================
+//  INTERMEDIATE RENDERS
+// ==============================================
 function renderCharacters() {
   const items = [
-    { title: "一 (jat1) + 人 (jan4) = 大 (daai6)", desc: "Combining characters can change meaning entirely. 大 means 'big' but visually resembles a person with arms out." },
-    { title: "Compound: 開心 (hoi1 sam1)", desc: "Open (hoi1) + Heart (sam1) = Happy. Many Cantonese compounds are transparent like this." },
-    { title: "Compound: 電話 (din6 waa6)", desc: "Electric (din6) + Speech (waa6) = Telephone. Technology words often use 電 (electric)." },
-    { title: "Compound: 飛機 (fei1 gei1)", desc: "Fly (fei1) + Machine (gei1) = Aeroplane." },
-    { title: "Compound: 電腦 (din6 nou5)", desc: "Electric (din6) + Brain (nou5) = Computer." },
-    { title: "Compound: 手機 (sau2 gei1)", desc: "Hand (sau2) + Machine (gei1) = Mobile phone." },
+    { title:"開心 (hoi1 sam1)", desc:"Open (開 hoi1) + Heart (心 sam1) = Happy. A perfect example of transparent compound words." },
+    { title:"電話 (din6 waa6)", desc:"Electric (電 din6) + Speech (話 waa6) = Telephone." },
+    { title:"飛機 (fei1 gei1)", desc:"Fly (飛 fei1) + Machine (機 gei1) = Aeroplane." },
+    { title:"電腦 (din6 nou5)", desc:"Electric (電 din6) + Brain (腦 nou5) = Computer." },
+    { title:"手機 (sau2 gei1)", desc:"Hand (手 sau2) + Machine (機 gei1) = Mobile phone." },
+    { title:"火車 (fo2 ce1)", desc:"Fire (火 fo2) + Vehicle (車 ce1) = Train." },
+    { title:"冰箱 (bing1 siang1)", desc:"Ice (冰 bing1) + Box (箱 siang1) = Refrigerator." },
+    { title:"圖書館 (tou4 syu1 gun2)", desc:"Picture (圖) + Book (書) + Hall (館) = Library." },
   ];
-  const cont = document.getElementById('grid-characters');
-  cont.innerHTML = items.map(i => `
-    <div class="wide-card">
-      <h3>${i.title}</h3>
-      <p>${i.desc}</p>
-    </div>
-  `).join('');
+  document.getElementById('grid-characters').innerHTML = items.map(i=>`<div class="wide-card"><h3>${i.title}</h3><p>${i.desc}</p></div>`).join('');
 }
 
 function renderThisThat() {
   const items = [
-    { jp: "ni1 go3", en: "This (one)" },
-    { jp: "go2 go3", en: "That (one)" },
-    { jp: "ni1 dou6", en: "Here" },
-    { jp: "go2 dou6", en: "There" },
-    { jp: "ni1 go3 jan4", en: "This person" },
-    { jp: "go2 go3 je5", en: "That thing" },
-    { jp: "ni1 di1", en: "These (plural)" },
-    { jp: "go2 di1", en: "Those (plural)" },
+    { jp:"ni1 go3", hz:"呢個", en:"This (one)" },
+    { jp:"go2 go3", hz:"嗰個", en:"That (one)" },
+    { jp:"ni1 dou6", hz:"呢度", en:"Here" },
+    { jp:"go2 dou6", hz:"嗰度", en:"There" },
+    { jp:"ni1 go3 jan4", hz:"呢個人", en:"This person" },
+    { jp:"go2 go3 je5", hz:"嗰個嘢", en:"That thing" },
+    { jp:"ni1 di1", hz:"呢啲", en:"These (plural)" },
+    { jp:"go2 di1", hz:"嗰啲", en:"Those (plural)" },
   ];
-  const cont = document.getElementById('grid-this_that');
-  cont.innerHTML = `
-    <div class="wide-card">
-      <h3>Demonstratives in Cantonese</h3>
-      <p>Cantonese uses <strong style="color:var(--accent)">ni1</strong> for 'this/here' and <strong style="color:var(--accent)">go2</strong> for 'that/there'. The classifier follows (go3 for people/things, dou6 for places, di1 for plurals).</p>
-      <div class="examples">
-        ${items.map(i => `<div class="example-row"><span class="ex-jp">${i.jp}</span><span class="ex-en">${i.en}</span><button class="ex-listen" onclick="speak('${i.jp}')">🔊</button><button class="ex-record" onclick="openRecordingModal('${i.jp}')">🎙️</button></div>`).join('')}
-      </div>
-    </div>`;
+  document.getElementById('grid-this_that').innerHTML = `<div class="wide-card">
+    <h3>Demonstratives in Cantonese</h3>
+    <p>Use <strong style="color:var(--accent)">ni1</strong> (呢) for 'this/here' and <strong style="color:var(--accent)">go2</strong> (嗰) for 'that/there'. The classifier follows.</p>
+    <div class="examples">${items.map(i=>`<div class="example-row">
+      <span class="ex-jp">${renderJyutping(i.jp)}</span>
+      <span style="font-family:'Noto Serif TC',serif;color:var(--text-muted);font-size:1rem;">${i.hz}</span>
+      <span class="ex-en">${i.en}</span>
+      <button class="ex-listen" onclick="speak('${i.hz}','${i.jp}')">🔊</button>
+      <button class="ex-record" onclick="openRecordingModal('${i.jp}')">🎙️</button>
+    </div>`).join('')}</div>
+  </div>`;
 }
 
 function renderParticles() {
   const particles = [
-    { jp: "aa3", en: "Softens statements. 'OK aa3' = 'OK then'" },
-    { jp: "aa1", en: "Exclamation/emphasis. 'Faai3 di1 aa1!' = 'Hurry up!'" },
-    { jp: "laa1", en: "Suggestion or mild command. 'Heoi3 sik6 faan6 laa1' = 'Let's go eat'" },
-    { jp: "ge3", en: "Assertion. 'Hou2 ge3' = 'It's good (you know)'" },
-    { jp: "maa3", en: "Tag question. 'Nei5 hou2 maa3?' = 'You OK?'" },
-    { jp: "lo3", en: "Obviously / Of course. 'Hai6 lo3' = 'Of course it is'" },
-    { jp: "gaa3", en: "Asserts a fact. 'Gam3 ge3 gaa3' = 'That's how it is'" },
-    { jp: "wo3", en: "Indicates something heard/surprising. 'Keoi5 lei4 wo3' = 'Oh, she's coming'" },
+    { jp:"aa3", hz:"啊", en:"Softens statements → 'OK aa3' = 'OK then'" },
+    { jp:"aa1", hz:"啊", en:"Exclamation → 'Faai3 di1 aa1!' = 'Hurry up!'" },
+    { jp:"laa1", hz:"喇", en:"Suggestion → 'Heoi3 sik6 laa1' = 'Let's eat'" },
+    { jp:"ge3", hz:"嘅", en:"Assertion → 'Hou2 ge3' = 'It's good, trust me'" },
+    { jp:"maa3", hz:"咩", en:"Tag question → 'Nei5 hou2 maa3?' = 'You OK?'" },
+    { jp:"lo3", hz:"囉", en:"Obviously → 'Hai6 lo3' = 'Of course it is'" },
+    { jp:"gaa3", hz:"㗎", en:"Asserts fact → 'Gam3 ge3 gaa3' = 'That's just how it is'" },
+    { jp:"wo3", hz:"喎", en:"Hearsay/surprise → 'Keoi5 lei4 wo3' = 'Oh, she's coming'" },
+    { jp:"zaa3", hz:"咋", en:"Only/just → 'jat1 go3 zaa3' = 'just one'" },
+    { jp:"tim1", hz:"添", en:"In addition → 'hou2 leng3 tim1' = 'also beautiful'" },
   ];
-  const cont = document.getElementById('grid-particles');
-  cont.innerHTML = `
-    <div class="wide-card">
-      <h3>Sentence-final particles</h3>
-      <p>Particles at the end of Cantonese sentences carry nuance, emotion, and social meaning. They are essential for sounding natural.</p>
-      <div class="examples">
-        ${particles.map(p => `<div class="example-row"><span class="ex-jp">${p.jp}</span><span class="ex-en">${p.en}</span><button class="ex-listen" onclick="speak('${p.jp}')">🔊</button><button class="ex-record" onclick="openRecordingModal('${p.jp}')">🎙️</button></div>`).join('')}
-      </div>
-    </div>`;
+  document.getElementById('grid-particles').innerHTML = `<div class="wide-card">
+    <h3>Sentence-final particles (語氣助詞)</h3>
+    <p>Particles at the end of Cantonese sentences carry nuance, emotion, and social meaning. They are essential for sounding natural.</p>
+    <div class="examples">${particles.map(p=>`<div class="example-row">
+      <span class="ex-jp">${renderJyutping(p.jp)}</span>
+      <span style="font-family:'Noto Serif TC',serif;color:var(--text-muted);font-size:1.1rem;">${p.hz}</span>
+      <span class="ex-en">${p.en}</span>
+      <button class="ex-listen" onclick="speak('${p.hz}','${p.jp}')">🔊</button>
+    </div>`).join('')}</div>
+  </div>`;
 }
 
 function renderToneMistakes() {
   const pairs = [
-    { a: "si6 (事)", a_en: "Thing / Matter", b: "si3 (試)", b_en: "Try" },
-    { a: "fan4 (焚)", a_en: "Burn", b: "fan3 (瞓)", b_en: "Sleep" },
-    { a: "maa5 (馬)", a_en: "Horse", b: "maa6 (罵)", b_en: "Scold" },
-    { a: "tong4 (糖)", a_en: "Sugar / Candy", b: "tong3 (燙)", b_en: "Scalding hot" },
-    { a: "gai1 (雞)", a_en: "Chicken", b: "gai3 (計)", b_en: "Plan / Calculate" },
-    { a: "fan2 (粉)", a_en: "Powder / Noodles", b: "fan6 (份)", b_en: "Portion / Copy" },
+    { a:"si6 (事)", a_en:"Thing/matter", b:"si3 (試)", b_en:"Try/test" },
+    { a:"fan4 (焚)", a_en:"Burn", b:"fan3 (瞓)", b_en:"Sleep" },
+    { a:"maa5 (馬)", a_en:"Horse", b:"maa6 (罵)", b_en:"Scold" },
+    { a:"tong4 (糖)", a_en:"Sugar/candy", b:"tong3 (燙)", b_en:"Scalding hot" },
+    { a:"gai1 (雞)", a_en:"Chicken", b:"gai3 (計)", b_en:"Plan/calculate" },
+    { a:"maai5 (買)", a_en:"Buy", b:"maai6 (賣)", b_en:"Sell" },
+    { a:"jyu2 (魚)", a_en:"Fish", b:"jyu5 (雨)", b_en:"Rain" },
+    { a:"siu2 (少)", a_en:"Few/small", b:"siu3 (笑)", b_en:"Smile/laugh" },
   ];
-  const cont = document.getElementById('grid-tone_mistakes');
-  cont.innerHTML = `
-    <div class="wide-card">
-      <h3>Watch your tones!</h3>
-      <p>These pairs share the same consonant & vowel but different tones. Getting them wrong changes meaning completely.</p>
-      <div class="examples">
-        ${pairs.map(p => `
-          <div class="example-row">
-            <span class="ex-jp">${p.a}</span>
-            <span class="ex-en">${p.a_en}</span>
-            <span style="color:var(--text-dim);margin:0 0.5rem;">vs</span>
-            <span class="ex-jp">${p.b}</span>
-            <span class="ex-en">${p.b_en}</span>
-          </div>`).join('')}
-      </div>
-    </div>`;
+  document.getElementById('grid-tone_mistakes').innerHTML = `<div class="wide-card">
+    <h3>Watch your tones! Same sound, different pitch = different word</h3>
+    <p>Getting these wrong can cause confusion — or amusement.</p>
+    <div class="examples">${pairs.map(p=>`<div class="example-row">
+      <span class="ex-jp">${p.a}</span><span class="ex-en">${p.a_en}</span>
+      <span style="color:var(--text-dim);margin:0 0.5rem;font-weight:700;">≠</span>
+      <span class="ex-jp">${p.b}</span><span class="ex-en">${p.b_en}</span>
+    </div>`).join('')}</div>
+  </div>`;
 }
 
 function renderRiddles() {
   const riddles = [
-    { q: "What has four legs in the morning, two in the afternoon, three in the evening?", a: "A person (baby crawls, adult walks, elder uses a cane). In Cantonese: jan4 (人)" },
-    { q: "我係水，但唔係海。(ngo5 hai6 seoi2, daan6 m4 hai6 hoi2) — I am water but not the sea. What am I?", a: "jyu5 (雨) — Rain" },
-    { q: "越舊越靚。(jyut6 gau6 jyut6 leng3) — The older, the more beautiful. What am I?", a: "古董 (gu2 dung2) — Antique" },
-    { q: "有腳唔識行。(jau5 goek3 m4 sik1 haang4) — Has legs but can't walk. What am I?", a: "toi2 (桌) — A table" },
+    { q:"What has four legs in the morning, two in the afternoon, three in the evening?", a:"A person 人 (jan4) — baby crawls, adult walks, elder uses a cane" },
+    { q:"我係水，但唔係海 (ngo5 hai6 seoi2, daan6 m4 hai6 hoi2) — I am water but not the sea. What am I?", a:"jyu5 (雨) — Rain" },
+    { q:"越舊越靚 (jyut6 gau6 jyut6 leng3) — The older, the more beautiful. What am I?", a:"古董 (gu2 dung2) — Antique" },
+    { q:"有腳唔識行 (jau5 goek3 m4 sik1 haang4) — Has legs but can't walk. What am I?", a:"枱 (toi2) — A table" },
   ];
-  const cont = document.getElementById('grid-riddles');
-  cont.innerHTML = riddles.map((r, i) => `
-    <div class="wide-card">
-      <h3>謎語 ${i+1}</h3>
-      <p><strong style="color:var(--text)">❓ ${r.q}</strong></p>
-      <details style="margin-top:0.8rem;">
-        <summary style="cursor:pointer;color:var(--accent);font-size:0.88rem;">Reveal answer</summary>
-        <p style="margin-top:0.5rem;padding:0.5rem;background:var(--surface2);border-radius:6px;">💡 ${r.a}</p>
-      </details>
-    </div>`).join('');
+  document.getElementById('grid-riddles').innerHTML = riddles.map((r,i)=>`<div class="wide-card">
+    <h3>謎語 ${i+1}</h3>
+    <p><strong style="color:var(--text)">❓ ${r.q}</strong></p>
+    <details style="margin-top:0.8rem;"><summary style="cursor:pointer;color:var(--accent);font-size:0.88rem;">Reveal answer</summary>
+    <p style="margin-top:0.5rem;padding:0.5rem;background:var(--surface2);border-radius:6px;">💡 ${r.a}</p></details>
+  </div>`).join('');
 }
 
 function renderMTR() {
-  const stations = [
-    { line: "Tsuen Wan", color: "#e60026", stations: [
-      { en: "Central", jp: "Zung1 Waan4" },
-      { en: "Admiralty", jp: "Gam1 Zung1" },
-      { en: "Wan Chai", jp: "Waan1 Zai2" },
-      { en: "Causeway Bay", jp: "Tung4 Lo4 Waan1" },
-      { en: "Tsim Sha Tsui", jp: "Zim1 Saa1 Zeoi2" },
-      { en: "Mong Kok", jp: "Wong6 Gok3" },
-      { en: "Tsuen Wan", jp: "Cyun4 Waan1" },
+  const lines = [
+    { line:"Tsuen Wan", color:"#e60026", stations:[
+      {en:"Central",jp:"Zung1 Waan4",hz:"中環"},{en:"Admiralty",jp:"Gam1 Zung1",hz:"金鐘"},
+      {en:"Wan Chai",jp:"Waan1 Zai2",hz:"灣仔"},{en:"Causeway Bay",jp:"Tung4 Lo4 Waan1",hz:"銅鑼灣"},
+      {en:"Tsim Sha Tsui",jp:"Zim1 Saa1 Zeoi2",hz:"尖沙咀"},{en:"Mong Kok",jp:"Wong6 Gok3",hz:"旺角"},
+      {en:"Tsuen Wan",jp:"Cyun4 Waan1",hz:"荃灣"},
     ]},
-    { line: "Island", color: "#006caf", stations: [
-      { en: "Kennedy Town", jp: "Gei1 nei4 dei6 sing4" },
-      { en: "Hong Kong", jp: "Hoeng1 Gong2 Zaam6" },
-      { en: "Sheung Wan", jp: "Soeng6 Waan1" },
-      { en: "Tai Koo", jp: "Taai3 Gu2" },
-      { en: "Shau Kei Wan", jp: "Sau3 Gei1 Waan1" },
+    { line:"Island", color:"#006caf", stations:[
+      {en:"Kennedy Town",jp:"Gei1 nei4 dei6 sing4",hz:"堅尼地城"},{en:"Hong Kong",jp:"Hoeng1 Gong2 Zaam6",hz:"香港站"},
+      {en:"Sheung Wan",jp:"Soeng6 Waan1",hz:"上環"},{en:"Tai Koo",jp:"Taai3 Gu2",hz:"太古"},
+      {en:"Shau Kei Wan",jp:"Sau3 Gei1 Waan1",hz:"筲箕灣"},
     ]},
-    { line: "Tung Chung", color: "#f58220", stations: [
-      { en: "Tung Chung", jp: "Dung1 Cung1" },
-      { en: "Tsing Yi", jp: "Cing1 Ji1" },
-      { en: "Lai King", jp: "Lai6 Ging2" },
-      { en: "Olympic", jp: "Ngaa4 Waan6 Sing4" },
+    { line:"Tung Chung", color:"#f58220", stations:[
+      {en:"Tung Chung",jp:"Dung1 Cung1",hz:"東涌"},{en:"Tsing Yi",jp:"Cing1 Ji1",hz:"青衣"},
+      {en:"Lai King",jp:"Lai6 Ging2",hz:"荔景"},{en:"Olympic",jp:"Ngaa4 Waan6 Sing4",hz:"奧運"},
+    ]},
+    { line:"East Rail", color:"#53b7e8", stations:[
+      {en:"Hung Hom",jp:"Hung4 Haam3",hz:"紅磡"},{en:"Sha Tin",jp:"Saa1 Tin4",hz:"沙田"},
+      {en:"Fanling",jp:"Faan4 Ling4",hz:"粉嶺"},{en:"Lo Wu",jp:"Lo4 Wu6",hz:"羅湖"},
     ]},
   ];
-  const cont = document.getElementById('grid-mtr');
-  cont.innerHTML = stations.map(line => `
+  document.getElementById('grid-mtr').innerHTML = lines.map(line=>`
     <div class="wide-card" style="margin-bottom:1rem;">
       <h3 style="display:flex;align-items:center;gap:0.6rem;">
-        <span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>
-        ${line.line} Line
+        <span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>${line.line} Line
       </h3>
       <table class="mtr-table" style="margin-top:0.8rem;">
-        <thead><tr><th>Station</th><th>Jyutping</th><th>Listen</th><th>Record</th></tr></thead>
-        <tbody>
-          ${line.stations.map(s => `<tr>
-            <td>${s.en}</td>
-            <td style="font-family:'Space Mono',monospace;color:var(--accent);">${s.jp}</td>
-            <td><button class="ex-listen" onclick="speak('${s.jp}')">🔊</button></td>
-            <td><button class="ex-record" onclick="openRecordingModal('${s.jp}')">🎙️</button></td>
-          </tr>`).join('')}
-        </tbody>
+        <thead><tr><th>Station</th><th>漢字</th><th>Jyutping</th><th>Listen</th><th>Record</th></tr></thead>
+        <tbody>${line.stations.map(s=>`<tr>
+          <td>${s.en}</td>
+          <td style="font-family:'Noto Serif TC',serif;font-size:1rem;color:var(--text);">${s.hz}</td>
+          <td style="font-size:0.82rem;">${renderJyutping(s.jp)}</td>
+          <td><button class="ex-listen" onclick="speak('${s.hz}','${s.jp}')">🔊</button></td>
+          <td><button class="ex-record" onclick="openRecordingModal('${s.jp}')">🎙️</button></td>
+        </tr>`).join('')}</tbody>
       </table>
     </div>`).join('');
 }
 
-// =============================================
-//  GENERIC CARD RENDERER (MODIFIED WITH RECORD BUTTON)
-// =============================================
-function renderGrid(id, data) {
-  const el = document.getElementById('grid-' + id);
-  if (!el) return;
-  el.innerHTML = data.map(item => `
-    <div class="vocab-card">
-      <div class="card-jyutping">${item.jp}</div>
-      <div class="card-meaning">${item.en}</div>
-      <div class="card-buttons">
-        <button class="card-listen" onclick="speak('${item.jp.replace(/'/g,"\\'")}')">🔊 Listen</button>
-        <button class="card-record" onclick="openRecordingModal('${item.jp.replace(/'/g,"\\'")}')">🎙️ Record Voice</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Render all standard grids
-Object.keys(VOCAB).forEach(key => renderGrid(key, VOCAB[key]));
-
-// Render special intermediate content
+renderToneGuide();
 renderCharacters();
 renderThisThat();
 renderParticles();
@@ -1741,86 +1347,80 @@ renderToneMistakes();
 renderRiddles();
 renderMTR();
 
-// =============================================
-//  VOICE RECORDING FEATURE
-// =============================================
-
-let mediaRecorder = null;
-let audioChunks = [];
-let currentRecordingPhrase = '';
-let recordedBlob = null;
-
+// ==============================================
+//  SPEECH — prefers Chinese character input for
+//  authentic Cantonese TTS via zh-HK voice
+// ==============================================
 function loadCustomRecordings() {
-  const saved = localStorage.getItem('customAudio');
-  return saved ? JSON.parse(saved) : {};
+  try { return JSON.parse(localStorage.getItem('customAudio') || '{}'); } catch { return {}; }
 }
-
-function saveRecordingToStorage(phrase, audioDataUrl) {
-  const recordings = loadCustomRecordings();
-  recordings[phrase] = audioDataUrl;
-  localStorage.setItem('customAudio', JSON.stringify(recordings));
+function saveRecordingToStorage(phrase, dataUrl) {
+  const r = loadCustomRecordings(); r[phrase] = dataUrl;
+  localStorage.setItem('customAudio', JSON.stringify(r));
   updateStorageInfo();
 }
 
-function getRecording(phrase) {
-  const recordings = loadCustomRecordings();
-  return recordings[phrase];
+// speak(text, fallbackJp)
+// text = Chinese characters (preferred for authentic pronunciation)
+// fallbackJp = Jyutping (used only if no zh-HK voice available)
+function speak(text, fallbackJp) {
+  const custom = loadCustomRecordings();
+  const key = fallbackJp || text;
+  if (custom[key]) { new Audio(custom[key]).play().catch(()=>fallbackTTS(text, fallbackJp)); return; }
+  fallbackTTS(text, fallbackJp);
 }
 
-function deleteAllRecordings() {
-  if (confirm('⚠️ Delete ALL your voice recordings? This cannot be undone.')) {
-    localStorage.removeItem('customAudio');
-    alert('All recordings deleted!');
-    updateStorageInfo();
+let cachedVoice = null;
+
+function fallbackTTS(text, fallbackJp) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  function doSpeak(voice) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-HK';
+    u.rate = 0.75;
+    u.pitch = 1.0;
+    if (voice) u.voice = voice;
+    window.speechSynthesis.speak(u);
   }
-}
 
-function exportAllRecordings() {
-  const recordings = loadCustomRecordings();
-  if (Object.keys(recordings).length === 0) {
-    alert('No recordings to export!');
-    return;
-  }
-  const dataStr = JSON.stringify(recordings);
-  const blob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `cantonese_recordings_${new Date().toISOString().split('T')[0]}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  alert(`Exported ${Object.keys(recordings).length} recordings!`);
-}
+  // If we already found a good voice, use it
+  if (cachedVoice) { doSpeak(cachedVoice); return; }
 
-function importRecordings(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const recordings = JSON.parse(e.target.result);
-      const existing = loadCustomRecordings();
-      const merged = { ...existing, ...recordings };
-      localStorage.setItem('customAudio', JSON.stringify(merged));
-      alert(`Imported ${Object.keys(recordings).length} recordings!`);
-      updateStorageInfo();
-    } catch (err) {
-      alert('Invalid file format!');
+  // Try to find a zh-HK / Cantonese voice
+  function findAndSpeak() {
+    const voices = window.speechSynthesis.getVoices();
+    // Priority order: exact zh-HK, then any Cantonese, then zh-TW, then any zh
+    const priority = [
+      v => v.lang === 'zh-HK',
+      v => v.name.toLowerCase().includes('cantonese'),
+      v => v.lang === 'zh-TW',
+      v => v.lang.startsWith('zh'),
+    ];
+    for (const test of priority) {
+      const found = voices.find(test);
+      if (found) { cachedVoice = found; doSpeak(found); return; }
     }
-  };
-  reader.readAsText(file);
+    // No Chinese voice — speak anyway with zh-HK lang tag
+    doSpeak(null);
+  }
+
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) { findAndSpeak(); }
+  else { window.speechSynthesis.onvoiceschanged = () => { findAndSpeak(); window.speechSynthesis.onvoiceschanged = null; }; }
 }
 
-function updateStorageInfo() {
-  const recordings = loadCustomRecordings();
-  const count = Object.keys(recordings).length;
-  const infoDiv = document.getElementById('storageInfo');
-  if (infoDiv) infoDiv.textContent = `📀 ${count} recording(s) saved locally`;
-}
+// ==============================================
+//  RECORDING
+// ==============================================
+let mediaRecorder=null, audioChunks=[], currentRecordingPhrase='', recordedBlob=null;
 
 function openRecordingModal(phrase) {
   currentRecordingPhrase = phrase;
   document.getElementById('recordingPhrase').textContent = phrase;
   document.getElementById('recordingModal').style.display = 'flex';
-  document.getElementById('recordingStatus').textContent = 'Ready to record. Click Start.';
+  document.getElementById('recordingStatus').textContent = 'Ready. Click Start.';
   document.getElementById('startRecordBtn').style.display = 'inline-block';
   document.getElementById('stopRecordBtn').style.display = 'none';
   document.getElementById('playbackBtn').style.display = 'none';
@@ -1830,9 +1430,7 @@ function openRecordingModal(phrase) {
 
 function closeRecordingModal() {
   document.getElementById('recordingModal').style.display = 'none';
-  if (mediaRecorder && mediaRecorder.state === 'recording') {
-    mediaRecorder.stop();
-  }
+  if (mediaRecorder?.state === 'recording') mediaRecorder.stop();
 }
 
 async function startRecording() {
@@ -1840,36 +1438,25 @@ async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
     audioChunks = [];
-    
-    mediaRecorder.ondataavailable = event => {
-      audioChunks.push(event.data);
-    };
-    
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
     mediaRecorder.onstop = () => {
       recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      const audioUrl = URL.createObjectURL(recordedBlob);
-      const playbackBtn = document.getElementById('playbackBtn');
-      playbackBtn.style.display = 'inline-block';
-      playbackBtn.onclick = () => {
-        new Audio(audioUrl).play();
-      };
+      const url = URL.createObjectURL(recordedBlob);
+      document.getElementById('playbackBtn').style.display = 'inline-block';
+      document.getElementById('playbackBtn').onclick = () => new Audio(url).play();
       document.getElementById('saveRecordingBtn').style.display = 'inline-block';
-      document.getElementById('recordingStatus').textContent = 'Recording finished! Listen or save.';
-      stream.getTracks().forEach(track => track.stop());
+      document.getElementById('recordingStatus').textContent = '✅ Done! Play back or save.';
+      stream.getTracks().forEach(t => t.stop());
     };
-    
     mediaRecorder.start();
     document.getElementById('startRecordBtn').style.display = 'none';
     document.getElementById('stopRecordBtn').style.display = 'inline-block';
-    document.getElementById('recordingStatus').textContent = '🔴 Recording... Click Stop when done.';
-  } catch (err) {
-    alert('Microphone access denied or not available.');
-    console.error(err);
-  }
+    document.getElementById('recordingStatus').textContent = '🔴 Recording…';
+  } catch { alert('Microphone access denied or not available.'); }
 }
 
 function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state === 'recording') {
+  if (mediaRecorder?.state === 'recording') {
     mediaRecorder.stop();
     document.getElementById('startRecordBtn').style.display = 'inline-block';
     document.getElementById('stopRecordBtn').style.display = 'none';
@@ -1877,172 +1464,137 @@ function stopRecording() {
 }
 
 function saveRecording() {
-  if (recordedBlob) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      saveRecordingToStorage(currentRecordingPhrase, reader.result);
-      alert(`✅ Recording saved for: ${currentRecordingPhrase}\n\nIt will play when you click Listen!`);
-      closeRecordingModal();
-    };
-    reader.readAsDataURL(recordedBlob);
-  } else {
-    alert('No recording to save!');
-  }
+  if (!recordedBlob) { alert('Nothing to save!'); return; }
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    saveRecordingToStorage(currentRecordingPhrase, reader.result);
+    alert(`✅ Saved for: "${currentRecordingPhrase}"`);
+    closeRecordingModal();
+  };
+  reader.readAsDataURL(recordedBlob);
 }
 
-// REPLACED speak function - checks for custom recordings first
-function speak(text) {
-  const customRecording = getRecording(text);
-  
-  if (customRecording) {
-    const audio = new Audio(customRecording);
-    audio.play().catch(err => {
-      console.error('Failed to play custom audio:', err);
-      fallbackTTS(text);
-    });
-  } else {
-    fallbackTTS(text);
-  }
+function updateStorageInfo() {
+  const count = Object.keys(loadCustomRecordings()).length;
+  const el = document.getElementById('storageInfo');
+  if (el) el.textContent = `📀 ${count} recording${count!==1?'s':''} saved`;
 }
 
-function fallbackTTS(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'zh-HK';
-  u.rate = 0.85;
-  window.speechSynthesis.speak(u);
+function exportAllRecordings() {
+  const r = loadCustomRecordings();
+  if (!Object.keys(r).length) { alert('No recordings!'); return; }
+  const blob = new Blob([JSON.stringify(r)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url;
+  a.download=`cantonese_recordings_${new Date().toISOString().split('T')[0]}.json`;
+  a.click(); URL.revokeObjectURL(url);
 }
 
-// =============================================
+function importRecordings(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      localStorage.setItem('customAudio', JSON.stringify({...loadCustomRecordings(),...data}));
+      alert(`Imported ${Object.keys(data).length} recordings!`);
+      updateStorageInfo();
+    } catch { alert('Invalid file!'); }
+  };
+  reader.readAsText(file);
+}
+
+// ==============================================
 //  QUIZ
-// =============================================
+// ==============================================
 const ALL_ITEMS = Object.values(VOCAB).flat();
-let quizIdx = 0, quizScore = 0, quizQuestions = [];
+let quizIdx=0, quizScore=0, quizQuestions=[];
 
-function buildQuizQuestions(n = 15) {
-  const shuffled = [...ALL_ITEMS].sort(() => Math.random() - 0.5).slice(0, n);
-  return shuffled.map(item => {
-    const wrong = ALL_ITEMS.filter(x => x.en !== item.en)
-      .sort(() => Math.random() - 0.5).slice(0, 3);
-    const opts = [...wrong, item].sort(() => Math.random() - 0.5);
-    return { q: `What does "${item.jp}" mean?`, opts: opts.map(o => o.en), answer: item.en };
+function buildQuizQuestions(n=15) {
+  const shuffled=[...ALL_ITEMS].sort(()=>Math.random()-0.5).slice(0,n);
+  return shuffled.map(item=>{
+    const wrong=ALL_ITEMS.filter(x=>x.en!==item.en).sort(()=>Math.random()-0.5).slice(0,3);
+    const opts=[...wrong,item].sort(()=>Math.random()-0.5);
+    return {jp:item.jp, hz:item.hz, opts:opts.map(o=>o.en), answer:item.en};
   });
 }
 
 function loadQuiz() {
-  if (quizIdx === 0) quizQuestions = buildQuizQuestions(15);
-  const wrap = document.getElementById('quizWrap');
+  if (quizIdx===0) quizQuestions=buildQuizQuestions(15);
+  const wrap=document.getElementById('quizWrap');
   if (!wrap) return;
-
-  if (quizIdx >= quizQuestions.length) {
-    wrap.innerHTML = `
-      <div class="quiz-score-screen">
-        <h3>🎉 Quiz complete!</h3>
-        <div class="score-big">${quizScore} / ${quizQuestions.length}</div>
-        <p>${quizScore >= quizQuestions.length * 0.8 ? '🌟 Excellent! You\'re really learning!' : '💪 Keep practising — you\'re improving!'}</p>
-        <button class="btn-primary" style="margin-top:1.2rem;" onclick="quizIdx=0;quizScore=0;loadQuiz()">🔄 Try again</button>
-      </div>`;
+  if (quizIdx>=quizQuestions.length) {
+    wrap.innerHTML=`<div class="quiz-score-screen"><h3>🎉 Quiz complete!</h3><div class="score-big">${quizScore}/${quizQuestions.length}</div>
+      <p>${quizScore>=quizQuestions.length*0.8?'🌟 Excellent!':'💪 Keep practising!'}</p>
+      <button class="btn-primary" style="margin-top:1.2rem;" onclick="quizIdx=0;quizScore=0;loadQuiz()">🔄 Try again</button></div>`;
     return;
   }
-
-  const q = quizQuestions[quizIdx];
-  const pips = quizQuestions.map((_, i) =>
-    `<div class="quiz-pip ${i < quizIdx ? 'done' : ''}"></div>`).join('');
-
-  wrap.innerHTML = `
+  const q=quizQuestions[quizIdx];
+  const pips=quizQuestions.map((_,i)=>`<div class="quiz-pip ${i<quizIdx?'done':''}"></div>`).join('');
+  wrap.innerHTML=`
     <div class="quiz-progress">${pips}</div>
-    <div class="quiz-q">Question ${quizIdx + 1} of ${quizQuestions.length}<br><span style="color:var(--accent);font-family:'Space Mono',monospace;font-size:1.4rem;">${q.q.match(/"(.+)"/)[1]}</span></div>
-    <div class="quiz-options" id="qopts">
-      ${q.opts.map(o => `<button class="quiz-opt" onclick="answerQuiz(this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}',this.parentElement)">${o}</button>`).join('')}
+    <div class="quiz-q">What does this mean?<br>
+      <div style="display:flex;align-items:center;gap:0.8rem;margin-top:0.4rem;flex-wrap:wrap;">
+        <span style="font-size:1.5rem;">${renderJyutping(q.jp)}</span>
+        ${q.hz?`<span style="font-family:'Noto Serif TC',serif;font-size:2rem;color:var(--text-muted);">${q.hz}</span>`:''}
+        <button class="ex-listen" style="font-size:1.2rem;" onclick="speak('${(q.hz||q.jp).replace(/'/g,"\\'")}','${q.jp.replace(/'/g,"\\'")}')">🔊</button>
+      </div>
     </div>
+    <div class="quiz-options" id="qopts">${q.opts.map(o=>`<button class="quiz-opt" onclick="answerQuiz(this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}',this.parentElement)">${o}</button>`).join('')}</div>
     <div class="quiz-feedback" id="qfb"></div>
-    <button class="btn-primary" id="qnext" disabled onclick="quizIdx++;loadQuiz()">Next →</button>
-  `;
+    <button class="btn-primary" id="qnext" disabled onclick="quizIdx++;loadQuiz()">Next →</button>`;
 }
 
-function answerQuiz(btn, chosen, correct, container) {
-  container.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
-  const fb = document.getElementById('qfb');
-  if (chosen === correct) {
-    btn.classList.add('correct');
-    fb.textContent = '✅ Correct!';
-    fb.className = 'quiz-feedback ok';
-    quizScore++;
-  } else {
-    btn.classList.add('wrong');
-    fb.textContent = `❌ Correct answer: ${correct}`;
-    fb.className = 'quiz-feedback nope';
-    container.querySelectorAll('.quiz-opt').forEach(b => {
-      if (b.textContent === correct) b.classList.add('correct');
-    });
+function answerQuiz(btn,chosen,correct,container) {
+  container.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('qfb');
+  if (chosen===correct) { btn.classList.add('correct'); fb.textContent='✅ Correct!'; fb.className='quiz-feedback ok'; quizScore++; }
+  else { btn.classList.add('wrong'); fb.textContent=`❌ Correct: ${correct}`; fb.className='quiz-feedback nope';
+    container.querySelectorAll('.quiz-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});
   }
-  document.getElementById('qnext').disabled = false;
+  document.getElementById('qnext').disabled=false;
 }
 
-// =============================================
+// ==============================================
 //  NAVIGATION
-// =============================================
-const sideItems = document.querySelectorAll('.sidebar-item');
-const panels = document.querySelectorAll('.panel');
-
-sideItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const target = item.dataset.panel;
-    sideItems.forEach(i => i.classList.remove('active'));
+// ==============================================
+const sideItems=document.querySelectorAll('.sidebar-item');
+const panels=document.querySelectorAll('.panel');
+sideItems.forEach(item=>{
+  item.addEventListener('click',()=>{
+    const target=item.dataset.panel;
+    sideItems.forEach(i=>i.classList.remove('active'));
     item.classList.add('active');
-    panels.forEach(p => p.classList.remove('active'));
-    const panel = document.getElementById('panel-' + target);
+    panels.forEach(p=>p.classList.remove('active'));
+    const panel=document.getElementById('panel-'+target);
     if (panel) panel.classList.add('active');
-    if (target === 'quiz') loadQuiz();
-    // close sidebar on mobile
-    if (window.innerWidth <= 768) {
-      document.getElementById('sidebar').classList.remove('open');
-    }
+    if (target==='quiz') loadQuiz();
+    if (window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
   });
 });
 
-// Hamburger
-document.getElementById('hamburger').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('open');
-});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
 
-// =============================================
-//  GLOBAL SEARCH
-// =============================================
-document.getElementById('globalSearch').addEventListener('input', function() {
-  const q = this.value.toLowerCase().trim();
+document.getElementById('globalSearch').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
   if (!q) return;
-  // find first match
-  for (const [category, items] of Object.entries(VOCAB)) {
-    const match = items.find(i => i.jp.toLowerCase().includes(q) || i.en.toLowerCase().includes(q));
-    if (match) {
-      const sideItem = document.querySelector(`[data-panel="${category}"]`);
-      if (sideItem) sideItem.click();
-      break;
-    }
+  for (const [category,items] of Object.entries(VOCAB)) {
+    const match=items.find(i=>i.jp.toLowerCase().includes(q)||i.en.toLowerCase().includes(q)||(i.hz&&i.hz.includes(q)));
+    if (match) { document.querySelector(`[data-panel="${category}"]`)?.click(); break; }
   }
 });
 
-// =============================================
-//  STORAGE BUTTONS & RECORDING BUTTONS
-// =============================================
-document.getElementById('exportAllBtn').addEventListener('click', exportAllRecordings);
-document.getElementById('importAllBtn').addEventListener('click', () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'application/json';
-  input.onchange = (e) => {
-    if (e.target.files[0]) importRecordings(e.target.files[0]);
-  };
-  input.click();
+document.getElementById('exportAllBtn').addEventListener('click',exportAllRecordings);
+document.getElementById('importAllBtn').addEventListener('click',()=>{
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='application/json';
+  inp.onchange=e=>{if(e.target.files[0])importRecordings(e.target.files[0]);}; inp.click();
 });
-document.getElementById('clearRecordingsBtn').addEventListener('click', deleteAllRecordings);
-document.getElementById('startRecordBtn').addEventListener('click', startRecording);
-document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
-document.getElementById('saveRecordingBtn').addEventListener('click', saveRecording);
+document.getElementById('clearRecordingsBtn').addEventListener('click',()=>{
+  if(confirm('Delete ALL recordings?')){localStorage.removeItem('customAudio');updateStorageInfo();}
+});
+document.getElementById('startRecordBtn').addEventListener('click',startRecording);
+document.getElementById('stopRecordBtn').addEventListener('click',stopRecording);
+document.getElementById('saveRecordingBtn').addEventListener('click',saveRecording);
 
-// Initialize
 updateStorageInfo();
 loadQuiz();
 </script>
