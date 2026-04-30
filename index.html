@@ -1414,13 +1414,98 @@ function fallbackTTS(text, fallbackJp) {
 // ==============================================
 //  RECORDING
 // ==============================================
-let mediaRecorder=null, audioChunks=[], currentRecordingPhrase='', recordedBlob=null;
+// ============= REPLACE YOUR RECORDING FUNCTIONS WITH THESE =============
+
+let mediaRecorder = null;
+let audioChunks = [];
+let currentRecordingPhrase = '';
+let recordedBlob = null;
+let mediaStream = null;
+
+async function startRecording() {
+  try {
+    // Close any existing stream
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+    }
+    
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaStream = stream;
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+    
+    // Collect data chunks as they become available
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        audioChunks.push(event.data);
+      }
+    };
+    
+    // When recording stops, create the blob
+    mediaRecorder.onstop = () => {
+      recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      const url = URL.createObjectURL(recordedBlob);
+      
+      const playBtn = document.getElementById('playbackBtn');
+      const saveBtn = document.getElementById('saveRecordingBtn');
+      
+      playBtn.style.display = 'inline-block';
+      saveBtn.style.display = 'inline-block';
+      
+      // Remove old onclick and set new one
+      playBtn.onclick = () => {
+        const audio = new Audio(url);
+        audio.play();
+      };
+      
+      document.getElementById('recordingStatus').textContent = '✅ Recording done! Play back or save.';
+    };
+    
+    // Start recording with timeslice to get data continuously
+    mediaRecorder.start(100);
+    
+    document.getElementById('startRecordBtn').style.display = 'none';
+    document.getElementById('stopRecordBtn').style.display = 'inline-block';
+    document.getElementById('recordingStatus').textContent = '🔴 Recording... Speak now!';
+    
+  } catch (err) {
+    console.error('Microphone error:', err);
+    document.getElementById('recordingStatus').textContent = '❌ Cannot access microphone. Please allow permission.';
+    alert('Microphone access is required for recording. Please allow it in your browser.');
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    mediaRecorder.stop();
+    document.getElementById('startRecordBtn').style.display = 'inline-block';
+    document.getElementById('stopRecordBtn').style.display = 'none';
+  }
+}
+
+function saveRecording() {
+  if (!recordedBlob) {
+    alert('No recording to save. Please record something first.');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    const recordings = loadCustomRecordings();
+    recordings[currentRecordingPhrase] = reader.result;
+    localStorage.setItem('customAudio', JSON.stringify(recordings));
+    updateStorageInfo();
+    alert(`✅ Saved: "${currentRecordingPhrase}"`);
+    closeRecordingModal();
+  };
+  reader.readAsDataURL(recordedBlob);
+}
 
 function openRecordingModal(phrase) {
   currentRecordingPhrase = phrase;
   document.getElementById('recordingPhrase').textContent = phrase;
   document.getElementById('recordingModal').style.display = 'flex';
-  document.getElementById('recordingStatus').textContent = 'Ready. Click Start.';
+  document.getElementById('recordingStatus').textContent = 'Ready. Click Start Recording.';
   document.getElementById('startRecordBtn').style.display = 'inline-block';
   document.getElementById('stopRecordBtn').style.display = 'none';
   document.getElementById('playbackBtn').style.display = 'none';
@@ -1430,77 +1515,13 @@ function openRecordingModal(phrase) {
 
 function closeRecordingModal() {
   document.getElementById('recordingModal').style.display = 'none';
-  if (mediaRecorder?.state === 'recording') mediaRecorder.stop();
-}
-
-async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks = [];
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      const url = URL.createObjectURL(recordedBlob);
-      document.getElementById('playbackBtn').style.display = 'inline-block';
-      document.getElementById('playbackBtn').onclick = () => new Audio(url).play();
-      document.getElementById('saveRecordingBtn').style.display = 'inline-block';
-      document.getElementById('recordingStatus').textContent = '✅ Done! Play back or save.';
-      stream.getTracks().forEach(t => t.stop());
-    };
-    mediaRecorder.start();
-    document.getElementById('startRecordBtn').style.display = 'none';
-    document.getElementById('stopRecordBtn').style.display = 'inline-block';
-    document.getElementById('recordingStatus').textContent = '🔴 Recording…';
-  } catch { alert('Microphone access denied or not available.'); }
-}
-
-function stopRecording() {
-  if (mediaRecorder?.state === 'recording') {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
     mediaRecorder.stop();
-    document.getElementById('startRecordBtn').style.display = 'inline-block';
-    document.getElementById('stopRecordBtn').style.display = 'none';
   }
-}
-
-function saveRecording() {
-  if (!recordedBlob) { alert('Nothing to save!'); return; }
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    saveRecordingToStorage(currentRecordingPhrase, reader.result);
-    alert(`✅ Saved for: "${currentRecordingPhrase}"`);
-    closeRecordingModal();
-  };
-  reader.readAsDataURL(recordedBlob);
-}
-
-function updateStorageInfo() {
-  const count = Object.keys(loadCustomRecordings()).length;
-  const el = document.getElementById('storageInfo');
-  if (el) el.textContent = `📀 ${count} recording${count!==1?'s':''} saved`;
-}
-
-function exportAllRecordings() {
-  const r = loadCustomRecordings();
-  if (!Object.keys(r).length) { alert('No recordings!'); return; }
-  const blob = new Blob([JSON.stringify(r)],{type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href=url;
-  a.download=`cantonese_recordings_${new Date().toISOString().split('T')[0]}.json`;
-  a.click(); URL.revokeObjectURL(url);
-}
-
-function importRecordings(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      localStorage.setItem('customAudio', JSON.stringify({...loadCustomRecordings(),...data}));
-      alert(`Imported ${Object.keys(data).length} recordings!`);
-      updateStorageInfo();
-    } catch { alert('Invalid file!'); }
-  };
-  reader.readAsText(file);
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(track => track.stop());
+    mediaStream = null;
+  }
 }
 
 // ==============================================
