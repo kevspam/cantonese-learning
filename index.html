@@ -6,13 +6,7 @@
   <title>Cantonese Study Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:#0e0f13; --surface:#161820; --surface2:#1e2028; --border:#2a2c36;
-      --accent:#e8b86d; --accent2:#6d9ee8; --accent3:#e86d8c;
-      --text:#e8e4dc; --text-muted:#7a7a8c; --text-dim:#4a4a5c;
-      --green:#6dcc9e; --red:#e86d6d; --sidebar-w:260px;
-      --t1:#f5c842; --t2:#6dcc9e; --t3:#6d9ee8; --t4:#e86d6d; --t5:#cc8dcc; --t6:#e8b86d;
-    }
+    :root{--bg:#0e0f13;--surface:#161820;--surface2:#1e2028;--border:#2a2c36;--accent:#e8b86d;--accent2:#6d9ee8;--accent3:#e86d8c;--text:#e8e4dc;--text-muted:#7a7a8c;--text-dim:#4a4a5c;--green:#6dcc9e;--red:#e86d6d;--sidebar-w:260px;--t1:#f5c842;--t2:#6dcc9e;--t3:#6d9ee8;--t4:#e86d6d;--t5:#cc8dcc;--t6:#e8b86d;}
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
     .top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:200;}
@@ -43,14 +37,12 @@
     .panel-header h2{font-family:'Noto Serif TC',serif;font-size:1.6rem;color:var(--accent);margin-bottom:.3rem;}
     .panel-header p{color:var(--text-muted);font-size:.9rem;}
 
-    /* TONE LEGEND */
+    /* TONE */
     .tone-legend{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;}
     .tone-legend-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--text-muted);}
     .tone-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-
-    /* CARDS */
     .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;}
-    .vocab-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem;transition:border-color .2s,transform .2s;}
+    .vocab-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem;transition:border-color .2s,transform .2s;position:relative;}
     .vocab-card:hover{border-color:var(--accent);transform:translateY(-2px);}
     .card-jyutping{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;margin-bottom:.4rem;line-height:1.5;display:flex;flex-wrap:wrap;gap:4px;align-items:baseline;}
     .syllable{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:1px;}
@@ -66,10 +58,18 @@
     .t0{color:var(--text-muted);}.t0 .tone-bar{background:var(--text-dim);}
     .card-hanzi{font-family:'Noto Serif TC',serif;font-size:1.3rem;color:var(--text-muted);margin-bottom:.4rem;letter-spacing:.05em;}
     .card-meaning{font-size:.88rem;color:var(--text-muted);border-left:2px solid var(--accent2);padding-left:.6rem;line-height:1.5;margin-bottom:.8rem;}
-    .card-buttons{display:flex;gap:.5rem;flex-wrap:wrap;}
-    .card-listen,.card-record{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.3rem .8rem;color:var(--text-muted);font-size:.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;font-family:'DM Sans',sans-serif;}
-    .card-listen:hover{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+    .card-buttons{display:flex;gap:.4rem;flex-wrap:wrap;}
+
+    /* LISTEN BUTTON GROUP */
+    .listen-group{display:inline-flex;border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+    .listen-normal,.listen-slow{background:var(--surface2);border:none;padding:.3rem .7rem;color:var(--text-muted);font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+    .listen-normal{border-right:1px solid var(--border);}
+    .listen-normal:hover,.listen-slow:hover{background:var(--accent);color:var(--bg);}
+    .listen-slow:hover{background:rgba(232,184,109,.6);}
+    .card-record{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.3rem .8rem;color:var(--text-muted);font-size:.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;font-family:'DM Sans',sans-serif;}
     .card-record:hover{background:var(--accent2);color:var(--bg);border-color:var(--accent2);}
+    /* Recording indicator badge on card */
+    .rec-badge{position:absolute;top:.6rem;right:.6rem;background:var(--accent2);color:var(--bg);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:8px;letter-spacing:.04em;}
 
     /* WIDE CARDS */
     .wide-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-bottom:1rem;}
@@ -83,9 +83,9 @@
     .ex-listen:hover{color:var(--accent);}
     .ex-record:hover{color:var(--accent2);}
 
-    /* CONVERSATION GUIDE */
+    /* CONVO GUIDE */
     .convo-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-bottom:1rem;}
-    .convo-card h3{font-family:'Noto Serif TC',serif;font-size:1.1rem;color:var(--accent);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;}
+    .convo-card h3{font-family:'Noto Serif TC',serif;font-size:1.1rem;color:var(--accent);margin-bottom:.8rem;}
     .convo-line{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:.6rem .8rem;align-items:start;padding:.5rem .7rem;border-radius:8px;margin-bottom:.3rem;}
     .convo-line:nth-child(odd){background:var(--surface2);}
     .speaker-tag{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;align-self:center;}
@@ -98,28 +98,22 @@
     .convo-tip{background:var(--surface2);border-left:3px solid var(--accent);padding:.6rem .9rem;border-radius:0 8px 8px 0;font-size:.82rem;color:var(--text-muted);margin-top:.8rem;}
     .convo-tip strong{color:var(--accent);}
 
-    /* QUIZ v2 */
+    /* QUIZ */
     .quiz-wrap{max-width:700px;}
-    /* Quiz mode selector */
     .quiz-modes{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem;}
     .quiz-mode-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1.1rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text-muted);transition:all .15s;}
     .quiz-mode-btn:hover,.quiz-mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(232,184,109,.08);}
-    /* Topic selector */
     .topic-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0;}
     .topic-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.3rem .8rem;cursor:pointer;font-size:.8rem;color:var(--text-muted);transition:all .15s;display:flex;align-items:center;gap:.4rem;}
     .topic-chip:hover{border-color:var(--accent2);}
     .topic-chip.selected{border-color:var(--accent2);background:rgba(109,158,232,.1);color:var(--accent2);}
-    .topic-chip .chip-score{font-size:.7rem;background:var(--surface2);border-radius:10px;padding:1px 6px;}
+    .chip-score{font-size:.7rem;background:var(--surface2);border-radius:10px;padding:1px 6px;}
     .chip-score.good{background:rgba(109,204,158,.2);color:var(--green);}
     .chip-score.mid{background:rgba(232,184,109,.2);color:var(--accent);}
     .chip-score.bad{background:rgba(232,109,109,.2);color:var(--red);}
-    /* Quiz progress */
     .quiz-progress{display:flex;gap:4px;margin-bottom:1.5rem;}
     .quiz-pip{height:4px;flex:1;background:var(--border);border-radius:2px;transition:background .3s;}
     .quiz-pip.done{background:var(--accent);}
-    .quiz-pip.correct-pip{background:var(--green);}
-    .quiz-pip.wrong-pip{background:var(--red);}
-    /* Quiz question */
     .quiz-q{font-size:1.1rem;font-weight:600;margin-bottom:1.2rem;line-height:1.5;}
     .quiz-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem;}
     .quiz-opt{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.75rem 1.1rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);text-align:left;transition:all .15s;}
@@ -130,7 +124,6 @@
     .quiz-feedback{font-size:.95rem;min-height:1.5rem;margin-bottom:.8rem;font-weight:500;}
     .quiz-feedback.ok{color:var(--green);}
     .quiz-feedback.nope{color:var(--red);}
-    /* Stats screen */
     .stats-screen{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
     .stats-screen h3{font-family:'Noto Serif TC',serif;font-size:1.4rem;color:var(--accent);margin-bottom:.3rem;}
     .stats-summary{display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap;}
@@ -140,16 +133,13 @@
     .stat-pill.green .num{color:var(--green);}
     .stat-pill.red .num{color:var(--red);}
     .stat-pill.gold .num{color:var(--accent);}
-    /* Topic bars */
     .topic-bars{margin:1.2rem 0;}
     .topic-bar-row{display:grid;grid-template-columns:120px 1fr 40px;gap:.5rem;align-items:center;margin-bottom:.5rem;}
     .topic-bar-label{font-size:.78rem;color:var(--text-muted);text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
     .topic-bar-track{background:var(--surface2);border-radius:4px;height:8px;overflow:hidden;}
     .topic-bar-fill{height:100%;border-radius:4px;transition:width .5s ease;}
     .topic-bar-pct{font-size:.72rem;color:var(--text-dim);text-align:right;}
-    /* Streak */
     .streak-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(232,184,109,.12);border:1px solid var(--accent);border-radius:20px;padding:.3rem .9rem;font-size:.82rem;color:var(--accent);margin-bottom:1rem;}
-    /* Buttons */
     .btn-primary{background:var(--accent);border:none;border-radius:8px;padding:.6rem 1.5rem;color:var(--bg);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:opacity .15s;}
     .btn-primary:hover{opacity:.85;}
     .btn-primary:disabled{opacity:.3;cursor:not-allowed;}
@@ -157,47 +147,57 @@
     .btn-outline:hover{border-color:var(--accent2);color:var(--accent2);}
     .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;}
 
+    /* RECORDINGS MANAGER */
+    .rec-manager{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;}
+    .rec-manager h3{font-family:'Space Mono',monospace;color:var(--accent2);font-size:.95rem;margin-bottom:1rem;}
+    .rec-list{display:flex;flex-direction:column;gap:.5rem;max-height:420px;overflow-y:auto;}
+    .rec-list::-webkit-scrollbar{width:4px;}
+    .rec-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+    .rec-item{display:flex;align-items:center;gap:.7rem;padding:.5rem .8rem;background:var(--surface2);border-radius:8px;font-size:.82rem;}
+    .rec-item-phrase{font-family:'Space Mono',monospace;color:var(--accent);flex:1;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .rec-item-play{background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--accent2);cursor:pointer;font-size:.75rem;}
+    .rec-item-play:hover{background:var(--accent2);color:var(--bg);}
+    .rec-item-del{background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--red);cursor:pointer;font-size:.75rem;}
+    .rec-item-del:hover{background:var(--red);color:var(--bg);}
+
     /* MTR */
     .mtr-table{width:100%;border-collapse:collapse;font-size:.88rem;}
     .mtr-table th{background:var(--surface2);padding:.6rem 1rem;text-align:left;color:var(--accent);font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.05em;border-bottom:1px solid var(--border);}
     .mtr-table td{padding:.55rem 1rem;border-bottom:1px solid var(--border);color:var(--text-muted);}
     .mtr-table tr:hover td{background:var(--surface2);}
-    /* Tone guide */
     .tone-guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:1rem 0;}
     .tone-guide-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;}
     .tone-guide-card .tone-num{font-size:2rem;font-weight:700;font-family:'Space Mono',monospace;}
     .tone-guide-card .tone-name{font-size:.8rem;color:var(--text-muted);margin:.2rem 0;}
     .tone-guide-card .tone-desc{font-size:.75rem;color:var(--text-dim);}
-    /* Storage */
+
+    /* STORAGE PANEL */
     .storage-panel{position:fixed;bottom:20px;right:20px;background:var(--surface);padding:1rem;border-radius:12px;border:1px solid var(--border);z-index:100;max-width:280px;font-size:.8rem;}
     .storage-panel h4{font-size:.85rem;margin-bottom:.5rem;color:var(--accent);}
     .storage-buttons{display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;}
     .small-btn{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.2rem .5rem;color:var(--text-muted);cursor:pointer;font-size:.7rem;flex:1;text-align:center;}
     .small-btn:hover{background:var(--accent2);color:var(--bg);}
-    /* Recording modal */
     #recordingModal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;}
 
     @media(max-width:768px){
       .hamburger{display:block;}
-      .top-search{width:140px;}
+      .top-search{width:130px;}
       .sidebar{position:fixed;left:-100%;top:54px;height:calc(100vh - 54px);z-index:300;transition:left .25s ease;}
       .sidebar.open{left:0;}
       .main{padding:1.2rem;}
       .card-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;}
-      .storage-panel{bottom:10px;right:10px;max-width:260px;padding:.8rem;}
+      .storage-panel{bottom:10px;right:10px;max-width:240px;padding:.8rem;}
       .convo-line{grid-template-columns:auto 1fr;}
       .convo-hz,.convo-listen{grid-column:1/-1;}
     }
   </style>
 </head>
 <body>
-
 <div class="top-bar">
   <button class="hamburger" id="hamburger">☰</button>
   <div class="logo">廣東話 <span>Cantonese Study Hub</span></div>
   <input type="text" class="top-search" placeholder="🔍 search vocab…" id="globalSearch">
 </div>
-
 <div class="layout">
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-section">
@@ -212,7 +212,7 @@
     <div class="sidebar-divider"></div>
     <div class="sidebar-section">
       <div class="sidebar-label">Beginners</div>
-      <div class="sidebar-item" data-panel="conversation_guide"><span class="icon">🗨️</span>Conversation Guide ✨</div>
+      <div class="sidebar-item" data-panel="conversation_guide"><span class="icon">🗨️</span>Conversation Guide</div>
       <div class="sidebar-item" data-panel="adjectives"><span class="icon">✨</span>Adjectives</div>
       <div class="sidebar-item" data-panel="animals"><span class="icon">🐾</span>Animals</div>
       <div class="sidebar-item" data-panel="basic_conversation"><span class="icon">💬</span>Basic Conversation</div>
@@ -224,7 +224,7 @@
       <div class="sidebar-item" data-panel="countries"><span class="icon">🌍</span>Countries</div>
       <div class="sidebar-item" data-panel="drinks"><span class="icon">🥤</span>Drinks</div>
       <div class="sidebar-item" data-panel="eating_out"><span class="icon">🍜</span>Eating Out</div>
-      <div class="sidebar-item" data-panel="chinese_restaurant"><span class="icon">🥢</span>Chinese Restaurant 🆕</div>
+      <div class="sidebar-item" data-panel="chinese_restaurant"><span class="icon">🥢</span>Chinese Restaurant</div>
       <div class="sidebar-item" data-panel="emotions"><span class="icon">😊</span>Emotions</div>
       <div class="sidebar-item" data-panel="family"><span class="icon">👨‍👩‍👧</span>Family</div>
       <div class="sidebar-item" data-panel="greetings"><span class="icon">👋</span>Greetings</div>
@@ -242,7 +242,7 @@
       <div class="sidebar-item" data-panel="special_occasions"><span class="icon">🎉</span>Special Occasions</div>
       <div class="sidebar-item" data-panel="sport"><span class="icon">⚽</span>Sport</div>
       <div class="sidebar-item" data-panel="christmas"><span class="icon">🎄</span>Christmas</div>
-      <div class="sidebar-item" data-panel="slang"><span class="icon">🤬</span>Slang & Sarcasm 🆕</div>
+      <div class="sidebar-item" data-panel="slang"><span class="icon">🤬</span>Slang & Sarcasm</div>
       <div class="sidebar-item" data-panel="verbs"><span class="icon">🏃</span>Verbs</div>
       <div class="sidebar-item" data-panel="weather"><span class="icon">🌤️</span>Weather</div>
     </div>
@@ -264,18 +264,18 @@
     <div class="sidebar-divider"></div>
     <div class="sidebar-section">
       <div class="sidebar-label">Practice</div>
-      <div class="sidebar-item" data-panel="quiz"><span class="icon">📝</span>Smart Quiz ✨</div>
+      <div class="sidebar-item" data-panel="quiz"><span class="icon">📝</span>Smart Quiz</div>
+      <div class="sidebar-item" data-panel="recordings_manager"><span class="icon">🎙️</span>My Recordings</div>
     </div>
   </nav>
 
   <main class="main" id="mainContent">
-
     <!-- TONE GUIDE -->
     <div class="panel" id="panel-tones_guide">
-      <div class="panel-header"><h2>🎵 The 6 Cantonese Tones</h2><p>Master tones — same sound, different pitch = completely different word</p></div>
+      <div class="panel-header"><h2>🎵 The 6 Cantonese Tones</h2><p>Same sound, different pitch = completely different word</p></div>
       <div class="tone-guide-grid" id="toneGuideGrid"></div>
       <div class="wide-card" style="margin-top:1rem;">
-        <h3>Tone colour key used on every card</h3>
+        <h3>Tone colour key</h3>
         <div style="margin-top:.8rem;display:flex;flex-wrap:wrap;gap:.6rem;">
           <span style="background:var(--t1);color:#000;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:700;">T1 High Flat ─</span>
           <span style="background:var(--t2);color:#000;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:700;">T2 High Rising ↗</span>
@@ -284,24 +284,23 @@
           <span style="background:var(--t5);color:#000;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:700;">T5 Low Rising ↗</span>
           <span style="background:var(--t6);color:#000;padding:2px 10px;border-radius:20px;font-size:.8rem;font-weight:700;">T6 Low Flat ─</span>
         </div>
+        <p style="margin-top:.8rem;font-size:.82rem;">🔊 = normal speed &nbsp;|&nbsp; 🐢 = slow (half speed) — great for catching every syllable</p>
       </div>
     </div>
 
     <!-- CONVERSATION GUIDE -->
     <div class="panel" id="panel-conversation_guide">
-      <div class="panel-header"><h2>🗨️ Conversation Guide</h2><p>Real dialogues — learn how conversations actually flow in Cantonese</p></div>
+      <div class="panel-header"><h2>🗨️ Conversation Guide</h2><p>Real dialogues — how conversations flow in Cantonese</p></div>
       <div id="convoGuideContent"></div>
     </div>
 
-    <!-- BASICS panels -->
-    <div class="panel active" id="panel-numbers"><div class="panel-header"><h2>🔢 Numbers</h2><p>Counting in Cantonese</p></div><div id="tone-legend-numbers"></div><div class="card-grid" id="grid-numbers"></div></div>
-    <div class="panel" id="panel-natural"><div class="panel-header"><h2>🌿 Natural Objects</h2><p>Nature vocabulary</p></div><div id="tone-legend-natural"></div><div class="card-grid" id="grid-natural"></div></div>
-    <div class="panel" id="panel-dates"><div class="panel-header"><h2>📅 Dates</h2><p>Days, months and calendar</p></div><div id="tone-legend-dates"></div><div class="card-grid" id="grid-dates"></div></div>
+    <!-- BASICS -->
+    <div class="panel active" id="panel-numbers"><div class="panel-header"><h2>🔢 Numbers</h2><p>Counting in Cantonese — zero to ten million</p></div><div id="tone-legend-numbers"></div><div class="card-grid" id="grid-numbers"></div></div>
+    <div class="panel" id="panel-natural"><div class="panel-header"><h2>🌿 Natural Objects</h2></div><div id="tone-legend-natural"></div><div class="card-grid" id="grid-natural"></div></div>
+    <div class="panel" id="panel-dates"><div class="panel-header"><h2>📅 Dates</h2></div><div id="tone-legend-dates"></div><div class="card-grid" id="grid-dates"></div></div>
     <div class="panel" id="panel-quantities"><div class="panel-header"><h2>📏 Quantities & Sizes</h2></div><div id="tone-legend-quantities"></div><div class="card-grid" id="grid-quantities"></div></div>
     <div class="panel" id="panel-directions"><div class="panel-header"><h2>🧭 Directions</h2></div><div id="tone-legend-directions"></div><div class="card-grid" id="grid-directions"></div></div>
     <div class="panel" id="panel-time"><div class="panel-header"><h2>⏰ Time</h2></div><div id="tone-legend-time"></div><div class="card-grid" id="grid-time"></div></div>
-
-    <!-- BEGINNERS panels -->
     <div class="panel" id="panel-adjectives"><div class="panel-header"><h2>✨ Adjectives</h2></div><div id="tone-legend-adjectives"></div><div class="card-grid" id="grid-adjectives"></div></div>
     <div class="panel" id="panel-animals"><div class="panel-header"><h2>🐾 Animals</h2></div><div id="tone-legend-animals"></div><div class="card-grid" id="grid-animals"></div></div>
     <div class="panel" id="panel-basic_conversation"><div class="panel-header"><h2>💬 Basic Conversation</h2></div><div id="tone-legend-basic_conversation"></div><div class="card-grid" id="grid-basic_conversation"></div></div>
@@ -314,9 +313,9 @@
     <div class="panel" id="panel-drinks"><div class="panel-header"><h2>🥤 Drinks</h2></div><div id="tone-legend-drinks"></div><div class="card-grid" id="grid-drinks"></div></div>
     <div class="panel" id="panel-eating_out"><div class="panel-header"><h2>🍜 Eating Out</h2></div><div id="tone-legend-eating_out"></div><div class="card-grid" id="grid-eating_out"></div></div>
 
-    <!-- CHINESE RESTAURANT - NEW -->
+    <!-- CHINESE RESTAURANT — full menu -->
     <div class="panel" id="panel-chinese_restaurant">
-      <div class="panel-header"><h2>🥢 Chinese Restaurant Menu</h2><p>Everything you'll find in a real Chinese restaurant — order with confidence</p></div>
+      <div class="panel-header"><h2>🥢 Chinese Restaurant Menu</h2><p>Full menu vocabulary — starters, soups, rice, noodles, meat, seafood, veg & desserts</p></div>
       <div id="tone-legend-chinese_restaurant"></div>
       <div class="card-grid" id="grid-chinese_restaurant"></div>
     </div>
@@ -338,19 +337,12 @@
     <div class="panel" id="panel-special_occasions"><div class="panel-header"><h2>🎉 Special Occasions</h2></div><div id="tone-legend-special_occasions"></div><div class="card-grid" id="grid-special_occasions"></div></div>
     <div class="panel" id="panel-sport"><div class="panel-header"><h2>⚽ Sport</h2></div><div id="tone-legend-sport"></div><div class="card-grid" id="grid-sport"></div></div>
     <div class="panel" id="panel-christmas"><div class="panel-header"><h2>🎄 Christmas</h2></div><div id="tone-legend-christmas"></div><div class="card-grid" id="grid-christmas"></div></div>
-    <div class="panel" id="panel-slang"><div class="panel-header"><h2>🤬 Slang & Sarcasm</h2><p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">⚠️ Strong language — use with care!</p></div><div id="tone-legend-slang"></div><div class="card-grid" id="grid-slang"></div></div>
+    <div class="panel" id="panel-slang"><div class="panel-header"><h2>🤬 Slang & Sarcasm</h2><p style="font-size:.8rem;color:var(--red);">⚠️ Strong language — for recognition only, use with care</p></div><div id="tone-legend-slang"></div><div class="card-grid" id="grid-slang"></div></div>
     <div class="panel" id="panel-verbs"><div class="panel-header"><h2>🏃 Verbs</h2></div><div id="tone-legend-verbs"></div><div class="card-grid" id="grid-verbs"></div></div>
     <div class="panel" id="panel-weather"><div class="panel-header"><h2>🌤️ Weather</h2></div><div id="tone-legend-weather"></div><div class="card-grid" id="grid-weather"></div></div>
 
     <!-- INTERMEDIATE -->
-    <div class="panel" id="panel-intro_intermediate">
-      <div class="panel-header"><h2>📖 Intermediate Introduction</h2></div>
-      <div style="max-width:640px;">
-        <div class="wide-card"><h3>Welcome to Intermediate Cantonese</h3>
-          <p>Cantonese has 6 tones. Jyutping tone numbers: <code style="color:var(--t1)">1</code> high flat, <code style="color:var(--t2)">2</code> high rising, <code style="color:var(--t3)">3</code> mid flat, <code style="color:var(--t4)">4</code> low falling, <code style="color:var(--t5)">5</code> low rising, <code style="color:var(--t6)">6</code> low flat.</p>
-        </div>
-      </div>
-    </div>
+    <div class="panel" id="panel-intro_intermediate"><div class="panel-header"><h2>📖 Intermediate Introduction</h2></div><div style="max-width:640px;"><div class="wide-card"><h3>Welcome to Intermediate Cantonese</h3><p>Tone numbers 1–6: <code style="color:var(--t1)">1</code> high flat, <code style="color:var(--t2)">2</code> high rising, <code style="color:var(--t3)">3</code> mid flat, <code style="color:var(--t4)">4</code> low falling, <code style="color:var(--t5)">5</code> low rising, <code style="color:var(--t6)">6</code> low flat.</p></div></div></div>
     <div class="panel" id="panel-characters"><div class="panel-header"><h2>字 Characters & Compound Words</h2></div><div id="grid-characters"></div></div>
     <div class="panel" id="panel-classifiers"><div class="panel-header"><h2>🔢 Numerical Classifiers</h2></div><div id="tone-legend-classifiers"></div><div class="card-grid" id="grid-classifiers"></div></div>
     <div class="panel" id="panel-this_that"><div class="panel-header"><h2>👉 "This" and "That"</h2></div><div id="grid-this_that"></div></div>
@@ -361,12 +353,14 @@
     <div class="panel" id="panel-dimsum"><div class="panel-header"><h2>🥟 Dim Sum Menu</h2></div><div id="tone-legend-dimsum"></div><div class="card-grid" id="grid-dimsum"></div></div>
     <div class="panel" id="panel-mtr"><div class="panel-header"><h2>🚇 Hong Kong MTR</h2></div><div id="grid-mtr"></div></div>
 
-    <!-- SMART QUIZ -->
-    <div class="panel" id="panel-quiz">
-      <div class="panel-header"><h2>📝 Smart Quiz</h2><p>Track your progress by topic — target your weak spots</p></div>
-      <div class="quiz-wrap" id="quizWrap"></div>
-    </div>
+    <!-- QUIZ -->
+    <div class="panel" id="panel-quiz"><div class="panel-header"><h2>📝 Smart Quiz</h2><p>Track progress by topic — target weak spots</p></div><div class="quiz-wrap" id="quizWrap"></div></div>
 
+    <!-- RECORDINGS MANAGER -->
+    <div class="panel" id="panel-recordings_manager">
+      <div class="panel-header"><h2>🎙️ My Recordings</h2><p>Manage all your saved voice recordings — play, delete, or export individual ones</p></div>
+      <div id="recManagerContent"></div>
+    </div>
   </main>
 </div>
 
@@ -376,11 +370,13 @@
     <h3 style="color:var(--accent);margin-bottom:1rem;">🎙️ Record Your Voice</h3>
     <p style="margin:1rem 0;">Phrase: <strong id="recordingPhrase" style="color:var(--accent2);font-family:'Space Mono',monospace;"></strong></p>
     <div id="recordingStatus" style="margin:1rem 0;padding:.5rem;background:var(--surface2);border-radius:8px;color:var(--text-muted);"></div>
+    <div id="existingRecNote" style="display:none;margin:.5rem 0;padding:.4rem .8rem;background:rgba(109,158,232,.1);border:1px solid var(--accent2);border-radius:6px;font-size:.8rem;color:var(--accent2);">📀 You already have a recording for this — saving will replace it.</div>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-      <button id="startRecordBtn" class="btn-primary">⏺ Start Recording</button>
+      <button id="startRecordBtn" class="btn-primary">⏺ Start</button>
       <button id="stopRecordBtn" class="btn-primary" style="display:none;background:var(--red);">⏹️ Stop</button>
       <button id="playbackBtn" class="btn-primary" style="display:none;background:var(--accent2);">▶️ Playback</button>
       <button id="saveRecordingBtn" class="btn-primary" style="display:none;">💾 Save</button>
+      <button id="deleteThisRecBtn" class="btn-primary" style="display:none;background:var(--red);">🗑️ Delete existing</button>
       <button onclick="closeRecordingModal()" class="btn-primary" style="background:var(--text-dim);">Close</button>
     </div>
   </div>
@@ -391,14 +387,15 @@
   <div class="storage-buttons">
     <button id="exportAllBtn" class="small-btn">📥 Export</button>
     <button id="importAllBtn" class="small-btn">📤 Import</button>
-    <button id="clearRecordingsBtn" class="small-btn">🗑️ Clear</button>
+    <button id="manageRecBtn" class="small-btn">⚙️ Manage</button>
   </div>
   <div id="storageInfo" style="font-size:.7rem;margin-top:.5rem;color:var(--text-muted);"></div>
 </div>
 
 <script>
 // ============================================================
-//  VOCABULARY DATA  (jp=Jyutping  hz=漢字  en=English)
+//  VOCABULARY  — jp=Jyutping  hz=漢字  en=English
+//  All topics expanded with additional words
 // ============================================================
 const VOCAB = {
   numbers:[
@@ -415,10 +412,14 @@ const VOCAB = {
     {jp:"ng5 sap6",hz:"五十",en:"Fifty (50)"},{jp:"luk6 sap6",hz:"六十",en:"Sixty (60)"},
     {jp:"cat1 sap6",hz:"七十",en:"Seventy (70)"},{jp:"baat3 sap6",hz:"八十",en:"Eighty (80)"},
     {jp:"gau2 sap6",hz:"九十",en:"Ninety (90)"},{jp:"baak3",hz:"百",en:"Hundred (100)"},
-    {jp:"loeng5 baak3",hz:"兩百",en:"Two hundred (200)"},{jp:"cin1",hz:"千",en:"Thousand (1,000)"},
-    {jp:"loeng5 cin1",hz:"兩千",en:"Two thousand (2,000)"},{jp:"maan6",hz:"萬",en:"Ten thousand (10,000)"},
-    {jp:"jat1 baak3 maan6",hz:"一百萬",en:"One million"},{jp:"daai6 jat1",hz:"第一",en:"First"},
-    {jp:"daai6 ji6",hz:"第二",en:"Second"},{jp:"daai6 saam1",hz:"第三",en:"Third"},
+    {jp:"loeng5 baak3",hz:"兩百",en:"Two hundred (200)"},{jp:"saam1 baak3",hz:"三百",en:"Three hundred (300)"},
+    {jp:"cin1",hz:"千",en:"Thousand (1,000)"},{jp:"loeng5 cin1",hz:"兩千",en:"Two thousand (2,000)"},
+    {jp:"ng5 cin1",hz:"五千",en:"Five thousand (5,000)"},{jp:"maan6",hz:"萬",en:"Ten thousand (10,000)"},
+    {jp:"sap6 maan6",hz:"十萬",en:"Hundred thousand (100,000)"},
+    {jp:"jat1 baak3 maan6",hz:"一百萬",en:"One million (1,000,000)"},
+    {jp:"daai6 jat1",hz:"第一",en:"First (ordinal)"},{jp:"daai6 ji6",hz:"第二",en:"Second (ordinal)"},
+    {jp:"daai6 saam1",hz:"第三",en:"Third (ordinal)"},{jp:"daai6 sei3",hz:"第四",en:"Fourth (ordinal)"},
+    {jp:"seoung1 bun6",hz:"雙份",en:"Double portion"},{jp:"bun3 go3",hz:"半個",en:"Half of one"},
   ],
   natural:[
     {jp:"tou2",hz:"土",en:"Earth"},{jp:"seoi2",hz:"水",en:"Water"},{jp:"fo2",hz:"火",en:"Fire"},
@@ -430,6 +431,9 @@ const VOCAB = {
     {jp:"sam4 lam4",hz:"森林",en:"Forest"},{jp:"sa1 mok6",hz:"沙漠",en:"Desert"},
     {jp:"fa1",hz:"花",en:"Flower"},{jp:"syu6",hz:"樹",en:"Tree"},{jp:"cou2",hz:"草",en:"Grass"},
     {jp:"sek6",hz:"石",en:"Rock"},{jp:"tou4 dei6",hz:"土地",en:"Land"},
+    {jp:"hoi2 taan1",hz:"海灘",en:"Beach"},{jp:"dou2",hz:"島",en:"Island"},
+    {jp:"buk6 bou3",hz:"瀑布",en:"Waterfall"},{jp:"gung1 jyun2",hz:"公園",en:"Park / Garden"},
+    {jp:"tin1 hei3",hz:"天氣",en:"Weather / Sky"},{jp:"daai6 hei3",hz:"大氣",en:"Atmosphere / Air"},
   ],
   dates:[
     {jp:"sing1 kei4 jat1",hz:"星期一",en:"Monday"},{jp:"sing1 kei4 ji6",hz:"星期二",en:"Tuesday"},
@@ -443,8 +447,10 @@ const VOCAB = {
     {jp:"gau2 jyut6",hz:"九月",en:"September"},{jp:"sap6 jyut6",hz:"十月",en:"October"},
     {jp:"sap6 jat1 jyut6",hz:"十一月",en:"November"},{jp:"sap6 ji6 jyut6",hz:"十二月",en:"December"},
     {jp:"nin4",hz:"年",en:"Year"},{jp:"jyut6",hz:"月",en:"Month"},{jp:"jat6",hz:"日",en:"Day"},
-    {jp:"gam1 nin4",hz:"今年",en:"This year"},{jp:"haa6 go3 jyut6",hz:"下個月",en:"Next month"},
+    {jp:"gam1 nin4",hz:"今年",en:"This year"},{jp:"haa6 nin4",hz:"下年",en:"Next year"},
+    {jp:"soeng6 nin4",hz:"上年",en:"Last year"},{jp:"haa6 go3 jyut6",hz:"下個月",en:"Next month"},
     {jp:"soeng6 go3 sing1 kei4",hz:"上個星期",en:"Last week"},
+    {jp:"ni1 go3 sing1 kei4",hz:"呢個星期",en:"This week"},
   ],
   quantities:[
     {jp:"do1",hz:"多",en:"Many"},{jp:"siu2",hz:"少",en:"Few"},{jp:"daai6",hz:"大",en:"Big"},
@@ -452,9 +458,12 @@ const VOCAB = {
     {jp:"gou1",hz:"高",en:"Tall"},{jp:"dai1",hz:"低",en:"Low"},{jp:"mun5",hz:"滿",en:"Full"},
     {jp:"hung1",hz:"空",en:"Empty"},{jp:"hou2 do1",hz:"好多",en:"A lot"},
     {jp:"jat1 di1",hz:"一啲",en:"A little"},{jp:"jat1 bun3",hz:"一半",en:"Half"},
-    {jp:"cyun4 bouh6",hz:"全部",en:"All / Entirely"},{jp:"mui5 go3",hz:"每個",en:"Each one"},
+    {jp:"cyun4 bouh6",hz:"全部",en:"All"},{jp:"mui5 go3",hz:"每個",en:"Each one"},
     {jp:"gau3",hz:"夠",en:"Enough"},{jp:"m4 gau3",hz:"唔夠",en:"Not enough"},
     {jp:"hou2 siu2",hz:"好少",en:"Very few"},{jp:"dou1 hai6",hz:"都係",en:"All are"},
+    {jp:"cung4",hz:"重",en:"Again / Redo"},{jp:"zoi3",hz:"再",en:"Again / Another"},
+    {jp:"dou1",hz:"都",en:"Also / All"},{jp:"zik6 hai6",hz:"即係",en:"That means / i.e."},
+    {jp:"daai6 goi3",hz:"大概",en:"Approximately / About"},
   ],
   directions:[
     {jp:"zo2",hz:"左",en:"Left"},{jp:"jau6",hz:"右",en:"Right"},
@@ -467,6 +476,9 @@ const VOCAB = {
     {jp:"zoeng3 zo2 zyun3",hz:"向左轉",en:"Turn left"},
     {jp:"zoeng3 jau6 zyun3",hz:"向右轉",en:"Turn right"},
     {jp:"lo4 hau2",hz:"路口",en:"Junction"},{jp:"faan1 tau4",hz:"返頭",en:"Turn back"},
+    {jp:"gwo3 maak6",hz:"過馬路",en:"Cross the road"},
+    {jp:"soeng5 lau4",hz:"上樓",en:"Go upstairs"},{jp:"lohk6 lau4",hz:"落樓",en:"Go downstairs"},
+    {jp:"dak1 dou3",hz:"得到",en:"Arrive at / reach"},
   ],
   time:[
     {jp:"ji4 gaa1",hz:"而家",en:"Now"},{jp:"gam1 jat6",hz:"今日",en:"Today"},
@@ -477,9 +489,14 @@ const VOCAB = {
     {jp:"gei2 dim2 zung1",hz:"幾點鐘",en:"What time is it?"},
     {jp:"jat1 dim2 zung1",hz:"一點鐘",en:"One o'clock"},
     {jp:"loeng5 dim2 bun3",hz:"兩點半",en:"Two thirty"},
+    {jp:"saam1 dim2 gwat1",hz:"三點骨",en:"Three fifteen"},
     {jp:"bun3",hz:"半",en:"Half past"},{jp:"faai3 di1",hz:"快啲",en:"Hurry"},
     {jp:"maan6 di1",hz:"慢啲",en:"Slowly"},{jp:"jat1 go3 zung1 tau4",hz:"一個鐘頭",en:"One hour"},
     {jp:"jat1 fan1 zung1",hz:"一分鐘",en:"One minute"},
+    {jp:"jat1 miu3 zung1",hz:"一秒鐘",en:"One second"},
+    {jp:"gam1 maan5",hz:"今晚",en:"Tonight"},{jp:"ting1 maan5",hz:"聽晚",en:"Tomorrow night"},
+    {jp:"cam4 maan5",hz:"尋晚",en:"Last night"},{jp:"zeoi3 gaan6",hz:"最近",en:"Recently"},
+    {jp:"gau2 dim2",hz:"九點",en:"Nine o'clock"},
   ],
   adjectives:[
     {jp:"leng3",hz:"靚",en:"Beautiful"},{jp:"cau1",hz:"醜",en:"Ugly"},
@@ -492,9 +509,15 @@ const VOCAB = {
     {jp:"gwong3",hz:"廣",en:"Wide"},{jp:"zaak3",hz:"窄",en:"Narrow"},
     {jp:"gon1 zing6",hz:"乾淨",en:"Clean"},{jp:"faai3",hz:"快",en:"Fast"},
     {jp:"maan6",hz:"慢",en:"Slow"},{jp:"hou2",hz:"好",en:"Good"},
-    {jp:"waai6",hz:"壞",en:"Bad / Broken"},{jp:"ngaam1",hz:"啱",en:"Correct"},
-    {jp:"co3",hz:"錯",en:"Wrong"},{jp:"gwong1",hz:"光",en:"Bright / Shiny"},
-    {jp:"ngam3",hz:"暗",en:"Dark / Dim"},
+    {jp:"waai6",hz:"壞",en:"Bad"},{jp:"ngaam1",hz:"啱",en:"Correct"},
+    {jp:"co3",hz:"錯",en:"Wrong"},{jp:"gwong1",hz:"光",en:"Bright"},
+    {jp:"ngam3",hz:"暗",en:"Dark"},{jp:"hou2 sik6",hz:"好食",en:"Tasty / Delicious"},
+    {jp:"m4 hou2 sik6",hz:"唔好食",en:"Doesn't taste good"},
+    {jp:"laat6",hz:"辣",en:"Spicy / Hot (taste)"},{jp:"tian4",hz:"甜",en:"Sweet"},
+    {jp:"ham4",hz:"鹹",en:"Salty"},{jp:"syun1",hz:"酸",en:"Sour"},
+    {jp:"fu2",hz:"苦",en:"Bitter"},{jp:"zek1",hz:"戚",en:"Crumbly / tender"},
+    {jp:"naan4",hz:"難",en:"Difficult"},{jp:"jung2 ji",hz:"容易",en:"Easy"},
+    {jp:"hou2 wan2",hz:"好玩",en:"Fun"},{jp:"hou2 siu3",hz:"好笑",en:"Funny / Ridiculous"},
   ],
   animals:[
     {jp:"gau2",hz:"狗",en:"Dog"},{jp:"maau1",hz:"貓",en:"Cat"},
@@ -507,6 +530,11 @@ const VOCAB = {
     {jp:"haai5",hz:"蟹",en:"Crab"},{jp:"haa1",hz:"蝦",en:"Prawn"},
     {jp:"se4",hz:"蛇",en:"Snake"},{jp:"luk6 gui1",hz:"陸龜",en:"Tortoise"},
     {jp:"zing2 zing2",hz:"猩猩",en:"Monkey"},{jp:"gung1 gai1",hz:"公雞",en:"Rooster"},
+    {jp:"aap3",hz:"鴨",en:"Duck"},{jp:"ngo4",hz:"鵝",en:"Goose"},
+    {jp:"jing1 jyu2",hz:"鯨魚",en:"Whale"},{jp:"hoi2 tau4",hz:"海豚",en:"Dolphin"},
+    {jp:"paa4 cung4",hz:"爬蟲",en:"Reptile"},{jp:"zek3 niu5",hz:"雀鳥",en:"Bird (general)"},
+    {jp:"ming4 gwai1",hz:"蜥蜴",en:"Lizard"},{jp:"lau4 jing4",hz:"蝙蝠",en:"Bat"},
+    {jp:"bou3 zai2",hz:"豹仔",en:"Leopard/Cheetah"},
   ],
   basic_conversation:[
     {jp:"nei5 hou2",hz:"你好",en:"Hello"},{jp:"ngo5 hou2, nei5 le1?",hz:"我好，你呢？",en:"I'm fine, and you?"},
@@ -521,7 +549,11 @@ const VOCAB = {
     {jp:"gei2 do1 cin2?",hz:"幾多錢？",en:"How much?"},
     {jp:"m4 goi1 saai3",hz:"唔該晒",en:"Thank you very much"},
     {jp:"hai6 ge3",hz:"係嘅",en:"That's right"},{jp:"ngo5 m4 zi1",hz:"我唔知",en:"I don't know"},
-    {jp:"mou5 gwaan1 hai6",hz:"冇關係",en:"It doesn't matter / Never mind"},
+    {jp:"mou5 gwaan1 hai6",hz:"冇關係",en:"Never mind"},
+    {jp:"nei5 wui5 m4 wui5 gong2 jing1 man4?",hz:"你會唔會講英文？",en:"Do you speak English?"},
+    {jp:"ngo5 sik1 jat1 di1",hz:"我識一啲",en:"I know a little"},
+    {jp:"nei5 gam1 jat6 dim2 aa3?",hz:"你今日點啊？",en:"How are you today?"},
+    {jp:"zan1 hai6 hoi1 sam1 gin3 dou3 nei5",hz:"真係開心見到你",en:"I'm really happy to see you"},
   ],
   body:[
     {jp:"tau4",hz:"頭",en:"Head"},{jp:"min6",hz:"面",en:"Face"},
@@ -533,6 +565,12 @@ const VOCAB = {
     {jp:"san1 tai2",hz:"身體",en:"Body"},{jp:"geng2",hz:"頸",en:"Neck"},
     {jp:"jiu1",hz:"腰",en:"Waist"},{jp:"bong3",hz:"膀",en:"Shoulder"},
     {jp:"sik6 zi2",hz:"手指",en:"Finger"},{jp:"fut3",hz:"膝",en:"Knee"},
+    {jp:"zaap3",hz:"脣",en:"Lips"},{jp:"lin4 min6",hz:"臉面",en:"Cheek"},
+    {jp:"mou4",hz:"毛",en:"Hair (body)"},{jp:"tau4 faat3",hz:"頭髮",en:"Head hair"},
+    {jp:"pei4 fu1",hz:"皮膚",en:"Skin"},{jp:"gwat1",hz:"骨",en:"Bone"},
+    {jp:"hyut3",hz:"血",en:"Blood"},{jp:"fai3",hz:"肺",en:"Lungs"},
+    {jp:"gon1",hz:"肝",en:"Liver"},{jp:"saan1 zeoi2",hz:"手肘",en:"Elbow"},
+    {jp:"maang5",hz:"踝",en:"Ankle"},
   ],
   buildings:[
     {jp:"uk1",hz:"屋",en:"House"},{jp:"daai6 haa4",hz:"大廈",en:"Tower block"},
@@ -543,6 +581,11 @@ const VOCAB = {
     {jp:"dei6 tit3 zaam6",hz:"地鐵站",en:"MTR station"},
     {jp:"fei1 gei1 coeng4",hz:"飛機場",en:"Airport"},{jp:"ma4 tau4",hz:"碼頭",en:"Harbour"},
     {jp:"ging2 caat3 guk6",hz:"警察局",en:"Police station"},
+    {jp:"jau4 zing3 guk6",hz:"郵政局",en:"Post office"},
+    {jp:"tou4 syu1 gun2",hz:"圖書館",en:"Library"},
+    {jp:"gung1 jyun2",hz:"公園",en:"Park"},{jp:"bou3 guk6",hz:"博物館",en:"Museum"},
+    {jp:"haak3 teng1",hz:"客廳",en:"Shopping centre / lobby"},
+    {jp:"cing3 tin1 daai6 zaa3",hz:"清天大廈",en:"Office building"},
   ],
   colours:[
     {jp:"hung4 sik1",hz:"紅色",en:"Red"},{jp:"laam4 sik1",hz:"藍色",en:"Blue"},
@@ -553,6 +596,8 @@ const VOCAB = {
     {jp:"caam3 sik1",hz:"棕色",en:"Brown"},{jp:"gam1 sik1",hz:"金色",en:"Gold"},
     {jp:"ngan4 sik1",hz:"銀色",en:"Silver"},{jp:"cin1 laam4 sik1",hz:"淺藍色",en:"Light blue"},
     {jp:"sam1 luk6",hz:"深綠",en:"Dark green"},{jp:"sam1 hung4",hz:"深紅",en:"Dark red"},
+    {jp:"sam1 laam4",hz:"深藍",en:"Dark blue"},{jp:"cin1 wong4",hz:"淺黃",en:"Light yellow"},
+    {jp:"bei3 sik1",hz:"米色",en:"Beige / Cream"},{jp:"tiu4 zan4",hz:"透明",en:"Transparent / Clear"},
   ],
   common_phrases:[
     {jp:"m4 goi1",hz:"唔該",en:"Excuse me / Thanks (service)"},
@@ -565,7 +610,11 @@ const VOCAB = {
     {jp:"zan1 hai6",hz:"真係",en:"Really"},{jp:"gei2 hou2 aa3!",hz:"幾好啊！",en:"That's great!"},
     {jp:"ho2 m4 ho2 ji5?",hz:"可唔可以？",en:"May I?"},{jp:"gau3 ming6 aa3!",hz:"救命啊！",en:"Help!"},
     {jp:"mou5 gwaan1 hai6",hz:"冇關係",en:"Never mind"},
-    {jp:"zing6 hai6",hz:"正係",en:"Exactly / Precisely"},
+    {jp:"zing6 hai6",hz:"正係",en:"Exactly"},{jp:"hai6 gaa3 maa3?",hz:"係㗎嘛？",en:"Is that so? / Really?"},
+    {jp:"ngo5 zi1 dou3",hz:"我知道",en:"I know"},{jp:"ngo5 m4 zi1 dou3",hz:"我唔知道",en:"I don't know"},
+    {jp:"hou2 aa3 laa3",hz:"好啊喇",en:"Alright then! (agreement)"},
+    {jp:"dang2 ngo5 haa ha",hz:"等我下吓",en:"Let me try / Let me have a go"},
+    {jp:"jat1 cai4",hz:"一齊",en:"Together"},{jp:"jat1 go3 jan4",hz:"一個人",en:"Alone / by oneself"},
   ],
   cooking:[
     {jp:"zyu2 faan6",hz:"煮飯",en:"Cook rice"},{jp:"cin1",hz:"煎",en:"Pan fry"},
@@ -577,6 +626,12 @@ const VOCAB = {
     {jp:"syun3",hz:"蒜",en:"Garlic"},{jp:"zoeng1",hz:"薑",en:"Ginger"},
     {jp:"faan6",hz:"飯",en:"Cooked rice"},{jp:"min6",hz:"麵",en:"Noodles"},
     {jp:"fo2 luk6",hz:"火鍋",en:"Hot pot"},{jp:"liu2",hz:"料",en:"Ingredients"},
+    {jp:"coeng1",hz:"葱",en:"Spring onion"},{jp:"jyu4",hz:"醋",en:"Vinegar"},
+    {jp:"hoi2 sin1 zoeng3",hz:"海鮮醬",en:"Hoisin sauce"},
+    {jp:"ho4 laan4 zoeng3",hz:"荷蘭醬",en:"Oyster sauce"},
+    {jp:"maai5 fan2",hz:"麵粉",en:"Flour"},{jp:"gai1 daan6",hz:"雞蛋",en:"Egg"},
+    {jp:"zuk1 soeng1",hz:"肉汁",en:"Stock / Gravy"},{jp:"baan6 coi3",hz:"伴菜",en:"Side dish"},
+    {jp:"zing1 jyu4",hz:"蒸油",en:"Steaming liquid / broth"},
   ],
   countries:[
     {jp:"Zung1 Gwok3",hz:"中國",en:"China"},{jp:"Hoeng1 Gong2",hz:"香港",en:"Hong Kong"},
@@ -588,6 +643,11 @@ const VOCAB = {
     {jp:"Ji3 Daai6 Lei6",hz:"意大利",en:"Italy"},{jp:"Naam4 Fei1",hz:"南非",en:"South Africa"},
     {jp:"Baa1 Sai1",hz:"巴西",en:"Brazil"},{jp:"Toi4 Waan1",hz:"台灣",en:"Taiwan"},
     {jp:"Sin1 Gaa1 Bo1",hz:"新加坡",en:"Singapore"},
+    {jp:"Maak6 Sai1 Go1",hz:"墨西哥",en:"Mexico"},
+    {jp:"Fei1 Leot6 Ban1",hz:"菲律賓",en:"Philippines"},
+    {jp:"Taai3 Gwok3",hz:"泰國",en:"Thailand"},
+    {jp:"Jyut6 Naam4",hz:"越南",en:"Vietnam"},
+    {jp:"Jing4 Gwok3 Laan4",hz:"愛爾蘭",en:"Ireland"},
   ],
   drinks:[
     {jp:"seoi2",hz:"水",en:"Water"},{jp:"caa4",hz:"茶",en:"Tea"},
@@ -596,15 +656,23 @@ const VOCAB = {
     {jp:"be1 jau2",hz:"啤酒",en:"Beer"},{jp:"hung4 jau2",hz:"紅酒",en:"Red wine"},
     {jp:"baak6 jau2",hz:"白酒",en:"White wine"},{jp:"bo1 bo1 caa4",hz:"波波茶",en:"Bubble tea"},
     {jp:"ho2 lok6",hz:"可樂",en:"Coca-Cola"},{jp:"bing1 seoi2",hz:"冰水",en:"Ice water"},
-    {jp:"jyun4 joeng1",hz:"鴛鴦",en:"Yuenyeung (HK coffee+tea)"},
+    {jp:"jyun4 joeng1",hz:"鴛鴦",en:"Yuenyeung (coffee + tea)"},
     {jp:"ze1 zap1",hz:"蔗汁",en:"Sugarcane juice"},
     {jp:"leng4 mung1 seoi2",hz:"檸檬水",en:"Lemonade"},
     {jp:"geng1 caa4",hz:"薑茶",en:"Ginger tea"},
     {jp:"cing1 caa4",hz:"青茶",en:"Green tea"},
+    {jp:"pu2 ji2 caa4",hz:"普洱茶",en:"Pu-erh tea"},
+    {jp:"luk6 caa4",hz:"綠茶",en:"Green tea (mainland style)"},
+    {jp:"cyun4 zyu1 laat6",hz:"朱古力",en:"Hot chocolate"},
+    {jp:"ping4 gwo2 zap1",hz:"蘋果汁",en:"Apple juice"},
+    {jp:"dang1 gwa1 zap1",hz:"燈瓜汁",en:"Watermelon juice"},
+    {jp:"cing1 gwa1 seoi2",hz:"青瓜水",en:"Cucumber water"},
+    {jp:"tong4 seoi2",hz:"糖水",en:"Sweet soup / dessert drink (HK)"},
   ],
   eating_out:[
     {jp:"jau5 mou5 wai2?",hz:"有冇位？",en:"Do you have a table?"},
     {jp:"loeng5 wai2",hz:"兩位",en:"Table for two"},
+    {jp:"saam1 wai2",hz:"三位",en:"Table for three"},
     {jp:"caan1 paai4",hz:"餐牌",en:"Menu"},
     {jp:"dim2 coi3?",hz:"點菜？",en:"Ready to order?"},
     {jp:"ngo5 soeng2 jiu3...",hz:"我想要…",en:"I'd like..."},
@@ -615,79 +683,127 @@ const VOCAB = {
     {jp:"maan5 caan1",hz:"晚餐",en:"Dinner"},{jp:"daai3 zau2",hz:"帶走",en:"Takeaway"},
     {jp:"laat6",hz:"辣",en:"Spicy"},{jp:"m4 laat6",hz:"唔辣",en:"Not spicy"},
     {jp:"tian4",hz:"甜",en:"Sweet"},{jp:"syun1",hz:"酸",en:"Sour"},{jp:"fu2",hz:"苦",en:"Bitter"},
+    {jp:"ngo5 m4 sik6 ...",hz:"我唔食…",en:"I don't eat..."},
+    {jp:"jau5 mou5 siu2 sik6?",hz:"有冇素食？",en:"Do you have vegetarian food?"},
+    {jp:"gaa1 do1 di1 faan6",hz:"加多啲飯",en:"More rice please"},
+    {jp:"peng4 di1 dak1 m4 dak1?",hz:"平啲得唔得？",en:"Can it be cheaper?"},
+    {jp:"sik6 dou3 bao3",hz:"食到飽",en:"Eat until full"},
+    {jp:"hou2 laam4 wai3",hz:"好難位",en:"This place is packed!"},
   ],
 
-  // ===== CHINESE RESTAURANT — EXPANDED =====
+  // ===== CHINESE RESTAURANT — comprehensive authentic menu =====
   chinese_restaurant:[
-    // Soups
-    {jp:"seon1 cai3 daan6 faa1 tong1",hz:"酸菜蛋花湯",en:"Egg drop soup with pickled veg"},
+    // --- STARTERS ---
+    {jp:"ceng1 zing1 ngaan5 jyu2 gun2",hz:"清蒸眼魚卷",en:"Steamed spring rolls (prawn & veg)"},
+    {jp:"zaa3 gun2",hz:"炸卷",en:"Deep-fried spring rolls"},
+    {jp:"ngo4 bau1 zaa3 caa4 siu1",hz:"烤包炸叉燒",en:"Toasted BBQ pork bao"},
+    {jp:"gai1 cing1 zoeng3 san1 min6",hz:"雞腸醬新面",en:"Prawn toast"},
+    {jp:"zaa3 wan4 tun1",hz:"炸雲吞",en:"Deep-fried wontons"},
+    {jp:"sei3 bou2 zing1",hz:"四寶拼",en:"Combination starter platter"},
+    {jp:"laang5 bun3 hoi2 jip6 zaa3",hz:"冷拌海蜇絲",en:"Jellyfish salad (cold starter)"},
+    {jp:"bak6 zit3 gai1",hz:"白切雞",en:"Poached chicken (cold cuts)"},
+    {jp:"caa4 siu1",hz:"叉燒",en:"BBQ pork (char siu)"},
+    // --- SOUPS ---
     {jp:"wun4 tun1 tong1",hz:"雲吞湯",en:"Wonton soup"},
-    {jp:"saan1 seon1 hou4 wu4 tong1",hz:"酸辣湯",en:"Hot and sour soup"},
-    {jp:"gai1 tong1",hz:"雞湯",en:"Chicken soup"},
+    {jp:"seon1 laat6 tong1",hz:"酸辣湯",en:"Hot and sour soup"},
+    {jp:"daan6 faa1 tong1",hz:"蛋花湯",en:"Egg drop soup"},
     {jp:"ngau4 naam4 tong1",hz:"牛腩湯",en:"Beef brisket soup"},
-    // Rice dishes
+    {jp:"gai1 juk6 suk1 mai5 zuk1",hz:"雞肉粟米粥",en:"Chicken and sweetcorn soup"},
+    {jp:"hoi2 sin1 tong1",hz:"海鮮湯",en:"Seafood soup"},
+    {jp:"tong4 coi3 paa4 tong1",hz:"唐菜排骨湯",en:"Pork and vegetable soup"},
+    // --- RICE ---
     {jp:"baak6 faan6",hz:"白飯",en:"Steamed white rice"},
-    {jp:"caau2 faan6",hz:"炒飯",en:"Fried rice"},
+    {jp:"caau2 faan6",hz:"炒飯",en:"Egg fried rice"},
     {jp:"gai1 caau2 faan6",hz:"雞炒飯",en:"Chicken fried rice"},
     {jp:"haa1 jan1 caau2 faan6",hz:"蝦仁炒飯",en:"Prawn fried rice"},
-    {jp:"joeng4 zau1 caau2 faan6",hz:"揚州炒飯",en:"Yangzhou fried rice"},
+    {jp:"joeng4 zau1 caau2 faan6",hz:"揚州炒飯",en:"Yangzhou special fried rice"},
     {jp:"bou1 zai2 faan6",hz:"煲仔飯",en:"Claypot rice"},
-    {jp:"laap6 mei6 faan6",hz:"臘味飯",en:"Chinese sausage rice"},
-    // Noodles
+    {jp:"laap6 mei6 faan6",hz:"臘味飯",en:"Chinese sausage claypot rice"},
+    {jp:"gai1 baau6 caau2 faan6",hz:"滑雞炒飯",en:"Silky chicken fried rice"},
+    {jp:"sam1 bou1 faan6",hz:"三寶飯",en:"Three treasure rice (meat combo)"},
+    // --- NOODLES ---
     {jp:"wun4 tun1 min6",hz:"雲吞麵",en:"Wonton noodle soup"},
     {jp:"ngau4 lam1 min6",hz:"牛腩麵",en:"Beef brisket noodles"},
-    {jp:"caau2 min6",hz:"炒麵",en:"Fried noodles"},
-    {jp:"jyu5 hei3 caau2 min6",hz:"魚香炒麵",en:"Fish fragrant fried noodles"},
+    {jp:"caau2 min6",hz:"炒麵",en:"Stir-fried noodles"},
+    {jp:"gai1 si1 caau2 min6",hz:"雞絲炒麵",en:"Shredded chicken chow mein"},
+    {jp:"ho4 fan2 caau2",hz:"河粉炒",en:"Beef flat noodles (dry fried beef ho fun)"},
+    {jp:"sing1 jau1 caau2 ho4 fan2",hz:"星洲炒河粉",en:"Singapore noodles (curry rice vermicelli)"},
     {jp:"lo4 min6",hz:"撈麵",en:"Dry tossed noodles"},
-    {jp:"gwo3 kiu4 min6",hz:"過橋米線",en:"Crossing the bridge rice noodles"},
-    {jp:"cing1 caau2 ho4 fan2",hz:"清炒河粉",en:"Pan-fried flat rice noodles"},
-    {jp:"zaa3 zoeng3 min6",hz:"炸醬麵",en:"Noodles with soybean paste"},
-    // Meat dishes
+    {jp:"jyu5 caa1 caau2 mai5",hz:"魚叉炒米",en:"Prawn and egg vermicelli"},
+    // --- CHICKEN ---
+    {jp:"gung1 bou2 gai1 ding1",hz:"宮保雞丁",en:"Kung Pao chicken"},
+    {jp:"cing1 zing1 suk1 gai1",hz:"清蒸熟雞",en:"Steamed whole chicken"},
+    {jp:"ji2 bou2 gai1",hz:"紙包雞",en:"Paper-wrapped chicken"},
+    {jp:"lemon4 gai1",hz:"檸檬雞",en:"Lemon chicken"},
+    {jp:"caau2 gai1 ding1",hz:"炒雞丁",en:"Diced chicken with cashews"},
+    {jp:"gaa3 lei1 gai1",hz:"咖喱雞",en:"Curry chicken"},
+    {jp:"sau2 zaa3 gai1",hz:"手炸雞",en:"Crispy fried chicken"},
+    {jp:"bat1 bou2 gai1",hz:"八寶雞",en:"Stuffed chicken (eight treasure)"},
+    // --- BEEF ---
+    {jp:"ngau4 naam4 laan4",hz:"牛腩煮",en:"Stewed beef brisket"},
+    {jp:"caau2 ngau4 ho4 fan2",hz:"炒牛河粉",en:"Dry fried beef flat noodles"},
+    {jp:"hoi1 sim1 caau2 ngau4",hz:"西蘭花炒牛",en:"Beef with broccoli"},
+    {jp:"gaat3 gaa1 caau2 ngau4",hz:"咖喱炒牛",en:"Beef in black pepper sauce"},
+    {jp:"hak1 jiu1 caau2 ngau4",hz:"黑椒炒牛",en:"Black pepper beef"},
+    {jp:"hung4 siu1 ngau4 naam4",hz:"紅燒牛腩",en:"Red braised beef brisket"},
+    // --- PORK ---
     {jp:"caa4 siu1 zyu1 juk6",hz:"叉燒豬肉",en:"BBQ pork (char siu)"},
     {jp:"hung4 siu1 juk6",hz:"紅燒肉",en:"Red braised pork belly"},
-    {jp:"gung1 bou2 gai1 ding1",hz:"宮保雞丁",en:"Kung Pao chicken"},
-    {jp:"cing1 zing1 suk1 gai1",hz:"清蒸熟雞",en:"Steamed chicken"},
-    {jp:"bei2 baa1 gai1",hz:"比霸雞",en:"Lemon chicken"},
-    {jp:"gwo2 zi2 ngau4 lam1",hz:"果子牛腩",en:"Braised beef brisket"},
-    {jp:"hei3 gwat1",hz:"黑骨",en:"Pork ribs in black bean sauce"},
-    {jp:"gaa3 lei1 gai1",hz:"咖喱雞",en:"Curry chicken"},
-    {jp:"maau4 po4 dau6 fu6",hz:"麻婆豆腐",en:"Mapo tofu"},
-    {jp:"hung1 siu1 jou6 gwaai3",hz:"紅燒茄子",en:"Braised aubergine"},
-    // Seafood
-    {jp:"zing1 jyu2",hz:"蒸魚",en:"Steamed fish"},
+    {jp:"gu1 lou juk6",hz:"咕嚕肉",en:"Sweet and sour pork"},
+    {jp:"zyu1 baa1 paai4",hz:"豬排排",en:"Pork chop / spare ribs"},
+    {jp:"zing1 jok6 zyu1 juk6",hz:"蒸肉餅",en:"Steamed minced pork patty"},
+    {jp:"hei3 gwat1",hz:"黑豆排骨",en:"Spare ribs in black bean sauce"},
+    // --- DUCK & OTHER POULTRY ---
+    {jp:"kaau3 aap3",hz:"烤鴨",en:"Roast duck"},
+    {jp:"hung4 siu1 aap3",hz:"紅燒鴨",en:"Braised duck"},
+    {jp:"aap3 juk6 caau2",hz:"鴨肉炒",en:"Stir-fried duck"},
+    // --- SEAFOOD ---
+    {jp:"zing1 jyu2",hz:"蒸魚",en:"Steamed whole fish (ginger & spring onion)"},
+    {jp:"zaa3 jyu2",hz:"炸魚",en:"Deep-fried fish"},
     {jp:"caau2 haa1 jan1",hz:"炒蝦仁",en:"Stir-fried prawns"},
+    {jp:"zaa3 haa1 hak1 jiu1",hz:"炸蝦黑椒",en:"Deep-fried king prawns in black pepper"},
+    {jp:"cing1 cang1 haa1",hz:"清炒蝦",en:"Sautéed prawns in garlic"},
     {jp:"hei3 zap1 caau2 haai5",hz:"豉汁炒蟹",en:"Crab in black bean sauce"},
     {jp:"caau2 jau4 jyu2",hz:"炒魷魚",en:"Stir-fried squid"},
-    {jp:"taan4 jyu2 pau4",hz:"炭魚泡",en:"Crispy fish skin"},
-    // Vegetables
-    {jp:"caau2 cing1 coi3",hz:"炒青菜",en:"Stir-fried greens"},
-    {jp:"siu2 baak6 coi3",hz:"小白菜",en:"Bok choy"},
-    {jp:"suaan1 sing1 caau2 cai3 sam1",hz:"蒜蓉炒菜心",en:"Garlic stir-fried choy sum"},
-    {jp:"hung1 siu1 dau2 fu6",hz:"紅燒豆腐",en:"Braised tofu"},
-    {jp:"caau2 mong4 gwo2",hz:"炒芒果",en:"Stir-fried seasonal veg"},
-    // Dim sum (more)
-    {jp:"haa1 gaau2",hz:"蝦餃",en:"Prawn dumplings (har gow)"},
-    {jp:"siu1 maai2",hz:"燒賣",en:"Pork & prawn dumplings"},
-    {jp:"fung6 zaau2",hz:"鳳爪",en:"Steamed chicken feet"},
-    {jp:"lau4 saa1 baau1",hz:"流沙包",en:"Custard lava bun"},
-    {jp:"lo4 baak6 gou1",hz:"蘿蔔糕",en:"Turnip cake"},
-    {jp:"coeng4 fan2",hz:"腸粉",en:"Rice noodle rolls"},
+    {jp:"caau2 dai6 zi2",hz:"炒帶子",en:"Stir-fried scallops"},
+    {jp:"hung4 siu1 doi3 jyu2",hz:"紅燒帶魚",en:"Braised belt fish"},
+    // --- TOFU & VEGETABLE ---
+    {jp:"maau4 po4 dau6 fu6",hz:"麻婆豆腐",en:"Mapo tofu (spicy minced pork & tofu)"},
+    {jp:"hung1 siu1 dau6 fu6",hz:"紅燒豆腐",en:"Braised tofu in sauce"},
+    {jp:"caau2 bok6 coi3",hz:"炒白菜",en:"Stir-fried bok choy"},
+    {jp:"suan3 cai3 caau2",hz:"蒜菜炒",en:"Garlic stir-fried vegetables"},
+    {jp:"hung1 siu1 jou6 gwaai3",hz:"紅燒茄子",en:"Braised aubergine"},
+    {jp:"sam4 gu1 caau2",hz:"蘑菇炒",en:"Mushrooms stir-fried with oyster sauce"},
+    {jp:"caau2 zaa3 cai3",hz:"炒雜菜",en:"Mixed stir-fried vegetables"},
+    {jp:"siu2 baak6 coi3",hz:"小白菜",en:"Baby bok choy"},
+    {jp:"kai4 laan4 ngau4 juk6",hz:"芥蘭牛肉",en:"Beef with Chinese broccoli (gai lan)"},
+    // --- SPECIALTIES ---
+    {jp:"fo2 guk3 faan6",hz:"火鍋飯",en:"Sizzling hot plate rice"},
+    {jp:"caau2 laan4 bat1",hz:"炒拉麵",en:"Wok-tossed ramen"},
+    {jp:"saan1 si6 hing4 gai1",hz:"三味魚香雞",en:"Fish fragrant chicken (Szechuan style)"},
+    {jp:"daan6 faa1 caau2 haa1",hz:"蛋花炒蝦",en:"Prawn and egg stir-fry"},
+    {jp:"daai6 bin3 dau2 fu6",hz:"大片豆腐",en:"Silken tofu with century egg"},
+    // --- DESSERTS ---
+    {jp:"mong2 gwo2 bou1 ding1",hz:"芒果布甸",en:"Mango pudding"},
     {jp:"daan6 taat3",hz:"蛋撻",en:"Egg tart"},
-    {jp:"wu4 gok3",hz:"芋角",en:"Taro puff"},
-    {jp:"caa4 siu1 baau1",hz:"叉燒包",en:"BBQ pork bun"},
-    {jp:"paai4 gwat1",hz:"排骨",en:"Spare ribs"},
-    // Restaurant phrases
+    {jp:"zi1 ma1 tong4",hz:"芝麻湯",en:"Black sesame soup dessert"},
+    {jp:"tong4 jyun4",hz:"湯圓",en:"Glutinous rice balls in sweet soup"},
+    {jp:"dau6 fu6 faa1",hz:"豆腐花",en:"Tofu pudding (douhua)"},
+    {jp:"gwaai1 leng4 gou1",hz:"龜苓膏",en:"Herbal jelly (gui ling gao)"},
+    {jp:"jyu4 zai2 ceng1",hz:"魚仔青",en:"Mango pomelo sago"},
+    {jp:"bing1 saa1",hz:"冰沙",en:"Shaved ice dessert"},
+    // --- RESTAURANT PHRASES ---
     {jp:"jiu3 faan6 m4 jiu3 min6?",hz:"要飯唔要麵？",en:"Rice or noodles?"},
     {jp:"m4 goi1 jau5 mou5 siu2 sik6?",hz:"唔該有冇素食？",en:"Do you have vegetarian?"},
     {jp:"ngo5 m4 sik6 haa1",hz:"我唔食蝦",en:"I don't eat prawns"},
     {jp:"gaa1 do1 di1 faan6",hz:"加多啲飯",en:"More rice please"},
     {jp:"m4 goi1 wun6 fan1 go3 dip6",hz:"唔該換番個碟",en:"Can I have a clean plate?"},
-    {jp:"hou2 laam4 wai3",hz:"好難位",en:"This place is packed!"},
     {jp:"dang2 wai2",hz:"等位",en:"Waiting for a table"},
     {jp:"git3 sou3",hz:"結數",en:"Pay the bill"},
-    {jp:"faan6 goi3",hz:"飯蓋",en:"Lid / cover for rice"},
+    {jp:"yung6 hyun3",hz:"用券",en:"Use a voucher"},
+    {jp:"fan1 zung1 gaa1",hz:"包廂",en:"Private dining room"},
+    {jp:"ngo5 jau5 gwo3 min5",hz:"我有過敏",en:"I have an allergy"},
   ],
-
   emotions:[
     {jp:"hoi1 sam1",hz:"開心",en:"Happy"},{jp:"naan4 gwo3",hz:"難過",en:"Sad"},
     {jp:"nau1",hz:"嬲",en:"Angry"},{jp:"pa3",hz:"怕",en:"Scared"},
@@ -697,6 +813,10 @@ const VOCAB = {
     {jp:"gam2 dung6",hz:"感動",en:"Touched"},{jp:"caan3 gou1",hz:"尷尬",en:"Embarrassed"},
     {jp:"geng1 zoeng1",hz:"驚張",en:"Nervous"},{jp:"fong3 sung1",hz:"放鬆",en:"Relaxed"},
     {jp:"san1 fu2",hz:"辛苦",en:"Exhausted"},{jp:"zan1 hei1",hz:"震喜",en:"Pleasantly surprised"},
+    {jp:"m4 syu1 fuk6",hz:"唔舒服",en:"Uncomfortable / Unwell"},
+    {jp:"ngo5 syu1 fuk6",hz:"我舒服",en:"I feel comfortable / at ease"},
+    {jp:"gei1 dung6",hz:"激動",en:"Deeply moved / stirred up"},
+    {jp:"siu1 sik1",hz:"消息",en:"Relieved"},
   ],
   family:[
     {jp:"baa4 baa1",hz:"爸爸",en:"Dad"},{jp:"maa1 maa1",hz:"媽媽",en:"Mum"},
@@ -708,6 +828,11 @@ const VOCAB = {
     {jp:"lou5 gung1",hz:"老公",en:"Husband"},{jp:"lou5 po4",hz:"老婆",en:"Wife"},
     {jp:"zai2",hz:"仔",en:"Son"},{jp:"neoi2",hz:"女",en:"Daughter"},
     {jp:"sun1 zi2",hz:"孫子",en:"Grandchild"},
+    {jp:"biu2 go1",hz:"表哥",en:"Male cousin (older)"},
+    {jp:"biu2 ze1",hz:"表姐",en:"Female cousin (older)"},
+    {jp:"naam4 pang4 jau5",hz:"男朋友",en:"Boyfriend"},
+    {jp:"neoi5 pang4 jau5",hz:"女朋友",en:"Girlfriend"},
+    {jp:"fei1 bou2",hz:"非婚伴侶",en:"Partner (unmarried)"},
   ],
   greetings:[
     {jp:"nei5 hou2",hz:"你好",en:"Hello"},{jp:"zou2 san4",hz:"早晨",en:"Good morning"},
@@ -719,7 +844,9 @@ const VOCAB = {
     {jp:"sik6 zo2 maa3?",hz:"食咗未？",en:"Have you eaten? (HK greeting)"},
     {jp:"dak1 m4 dak1 haan4?",hz:"得唔得閒？",en:"Are you free?"},
     {jp:"jyu6 nei5 seon6 lei6",hz:"祝你順利",en:"All the best"},
-    {jp:"bou2 zung6 san1 tai2",hz:"保重身體",en:"Take care of yourself"},
+    {jp:"bou2 zung6 san1 tai2",hz:"保重身體",en:"Take care"},
+    {jp:"ceot1 heoi3",hz:"出去",en:"Going out? (casual greeting)"},
+    {jp:"faan1 lei4",hz:"返嚟",en:"You're back! (greeting on return)"},
   ],
   health:[
     {jp:"tung3",hz:"痛",en:"Pain"},{jp:"beng6",hz:"病",en:"Sick"},
@@ -729,6 +856,13 @@ const VOCAB = {
     {jp:"ji1 saang1",hz:"醫生",en:"Doctor"},{jp:"ji1 jyun2",hz:"醫院",en:"Hospital"},
     {jp:"joek6 fong4",hz:"藥房",en:"Pharmacy"},{jp:"joek6",hz:"藥",en:"Medicine"},
     {jp:"gau3 seong1 ce1",hz:"救傷車",en:"Ambulance"},{jp:"mou5 si6",hz:"冇事",en:"I'm OK"},
+    {jp:"m4 syu1 fuk6",hz:"唔舒服",en:"Not feeling well"},
+    {jp:"hyut3 ngaat3",hz:"血壓",en:"Blood pressure"},
+    {jp:"tong4 njo6 beng6",hz:"糖尿病",en:"Diabetes"},
+    {jp:"maan4 sing3 beng6",hz:"慢性病",en:"Chronic illness"},
+    {jp:"joek6 fang1",hz:"藥方",en:"Prescription"},
+    {jp:"zyu3 se6",hz:"注射",en:"Injection / Shot"},
+    {jp:"gwo3 man5",hz:"過敏",en:"Allergy"},
   ],
   holidays:[
     {jp:"gaa3 kei4",hz:"假期",en:"Holiday"},{jp:"leoi5 haang4",hz:"旅行",en:"Travel"},
@@ -738,6 +872,9 @@ const VOCAB = {
     {jp:"faan1 gwok3",hz:"返國",en:"Return home"},{jp:"ceot1 gwok3",hz:"出國",en:"Go abroad"},
     {jp:"daap3 fei1 gei1",hz:"搭飛機",en:"Take a flight"},
     {jp:"gwo3 hoi2 gwaan1",hz:"過海關",en:"Go through customs"},
+    {jp:"geuk3 lei5 jyun4",hz:"旅遊局",en:"Tourism board"},
+    {jp:"gaak3 leot6 ji3",hz:"隔離",en:"Quarantine / Isolation"},
+    {jp:"bou3 him2",hz:"保險",en:"Insurance"},
   ],
   home:[
     {jp:"uk1 kei2",hz:"屋企",en:"Home"},{jp:"cyu5 fong2",hz:"廚房",en:"Kitchen"},
@@ -748,6 +885,11 @@ const VOCAB = {
     {jp:"saa1 faa1",hz:"沙發",en:"Sofa"},{jp:"gwai6",hz:"櫃",en:"Cabinet"},
     {jp:"bing1 siang1",hz:"冰箱",en:"Refrigerator"},{jp:"faan6 bou1",hz:"飯煲",en:"Rice cooker"},
     {jp:"lau4 toi1",hz:"樓梯",en:"Stairs"},
+    {jp:"ceot1 jap6 hau2",hz:"出入口",en:"Entrance / Exit"},
+    {jp:"tin4 toi2",hz:"陽台",en:"Balcony"},{jp:"aa3 taan1",hz:"花壇",en:"Garden / Yard"},
+    {jp:"deoi3 gan6 mun4",hz:"對近門",en:"Next door"},
+    {jp:"saan1 deoi1",hz:"桑底",en:"Attic / Loft"},
+    {jp:"dei6 haa6 sat1",hz:"地下室",en:"Basement"},
   ],
   machines:[
     {jp:"din6 nou5",hz:"電腦",en:"Computer"},{jp:"sau2 gei1",hz:"手機",en:"Mobile phone"},
@@ -757,6 +899,9 @@ const VOCAB = {
     {jp:"mei4 bo1 lou4",hz:"微波爐",en:"Microwave"},
     {jp:"din6 tai1",hz:"電梯",en:"Elevator"},{jp:"daa2 jing3 gei1",hz:"打印機",en:"Printer"},
     {jp:"soeng2 gei1",hz:"相機",en:"Camera"},{jp:"ceong3 din6 gei1",hz:"充電機",en:"Charger"},
+    {jp:"lou4 fu1",hz:"烤箱",en:"Oven"},{jp:"hei3 bou1",hz:"氣煲",en:"Air fryer"},
+    {jp:"tim1 gei1",hz:"添機",en:"Coffee machine"},
+    {jp:"siu2 hei3 gei1",hz:"吸氣機",en:"Extractor fan"},{jp:"din6 fung1 sin3",hz:"電風扇",en:"Electric fan"},
   ],
   motoring:[
     {jp:"ce1",hz:"車",en:"Car"},{jp:"baa1 si2",hz:"巴士",en:"Bus"},
@@ -765,6 +910,11 @@ const VOCAB = {
     {jp:"jau4 zaak3",hz:"油站",en:"Petrol station"},{jp:"ce1 coeng4",hz:"車場",en:"Car park"},
     {jp:"daap3 ce1",hz:"搭車",en:"Take transport"},{jp:"sak1 ce1",hz:"塞車",en:"Traffic jam"},
     {jp:"hung4 luk6 dang1",hz:"紅綠燈",en:"Traffic light"},
+    {jp:"gaan6 dou6",hz:"近道",en:"Short cut"},
+    {jp:"jyun4 jat6",hz:"遠一日",en:"Longer route"},
+    {jp:"paa4 lau4",hz:"爬樓",en:"Footbridge / overpass"},
+    {jp:"dei6 haa6 dou6",hz:"地下道",en:"Underpass / subway"},
+    {jp:"naam4 heung3",hz:"南向",en:"Southbound"},
   ],
   people:[
     {jp:"jan4",hz:"人",en:"Person"},{jp:"naam4 jan4",hz:"男人",en:"Man"},
@@ -772,12 +922,23 @@ const VOCAB = {
     {jp:"lou5 jan4",hz:"老人",en:"Elderly"},{jp:"pang4 jau5",hz:"朋友",en:"Friend"},
     {jp:"tung4 si6",hz:"同事",en:"Colleague"},{jp:"lou5 si1",hz:"老師",en:"Teacher"},
     {jp:"hohk6 saang1",hz:"學生",en:"Student"},{jp:"jyun4 gung1",hz:"員工",en:"Employee"},
+    {jp:"zoeng2 gei1",hz:"掌機",en:"Boss / Manager"},
+    {jp:"haak3",hz:"客",en:"Customer / Guest"},
+    {jp:"lei4 hei3 jan4",hz:"離奇人",en:"Stranger"},
+    {jp:"zyu3 geoi1",hz:"住居",en:"Neighbour"},
+    {jp:"ji1 saang1",hz:"醫生",en:"Doctor (person)"},
   ],
   places:[
     {jp:"si5 coeng4",hz:"市場",en:"Market"},{jp:"gung1 jyun2",hz:"公園",en:"Park"},
     {jp:"tou4 syu1 gun2",hz:"圖書館",en:"Library"},{jp:"ging2 caat3 guk6",hz:"警察局",en:"Police station"},
     {jp:"siu2 sik6 zung1 sam1",hz:"小食中心",en:"Food court"},{jp:"kiu2",hz:"橋",en:"Bridge"},
     {jp:"sing4 si5 zung1 sam1",hz:"城市中心",en:"City centre"},{jp:"gong2 bin1",hz:"港邊",en:"Waterfront"},
+    {jp:"baak6 fo3 gung1 si1",hz:"百貨公司",en:"Department store"},
+    {jp:"hei3 jyun2",hz:"戲院",en:"Cinema / Theatre"},
+    {jp:"bou3 guk6",hz:"博物館",en:"Museum"},
+    {jp:"giu3 tong4",hz:"教堂",en:"Church"},
+    {jp:"zi6 jan4 bou3 guk6",hz:"自然博物館",en:"Natural history museum"},
+    {jp:"ho4 bin1",hz:"河邊",en:"Riverside"},
   ],
   professions:[
     {jp:"ji1 saang1",hz:"醫生",en:"Doctor"},{jp:"wu6 si6",hz:"護士",en:"Nurse"},
@@ -786,6 +947,10 @@ const VOCAB = {
     {jp:"cui4 si1",hz:"廚師",en:"Chef"},{jp:"ging2 caat3",hz:"警察",en:"Police officer"},
     {jp:"siu1 fong4 jyun4",hz:"消防員",en:"Firefighter"},{jp:"gei3 ze2",hz:"記者",en:"Journalist"},
     {jp:"wui6 gai3 si1",hz:"會計師",en:"Accountant"},{jp:"jaa2 si1",hz:"牙醫",en:"Dentist"},
+    {jp:"gin3 zuk1 si1",hz:"建築師",en:"Architect"},
+    {jp:"se2 jing3 si1",hz:"攝影師",en:"Photographer"},
+    {jp:"ngai6 seot6 gaa1",hz:"藝術家",en:"Artist"},
+    {jp:"jyun4 fong4 ci4",hz:"員房師",en:"Pharmacist"},
   ],
   pronouns:[
     {jp:"ngo5",hz:"我",en:"I / Me"},{jp:"nei5",hz:"你",en:"You"},
@@ -794,6 +959,8 @@ const VOCAB = {
     {jp:"ngo5 ge3",hz:"我嘅",en:"My"},{jp:"nei5 ge3",hz:"你嘅",en:"Your"},
     {jp:"keoi5 ge3",hz:"佢嘅",en:"His / Her"},{jp:"zi6 gei2",hz:"自己",en:"Yourself"},
     {jp:"daai6 gaa1",hz:"大家",en:"Everyone"},{jp:"ngo5 dei6 ge3",hz:"我哋嘅",en:"Our"},
+    {jp:"bin1 go3",hz:"邊個",en:"Who? / Which one?"},
+    {jp:"me1 jan4",hz:"咩人",en:"What kind of person?"},
   ],
   school:[
     {jp:"hohk6 haau6",hz:"學校",en:"School"},{jp:"daai6 hohk6",hz:"大學",en:"University"},
@@ -802,11 +969,18 @@ const VOCAB = {
     {jp:"bat1",hz:"筆",en:"Pen"},{jp:"zi2",hz:"紙",en:"Paper"},
     {jp:"haau6 si5",hz:"考試",en:"Exam"},{jp:"fu6 koi3",hz:"功課",en:"Homework"},
     {jp:"fong3 hohk6",hz:"放學",en:"After school"},{jp:"baak2 baan2",hz:"白板",en:"Whiteboard"},
+    {jp:"gaai2 saat1 sat1",hz:"解算室",en:"Science lab"},
+    {jp:"tyun4 din6 sau2",hz:"圖書員",en:"Librarian"},
+    {jp:"tai2 syun1 kei4",hz:"體育期",en:"PE / Sports day"},
+    {jp:"hok6 hei3",hz:"學期",en:"School term / semester"},
+    {jp:"gin3 gin3 wui2",hz:"家長會",en:"Parent-teacher meeting"},
   ],
   seasons:[
     {jp:"ceon1 tin1",hz:"春天",en:"Spring"},{jp:"haa6 tin1",hz:"夏天",en:"Summer"},
     {jp:"cau1 tin1",hz:"秋天",en:"Autumn"},{jp:"dung1 tin1",hz:"冬天",en:"Winter"},
     {jp:"jyu5 gei3",hz:"雨季",en:"Rainy season"},{jp:"taai3 fung1",hz:"颱風",en:"Typhoon"},
+    {jp:"hot3 gei3",hz:"旱季",en:"Dry season"},
+    {jp:"fa1 faa1 gei3",hz:"花季",en:"Blossom season"},
   ],
   special_occasions:[
     {jp:"san1 nin4 faai3 lok6",hz:"新年快樂",en:"Happy New Year"},
@@ -815,6 +989,10 @@ const VOCAB = {
     {jp:"sing3 daan3 faai3 lok6",hz:"聖誕快樂",en:"Merry Christmas"},
     {jp:"zung1 cau1 zit3",hz:"中秋節",en:"Mid-Autumn Festival"},
     {jp:"daan3 gou1",hz:"蛋糕",en:"Cake"},{jp:"lai5 si6",hz:"利是",en:"Red envelope"},
+    {jp:"gyun1 jyun1 zit3",hz:"端午節",en:"Dragon Boat Festival"},
+    {jp:"cing1 ming4 zit3",hz:"清明節",en:"Ching Ming (tomb sweeping)"},
+    {jp:"dong1 zi3",hz:"冬至",en:"Winter solstice festival"},
+    {jp:"baat3 jyut6 sap6 ng5",hz:"八月十五",en:"Mid-Autumn (15th day of 8th month)"},
   ],
   sport:[
     {jp:"zuk1 kau4",hz:"足球",en:"Football"},{jp:"laam4 kau4",hz:"籃球",en:"Basketball"},
@@ -822,12 +1000,40 @@ const VOCAB = {
     {jp:"jau4 soeng1",hz:"游泳",en:"Swimming"},{jp:"paau2 bou6",hz:"跑步",en:"Running"},
     {jp:"daan1 ce1",hz:"單車",en:"Cycling"},{jp:"wan6 dung6",hz:"運動",en:"Exercise"},
     {jp:"paa4 saan1",hz:"爬山",en:"Hiking"},{jp:"juu4 gaa1",hz:"瑜伽",en:"Yoga"},
+    {jp:"kyun4 faat3",hz:"拳法",en:"Boxing / martial arts"},
+    {jp:"gam4 buk6",hz:"健步",en:"Brisk walking"},
+    {jp:"gim4 san4 fong2",hz:"健身房",en:"Gym"},
+    {jp:"gwaan3 mong5 kau4",hz:"棍網球",en:"Squash"},
+    {jp:"ce1 si5 gai3",hz:"車士界",en:"Motorsport"},
   ],
   christmas:[
     {jp:"sing3 daan3 zit3",hz:"聖誕節",en:"Christmas"},{jp:"sing3 daan3 syu6",hz:"聖誕樹",en:"Christmas tree"},
     {jp:"sing3 daan3 lou5 jan4",hz:"聖誕老人",en:"Santa Claus"},{jp:"lai5 mat6",hz:"禮物",en:"Gift"},
     {jp:"sing3 daan3 faai3 lok6",hz:"聖誕快樂",en:"Merry Christmas"},
     {jp:"san1 nin4 faai3 lok6",hz:"新年快樂",en:"Happy New Year"},
+    {jp:"sing3 daan3 paai4 deoi3",hz:"聖誕派對",en:"Christmas party"},
+    {jp:"dung1 jat3",hz:"冬日",en:"Winter day"},
+  ],
+  slang:[
+    {jp:"tiu4 lou6 nei5 gaa3 gaa3?",hz:"條路你嫁㗎？",en:"Move it! (lit. 'Is the road married to you?')"},
+    {jp:"nei5 m4 ceot1 seng1 mou5 jan4 waa6 nei5 aa2",hz:"你唔出聲冇人話你啞",en:"If you don't speak, no one will think you're mute — shut up"},
+    {jp:"nei5 gam3 gap1 heoi3 tau4 toi1 aa3?",hz:"你咁急去投胎呀？",en:"Are you rushing to get reincarnated? — to reckless people"},
+    {jp:"dang2 dou3 geng2 dou1 coeng4",hz:"等到頸都長",en:"I've waited until my neck is long — been waiting forever"},
+    {jp:"haam4 sap1 lou2",hz:"鹹濕佬",en:"Pervert / lecherous man"},
+    {jp:"bei2 jan4 gwaan1",hz:"俾人昆",en:"Got scammed / fooled"},
+    {jp:"gau3 gau6",hz:"狗噏",en:"Talking nonsense (lit. 'dog barking')"},
+    {jp:"tai2 siu2 nei5",hz:"睇小你",en:"Look down on / underestimate you"},
+    {jp:"soeng6 dong6 aa3 maa3",hz:"上當啊嘛",en:"Yeah right / As if I'd fall for that (sarcastic)"},
+    {jp:"seoi2 fan6 sou3",hz:"水份數",en:"Exaggerated story / full of hot air"},
+    {jp:"lek1 zai2",hz:"叻仔",en:"Clever boy (can be genuine OR sarcastic)"},
+    {jp:"nei5 zan1 hai6 hou2 lek1",hz:"你真係好叻",en:"You're so talented! (often sarcastic)"},
+    {jp:"zan1 sik6 gaa3?",hz:"真食㗎？",en:"For real? (sarcastic)"},
+    {jp:"nei5 gong2 dung6 aa3",hz:"你講棟啊",en:"You're making that up"},
+    {jp:"seon3 nei5 dou1 so4",hz:"信你都傻",en:"Only an idiot would believe you"},
+    {jp:"hoe1 seoi2 zai2",hz:"吹水仔",en:"Bullshitter / exaggerator"},
+    {jp:"on9",hz:"on9",en:"Stupid idiot (vulgar internet slang — recognition only)"},
+    {jp:"diu2",hz:"屌",en:"F*** (extremely vulgar — do NOT use)"},
+    {jp:"sik6 si2",hz:"食屎",en:"Eat sh*t — expression of frustration"},
   ],
   verbs:[
     {jp:"heoi3",hz:"去",en:"Go"},{jp:"lei4",hz:"嚟",en:"Come"},
@@ -841,8 +1047,13 @@ const VOCAB = {
     {jp:"paau2",hz:"跑",en:"Run"},{jp:"sai2",hz:"洗",en:"Wash"},
     {jp:"soeng2",hz:"想",en:"Want / Think"},{jp:"zung1 ji3",hz:"鍾意",en:"Like"},
     {jp:"m4 zung1 ji3",hz:"唔鍾意",en:"Dislike"},{jp:"jiu3",hz:"要",en:"Need"},
-    {jp:"waan2",hz:"玩",en:"Play"},{jp:"siu3",hz:"笑",en:"Laugh / Smile"},
+    {jp:"waan2",hz:"玩",en:"Play"},{jp:"siu3",hz:"笑",en:"Laugh"},
     {jp:"haam3",hz:"喊",en:"Cry"},{jp:"gei3",hz:"記",en:"Remember"},
+    {jp:"mong4",hz:"忘",en:"Forget"},{jp:"gaau3",hz:"教",en:"Teach"},
+    {jp:"hohk6",hz:"學",en:"Learn"},{jp:"faan1 jyik6",hz:"翻譯",en:"Translate"},
+    {jp:"soeng5 mong5",hz:"上網",en:"Go online"},{jp:"daa2 dian4 waa6",hz:"打電話",en:"Make a phone call"},
+    {jp:"faat3 seon3 sik1",hz:"發信息",en:"Send a message"},{jp:"jik6 hang4",hz:"旅行",en:"Travel"},
+    {jp:"sau3 gip3",hz:"收拾",en:"Tidy up / Pack"},
   ],
   weather:[
     {jp:"tin1 hei3",hz:"天氣",en:"Weather"},{jp:"cing1 tin1",hz:"晴天",en:"Sunny"},
@@ -853,6 +1064,12 @@ const VOCAB = {
     {jp:"gam1 jat6 hou2 laang5",hz:"今日好冷",en:"It's very cold today"},
     {jp:"baat3 hou6 fung1 kau4",hz:"八號風球",en:"Typhoon signal no. 8"},
     {jp:"dung3",hz:"凍",en:"Cold (feeling cold)"},
+    {jp:"siu2 jyu5",hz:"小雨",en:"Light rain / drizzle"},
+    {jp:"bou3 jyu5",hz:"暴雨",en:"Heavy rain / downpour"},
+    {jp:"mut6 waan4",hz:"霧霾",en:"Smog / haze"},
+    {jp:"git3 seong1",hz:"結霜",en:"Frost"},
+    {jp:"sing4 jyut3",hz:"晴月",en:"Clear moonlit night"},
+    {jp:"hung1 hei3",hz:"空氣",en:"Air quality"},
   ],
   classifiers:[
     {jp:"go3",hz:"個",en:"General — people, objects"},{jp:"zek3",hz:"隻",en:"Animals; one of a pair"},
@@ -861,121 +1078,69 @@ const VOCAB = {
     {jp:"bui1",hz:"杯",en:"Cup of drink"},{jp:"wun2",hz:"碗",en:"Bowl of food"},
     {jp:"dip6",hz:"碟",en:"Plate"},{jp:"gaan1",hz:"間",en:"Rooms / shops"},
     {jp:"loeng5 go3",hz:"兩個",en:"Two (use loeng5 not ji6)"},{jp:"fan6",hz:"份",en:"Portions"},
+    {jp:"ceot1",hz:"出",en:"Shows / performances"},{jp:"jat1 bou6",hz:"一部",en:"One device/film"},
+    {jp:"baa2",hz:"把",en:"Handles — knives, umbrellas, chairs"},
   ],
   idioms:[
     {jp:"jat1 sek6 loeng5 niu5",hz:"一石兩鳥",en:"Kill two birds with one stone"},
     {jp:"oi3 uk1 kap6 wu1",hz:"愛屋及烏",en:"Love me, love my dog"},
-    {jp:"baak6 faat3 baak6 zung1",hz:"百發百中",en:"100% accurate"},
+    {jp:"baak6 faat3 baak6 zung1",hz:"百發百中",en:"100% accurate / never miss"},
     {jp:"mou4 fung1 bat1 hei2 long6",hz:"無風不起浪",en:"No smoke without fire"},
     {jp:"soeng5 soeng5 haa6 haa6",hz:"上上下下",en:"Mediocre / So-so"},
+    {jp:"sam1 jyu2 jau4",hz:"心有餘",en:"The spirit is willing (but flesh is weak)"},
+    {jp:"gaau3 jan4 zi1 yu2",hz:"教人知魚",en:"Teach a man to fish"},
+    {jp:"jat1 bou6 jat1 geoi6",hz:"一步一腳印",en:"One step at a time (steady progress)"},
   ],
   dimsum:[
-    {jp:"haa1 gaau2",hz:"蝦餃",en:"Prawn dumplings"},{jp:"siu1 maai2",hz:"燒賣",en:"Siu mai"},
-    {jp:"fung6 zaau2",hz:"鳳爪",en:"Chicken feet"},{jp:"lau4 saa1 baau1",hz:"流沙包",en:"Custard bun"},
-    {jp:"lo4 baak6 gou1",hz:"蘿蔔糕",en:"Turnip cake"},{jp:"coeng4 fan2",hz:"腸粉",en:"Rice rolls"},
+    {jp:"haa1 gaau2",hz:"蝦餃",en:"Prawn dumplings (har gow)"},{jp:"siu1 maai2",hz:"燒賣",en:"Siu mai"},
+    {jp:"fung6 zaau2",hz:"鳳爪",en:"Chicken feet"},{jp:"lau4 saa1 baau1",hz:"流沙包",en:"Custard lava bun"},
+    {jp:"lo4 baak6 gou1",hz:"蘿蔔糕",en:"Turnip cake"},{jp:"coeng4 fan2",hz:"腸粉",en:"Rice noodle rolls"},
     {jp:"daan6 taat3",hz:"蛋撻",en:"Egg tart"},{jp:"wu4 gok3",hz:"芋角",en:"Taro puff"},
     {jp:"caa4 siu1 baau1",hz:"叉燒包",en:"BBQ pork bun"},{jp:"paai4 gwat1",hz:"排骨",en:"Spare ribs"},
     {jp:"zaa3 loeng2",hz:"炸兩",en:"Fried dough rice roll"},{jp:"jat1 wut6 caa4",hz:"一壺茶",en:"One pot of tea"},
-  ],
-  slang:[
-    {jp:"tiu4 lou6 nei5 gaa3 gaa3?", hz:"條路你嫁㗎？", en:"Move it! (lit. 'Is the road married to you?') — tell someone blocking the way"},
-    {jp:"nei5 m4 ceot1 seng1 mou5 jan4 waa6 nei5 aa2", hz:"你唔出聲冇人話你啞", en:"If you don't speak, no one will think you're deaf — shut up"},
-    {jp:"nei5 gam3 gap1 heoi3 tau4 toi1 aa3?", hz:"你咁急去投胎呀？", en:"Are you in a rush to get reincarnated? — to reckless drivers/people"},
-    {jp:"dang2 dou3 geng2 dou1 coeng4", hz:"等到頸都長", en:"I've waited until my neck is long — I've been waiting forever"},
-    {jp:"nei5 sai3 go3 sik6 bo1 lei1 daai6 gaa3?", hz:"你細個食玻璃大㗎？", en:"Did you eat glass growing up? — you're so sharp-tongued"},
-
-    {jp:"haam4 sap1 lou2",hz:"鹹濕佬",en:"Pervert / lecherous man (very common)"},
-    {jp:"daai6 lou6",hz:"大碌",en:"Bullshit / worthless (slang, vulgar)"},
-    {jp:"on9",hz:"on9",en:"Stupid idiot (vulgar internet slang — recognition only)"},
-    {jp:"diu2",hz:"屌",en:"F*** (extremely vulgar — do NOT use)"},
-    {jp:"sik6 si2",hz:"食屎",en:"Eat sh*t — expression of frustration"},
-    {jp:"bei2 jan4 gwaan1",hz:"俾人昆",en:"Got scammed / fooled"},
-    {jp:"gau3 gau6",hz:"狗噏",en:"Talking nonsense / bullshitting (lit. 'dog barking')"},
-    {jp:"tai2 siu2 nei5",hz:"睇小你",en:"Look down on you / underestimate you"},
-    {jp:"daa2 gaa1 si1",hz:"打茄輪",en:"Make out / French kiss (slang)"},
-
-    {jp:"soeng6 dong6 aa3 maa3",hz:"上當啊嘛",en:"Yeah right / As if I'd fall for that (sarcastic)"},
-    {jp:"seoi2 fan6 sou3",hz:"水份數",en:"Exaggerated story / full of hot air"},
-    {jp:"gong2 gau3 waa6",hz:"講狗話",en:"Talking bullshit / speaking nonsense"},
-    {jp:"zaam1 gaau3",hz:"陰莮",en:"Sneaky / two-faced person"},
-    {jp:"lek1 zai2",hz:"叻仔",en:"Clever boy (can be genuine OR sarcastic — tone matters!)"},
-    {jp:"nei5 zan1 hai6 hou2 lek1",hz:"你真係好叻",en:"You're so talented! (OFTEN sarcastic — 'Yeah, you're such a genius...')"},
-    {jp:"hai6 lo3, nei5 teoi1 dak1",hz:"係囉，你推得",en:"Yeah right, you push it (sarcastic: 'Sure, whatever')"},
-    {jp:"zan1 sik6 gaa3?",hz:"真食㗎？",en:"Really? (sarcastic: 'Are you for real?')"},
-    {jp:"nei5 gong2 dung6 aa3",hz:"你講棟啊",en:"You're making that up / lying"},
-    {jp:"hang4 sai3",hz:"行事",en:"Yeah sure / as if (dismissive sarcasm)"},
-    {jp:"m4 goi1 nei5 aa3",hz:"唔該你啊",en:"Thanks a lot (can be genuine OR sarcastic)"},
-    {jp:"deoi3 m4 zyu6 lo3",hz:"對唔住囉",en:"Ohhh sorry then (sarcastic apology — 'Well excuse me!')"},
-    {jp:"zou6 me1 je5 aa3?",hz:"做咩嘢啊？",en:"What are you doing? (can be aggressive/sarcastic)"},
-    
-    {jp:"sui1 dou1 m4 seon3 nei5",hz:"隨都唔信你",en:"No one would believe you"},
-    {jp:"nei5 gong2 zeoi3 daai6",hz:"你講最大",en:"You're telling the biggest story = You're full of it"},
-    {jp:"paau1 m4 sik1 min6",hz:"拋唔識面",en:"You can't even keep a straight face saying that"},
-    {jp:"seon3 nei5 dou1 so4",hz:"信你都傻",en:"Only an idiot would believe you"},
-    {jp:"hoe1 seoi2 zai2",hz:"吹水仔",en:"Bullshitter / exaggerator"},
-    {jp:"daa2 dei6 gong2 waa6",hz:"打地講話",en:"Talking out of your ass (vulgar but common)"},
+    {jp:"maa4 lai4 gou1",hz:"馬拉糕",en:"Steamed sponge cake"},
+    {jp:"nai5 wong4 bau1",hz:"奶皇包",en:"Steamed custard bun"},
+    {jp:"cyu4 zyu1 gou1",hz:"豬腸糕",en:"Rice flour layer cake"},
   ],
 };
 
 // ============================================================
 //  TONE ENGINE
 // ============================================================
-const TONE_NAMES={
-  1:{label:"High Flat",symbol:"─",desc:"High level, like a firm 'hm'"},
-  2:{label:"High Rising",symbol:"↗",desc:"Rises like an English question"},
-  3:{label:"Mid Flat",symbol:"─",desc:"Medium, relaxed and steady"},
-  4:{label:"Low Falling",symbol:"↘",desc:"Starts low, drops further"},
-  5:{label:"Low Rising",symbol:"↗",desc:"Low then gently rises"},
-  6:{label:"Low Flat",symbol:"─",desc:"Low and flat, like a murmur"},
-};
+const TONE_NAMES={1:{label:"High Flat",symbol:"─",desc:"High level pitch"},2:{label:"High Rising",symbol:"↗",desc:"Rises like a question"},3:{label:"Mid Flat",symbol:"─",desc:"Medium level, steady"},4:{label:"Low Falling",symbol:"↘",desc:"Starts low, drops"},5:{label:"Low Rising",symbol:"↗",desc:"Low then rises gently"},6:{label:"Low Flat",symbol:"─",desc:"Low and flat"}};
 const TONE_PATHS={1:"M2,2 L18,2",2:"M2,8 L18,2",3:"M2,5 L18,5",4:"M2,4 L18,10",5:"M2,10 L10,8 L18,4",6:"M2,8 L18,8"};
-const TONE_COLOURS={1:"var(--t1)",2:"var(--t2)",3:"var(--t3)",4:"var(--t4)",5:"var(--t5)",6:"var(--t6)"};
-
 function getToneNum(s){const m=s.match(/([1-6])$/);return m?parseInt(m[1]):0;}
 function stripTone(s){return s.replace(/[1-6]$/,'');}
-
 function renderJyutping(jp){
   return jp.split(' ').map(syl=>{
-    const t=getToneNum(syl),cls=t>0?`t${t}`:'t0',base=stripTone(syl);
-    const path=TONE_PATHS[t]||'';
-    return `<span class="syllable ${cls}" title="Tone ${t}: ${(TONE_NAMES[t]||{}).label||''} ${(TONE_NAMES[t]||{}).symbol||''}">
-      <span class="syl-text">${base}<sup style="font-size:.6em;opacity:.7;">${t||''}</sup></span>
-      ${t>0?`<svg class="tone-shape" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg"><path d="${path}" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:'<div class="tone-bar"></div>'}
-    </span>`;
+    const t=getToneNum(syl),cls=t>0?`t${t}`:'t0',base=stripTone(syl),path=TONE_PATHS[t]||'';
+    return `<span class="syllable ${cls}" title="Tone ${t}: ${(TONE_NAMES[t]||{}).label||''} ${(TONE_NAMES[t]||{}).symbol||''}"><span class="syl-text">${base}<sup style="font-size:.6em;opacity:.7;">${t||''}</sup></span>${t>0?`<svg class="tone-shape" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg"><path d="${path}" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:'<div class="tone-bar"></div>'}</span>`;
   }).join(' ');
 }
-
-function renderLegend(id){
-  const el=document.getElementById(id);if(!el)return;
-  el.innerHTML=`<div class="tone-legend"><span style="font-size:.72rem;color:var(--text-dim);margin-right:.3rem;">Tone key:</span>${Object.entries(TONE_NAMES).map(([n,t])=>`<div class="tone-legend-item"><div class="tone-dot" style="background:var(--t${n})"></div><span><b style="color:var(--t${n})">T${n}</b> ${t.label} ${t.symbol}</span></div>`).join('')}</div>`;
-}
-
-function renderToneGuide(){
-  const el=document.getElementById('toneGuideGrid');if(!el)return;
-  const ex={1:"jat1 (一)",2:"nei5 (你)",3:"sei3 (四)",4:"jan4 (人)",5:"ng5 (五)",6:"luk6 (六)"};
-  el.innerHTML=Object.entries(TONE_NAMES).map(([n,t])=>`<div class="tone-guide-card">
-    <div class="tone-num" style="color:var(--t${n})">${n}</div>
-    <div class="tone-name" style="color:var(--t${n})">${t.label} ${t.symbol}</div>
-    <svg width="80" height="30" viewBox="0 0 20 12" style="display:block;margin:.4rem auto;"><path d="${TONE_PATHS[n]}" stroke="var(--t${n})" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
-    <div class="tone-desc">${t.desc}</div>
-    <div style="margin-top:.5rem;font-size:.78rem;color:var(--text-dim);">${ex[n]}</div>
-  </div>`).join('');
-}
+function renderLegend(id){const el=document.getElementById(id);if(!el)return;el.innerHTML=`<div class="tone-legend"><span style="font-size:.72rem;color:var(--text-dim);margin-right:.3rem;">Tone key:</span>${Object.entries(TONE_NAMES).map(([n,t])=>`<div class="tone-legend-item"><div class="tone-dot" style="background:var(--t${n})"></div><span><b style="color:var(--t${n})">T${n}</b> ${t.label} ${t.symbol}</span></div>`).join('')}</div>`;}
+function renderToneGuide(){const el=document.getElementById('toneGuideGrid');if(!el)return;const ex={1:"jat1 (一)",2:"nei5 (你)",3:"sei3 (四)",4:"jan4 (人)",5:"ng5 (五)",6:"luk6 (六)"};el.innerHTML=Object.entries(TONE_NAMES).map(([n,t])=>`<div class="tone-guide-card"><div class="tone-num" style="color:var(--t${n})">${n}</div><div class="tone-name" style="color:var(--t${n})">${t.label} ${t.symbol}</div><svg width="80" height="30" viewBox="0 0 20 12" style="display:block;margin:.4rem auto;"><path d="${TONE_PATHS[n]}" stroke="var(--t${n})" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg><div class="tone-desc">${t.desc}</div><div style="margin-top:.5rem;font-size:.78rem;color:var(--text-dim);">${ex[n]}</div></div>`).join('');}
 
 // ============================================================
-//  CARD RENDERER
+//  CARD RENDERER — includes 🔊 Normal + 🐢 Slow listen, rec badge
 // ============================================================
+function hasRecording(jp){return !!loadCustomRecordings()[jp];}
+
 function renderGrid(id,data){
   const el=document.getElementById('grid-'+id);if(!el)return;
   renderLegend('tone-legend-'+id);
   el.innerHTML=data.map(item=>{
     const speakText=item.hz||item.jp;
+    const hasRec=hasRecording(item.jp);
     return `<div class="vocab-card">
+      ${hasRec?`<span class="rec-badge">🎙️ REC</span>`:''}
       <div class="card-jyutping">${renderJyutping(item.jp)}</div>
       ${item.hz?`<div class="card-hanzi">${item.hz}</div>`:''}
       <div class="card-meaning">${item.en}</div>
       <div class="card-buttons">
-        <button class="card-listen" onclick="speak('${speakText.replace(/'/g,"\\'")}','${item.jp.replace(/'/g,"\\'")}')">🔊 Listen</button>
+        <div class="listen-group">
+          <button class="listen-normal" onclick="speak('${speakText.replace(/'/g,"\\'")}','${item.jp.replace(/'/g,"\\'")}',1)" title="Normal speed">🔊 Listen</button>
+          <button class="listen-slow" onclick="speak('${speakText.replace(/'/g,"\\'")}','${item.jp.replace(/'/g,"\\'")}',0.45)" title="Slow — hear every syllable">🐢 Slow</button>
+        </div>
         <button class="card-record" onclick="openRecordingModal('${item.jp.replace(/'/g,"\\'")}')">🎙️ Record</button>
       </div>
     </div>`;
@@ -987,223 +1152,97 @@ Object.keys(VOCAB).forEach(k=>renderGrid(k,VOCAB[k]));
 //  CONVERSATION GUIDE
 // ============================================================
 const CONVERSATIONS=[
-  {
-    title:"☕ Meeting someone for the first time",
-    tip:"<strong>Key tip:</strong> Cantonese speakers often ask 食咗未 (sik6 zo2 maa3 — 'have you eaten?') as a greeting. It's a sign of warmth, not an actual dinner invitation!",
-    lines:[
-      {a:true,hz:"你好！我叫明。你叫咩名？",jp:"nei5 hou2! ngo5 giu3 Ming4. nei5 giu3 me1 meng2?",en:"Hi! I'm Ming. What's your name?"},
-      {a:false,hz:"你好！我叫 Sarah。好開心識到你！",jp:"nei5 hou2! ngo5 giu3 Sarah. hou2 hoi1 sam1 sik1 dou3 nei5!",en:"Hi! I'm Sarah. Nice to meet you!"},
-      {a:true,hz:"你係邊度人？",jp:"nei5 hai6 bin1 dou6 jan4?",en:"Where are you from?"},
-      {a:false,hz:"我係英國人。你呢？",jp:"ngo5 hai6 Jing1 Gwok3 jan4. nei5 ne1?",en:"I'm British. And you?"},
-      {a:true,hz:"我係香港人。你識唔識講廣東話？",jp:"ngo5 hai6 Hoeng1 Gong2 jan4. nei5 sik1 m4 sik1 gong2 gwong2 dung1 waa2?",en:"I'm from Hong Kong. Do you speak Cantonese?"},
-      {a:false,hz:"我識講少少。你可唔可以講慢啲？",jp:"ngo5 sik1 gong2 siu2 siu2. nei5 ho2 m4 ho2 ji5 gong2 maan6 di1?",en:"I speak a little. Can you speak slower?"},
-      {a:true,hz:"冇問題！我哋慢慢講。",jp:"mou5 man6 tai4! ngo5 dei6 maan6 maan6 gong2.",en:"No problem! Let's take it slow."},
-    ]
-  },
-  {
-    title:"🍜 Ordering at a restaurant",
-    tip:"<strong>Key tip:</strong> Always say 唔該 (m4 goi1) to get the waiter's attention — it means 'excuse me' and 'thank you' rolled into one. Saying 埋單 (maai4 daan1) gets you the bill.",
-    lines:[
-      {a:false,hz:"唔該！有冇位？",jp:"m4 goi1! jau5 mou5 wai2?",en:"Excuse me! Do you have a table?"},
-      {a:true,hz:"有！幾多位？",jp:"jau5! gei2 do1 wai2?",en:"Yes! How many people?"},
-      {a:false,hz:"兩位。",jp:"loeng5 wai2.",en:"Two people."},
-      {a:true,hz:"好，跟我嚟。呢係餐牌。",jp:"hou2, gan1 ngo5 lei4. ni1 hai6 caan1 paai4.",en:"OK, follow me. Here's the menu."},
-      {a:false,hz:"唔該，我想要炒飯同埋例湯。",jp:"m4 goi1, ngo5 soeng2 jiu3 caau2 faan6 tung4 maai4 lai6 tong1.",en:"Excuse me, I'd like fried rice and the set soup."},
-      {a:true,hz:"飲咩嘢？",jp:"jam2 me1 je5?",en:"What would you like to drink?"},
-      {a:false,hz:"一杯凍奶茶，唔該。",jp:"jat1 bui1 dung3 naai5 caa4, m4 goi1.",en:"One iced milk tea please."},
-      {a:true,hz:"好，稍等。",jp:"hou2, siu2 dang2.",en:"OK, just a moment."},
-      {a:false,hz:"唔該，埋單！",jp:"m4 goi1, maai4 daan1!",en:"Excuse me, the bill please!"},
-    ]
-  },
-  {
-    title:"🚇 Asking for directions",
-    tip:"<strong>Key tip:</strong> In Hong Kong, people often give directions by MTR stations. If you're lost, saying 唔好意思，我唔識路 (ngo5 m4 sik1 lou6 — 'I don't know the way') will usually get friendly help.",
-    lines:[
-      {a:false,hz:"唔好意思，地鐵站喺邊度？",jp:"m4 hou2 ji3 si1, dei6 tit3 zaam6 hai2 bin1 dou6?",en:"Excuse me, where is the MTR station?"},
-      {a:true,hz:"一直行，再向右轉。",jp:"jat1 zik6 haang4, zoi3 zoeng3 jau6 zyun3.",en:"Go straight, then turn right."},
-      {a:false,hz:"係咪好遠？",jp:"hai6 mai6 hou2 jyun5?",en:"Is it very far?"},
-      {a:true,hz:"唔遠，行五分鐘左右。",jp:"m4 jyun5, haang4 ng5 fan1 zung1 zo2 jau6.",en:"Not far, about 5 minutes walk."},
-      {a:false,hz:"多謝晒！",jp:"do1 ze6 saai3!",en:"Thank you so much!"},
-      {a:true,hz:"唔使客氣，慢走！",jp:"m4 sai2 haak3 hei3, maan6 zau2!",en:"You're welcome, take care!"},
-    ]
-  },
-  {
-    title:"🏪 Shopping",
-    tip:"<strong>Key tip:</strong> 平啲得唔得 (peng4 di1 dak1 m4 dak1) — 'Can it be cheaper?' is perfectly normal to say at markets. Don't be shy!",
-    lines:[
-      {a:false,hz:"呢件衫幾多錢？",jp:"ni1 gin6 saam1 gei2 do1 cin2?",en:"How much is this top?"},
-      {a:true,hz:"二百蚊。",jp:"ji6 baak3 man1.",en:"Two hundred dollars."},
-      {a:false,hz:"平啲得唔得？",jp:"peng4 di1 dak1 m4 dak1?",en:"Can it be cheaper?"},
-      {a:true,hz:"最平一百八十蚊。",jp:"zeoi3 peng4 jat1 baak3 baat3 sap6 man1.",en:"The cheapest is one hundred and eighty."},
-      {a:false,hz:"好，我買喇。有冇其他顏色？",jp:"hou2, ngo5 maai5 laa1. jau5 mou5 kei4 taa1 ngaan4 sik1?",en:"OK, I'll buy it. Do you have other colours?"},
-      {a:true,hz:"有紅色同黑色。",jp:"jau5 hung4 sik1 tung4 haak1 sik1.",en:"We have red and black."},
-    ]
-  },
-  {
-    title:"☎️ Making a phone call",
-    tip:"<strong>Key tip:</strong> When answering the phone in Cantonese, people say 喂 (wai3) — equivalent to 'hello'. Not 你好!",
-    lines:[
-      {a:false,hz:"喂？你好，我係 Sarah。",jp:"wai3? nei5 hou2, ngo5 hai6 Sarah.",en:"Hello? Hi, I'm Sarah."},
-      {a:true,hz:"喂，你好！你搵邊位？",jp:"wai3, nei5 hou2! nei5 wan2 bin1 wai2?",en:"Hello! Who are you looking for?"},
-      {a:false,hz:"我想搵明。",jp:"ngo5 soeng2 wan2 Ming4.",en:"I'd like to speak to Ming."},
-      {a:true,hz:"我就係。有咩事？",jp:"ngo5 zau6 hai6. jau5 me1 si6?",en:"That's me. What's up?"},
-      {a:false,hz:"你聽日得唔得閒？我哋一齊食飯？",jp:"nei5 ting1 jat6 dak1 m4 dak1 haan4? ngo5 dei6 jat1 cai4 sik6 faan6?",en:"Are you free tomorrow? Let's eat together?"},
-      {a:true,hz:"得！幾點鐘？",jp:"dak1! gei2 dim2 zung1?",en:"Sure! What time?"},
-      {a:false,hz:"七點，銅鑼灣。",jp:"cat1 dim2, Tung4 Lo4 Waan1.",en:"7 o'clock, Causeway Bay."},
-      {a:true,hz:"好，見！拜拜！",jp:"hou2, gin3! bai1 bai3!",en:"Great, see you then! Bye!"},
-    ]
-  },
-  {
-    title:"💊 Visiting a doctor",
-    tip:"<strong>Key tip:</strong> 我唔舒服 (ngo5 m4 syu1 fuk6) = 'I don't feel well' is the universal opener at a clinic. Doctors in HK are used to patients who can only describe symptoms simply.",
-    lines:[
-      {a:false,hz:"我唔舒服，我想睇醫生。",jp:"ngo5 m4 syu1 fuk6, ngo5 soeng2 tai2 ji1 saang1.",en:"I don't feel well, I'd like to see a doctor."},
-      {a:true,hz:"你點唔舒服？",jp:"nei5 dim2 m4 syu1 fuk6?",en:"What's wrong with you?"},
-      {a:false,hz:"我頭痛同埋發燒。",jp:"ngo5 tau4 tung3 tung4 maai4 faat3 siu1.",en:"I have a headache and a fever."},
-      {a:true,hz:"幾時開始？",jp:"gei2 si4 hoi1 ci2?",en:"When did it start?"},
-      {a:false,hz:"尋日開始。",jp:"cam4 jat6 hoi1 ci2.",en:"It started yesterday."},
-      {a:true,hz:"我開藥俾你。多飲水，多休息。",jp:"ngo5 hoi1 joek6 bei2 nei5. do1 jam2 seoi2, do1 jau1 sik1.",en:"I'll prescribe medicine. Drink plenty of water, rest well."},
-    ]
-  },
+  {title:"☕ Meeting someone for the first time",tip:"<strong>Key tip:</strong> 食咗未？ (sik6 zo2 maa3) — 'Have you eaten?' is a warmth greeting, not a dinner request!",lines:[
+    {a:true,hz:"你好！我叫明。你叫咩名？",jp:"nei5 hou2! ngo5 giu3 Ming4. nei5 giu3 me1 meng2?",en:"Hi! I'm Ming. What's your name?"},
+    {a:false,hz:"你好！我叫 Sarah。好開心識到你！",jp:"nei5 hou2! ngo5 giu3 Sarah. hou2 hoi1 sam1 sik1 dou3 nei5!",en:"Hi! I'm Sarah. Nice to meet you!"},
+    {a:true,hz:"你係邊度人？",jp:"nei5 hai6 bin1 dou6 jan4?",en:"Where are you from?"},
+    {a:false,hz:"我係英國人。你呢？",jp:"ngo5 hai6 Jing1 Gwok3 jan4. nei5 ne1?",en:"I'm British. And you?"},
+    {a:false,hz:"我識講少少。你可唔可以講慢啲？",jp:"ngo5 sik1 gong2 siu2 siu2. nei5 ho2 m4 ho2 ji5 gong2 maan6 di1?",en:"I speak a little. Can you speak slower?"},
+    {a:true,hz:"冇問題！我哋慢慢講。",jp:"mou5 man6 tai4! ngo5 dei6 maan6 maan6 gong2.",en:"No problem! Let's take it slow."},
+  ]},
+  {title:"🍜 Ordering at a restaurant",tip:"<strong>Key tip:</strong> 唔該 (m4 goi1) gets the waiter's attention AND means thank you. 埋單 (maai4 daan1) gets you the bill.",lines:[
+    {a:false,hz:"唔該！有冇位？",jp:"m4 goi1! jau5 mou5 wai2?",en:"Excuse me! Do you have a table?"},
+    {a:true,hz:"有！幾多位？",jp:"jau5! gei2 do1 wai2?",en:"Yes! How many people?"},
+    {a:false,hz:"兩位。",jp:"loeng5 wai2.",en:"Two people."},
+    {a:false,hz:"唔該，我想要炒飯同埋例湯。",jp:"m4 goi1, ngo5 soeng2 jiu3 caau2 faan6 tung4 maai4 lai6 tong1.",en:"I'd like fried rice and the set soup."},
+    {a:true,hz:"飲咩嘢？",jp:"jam2 me1 je5?",en:"What would you like to drink?"},
+    {a:false,hz:"一杯凍奶茶，唔該。",jp:"jat1 bui1 dung3 naai5 caa4, m4 goi1.",en:"One iced milk tea please."},
+    {a:false,hz:"唔該，埋單！",jp:"m4 goi1, maai4 daan1!",en:"Check please!"},
+  ]},
+  {title:"🚇 Asking for directions",tip:"<strong>Key tip:</strong> In HK, directions are often given by MTR station. 唔好意思 (m4 hou2 ji3 si1) = 'excuse me' before asking a stranger.",lines:[
+    {a:false,hz:"唔好意思，地鐵站喺邊度？",jp:"m4 hou2 ji3 si1, dei6 tit3 zaam6 hai2 bin1 dou6?",en:"Excuse me, where is the MTR station?"},
+    {a:true,hz:"一直行，再向右轉。",jp:"jat1 zik6 haang4, zoi3 zoeng3 jau6 zyun3.",en:"Go straight, then turn right."},
+    {a:false,hz:"係咪好遠？",jp:"hai6 mai6 hou2 jyun5?",en:"Is it very far?"},
+    {a:true,hz:"唔遠，行五分鐘左右。",jp:"m4 jyun5, haang4 ng5 fan1 zung1 zo2 jau6.",en:"Not far, about 5 minutes walk."},
+    {a:false,hz:"多謝晒！",jp:"do1 ze6 saai3!",en:"Thank you so much!"},
+  ]},
+  {title:"🏪 Shopping",tip:"<strong>Key tip:</strong> 平啲得唔得 (peng4 di1 dak1 m4 dak1) — 'Can it be cheaper?' is totally normal at markets!",lines:[
+    {a:false,hz:"呢件衫幾多錢？",jp:"ni1 gin6 saam1 gei2 do1 cin2?",en:"How much is this top?"},
+    {a:true,hz:"二百蚊。",jp:"ji6 baak3 man1.",en:"Two hundred dollars."},
+    {a:false,hz:"平啲得唔得？",jp:"peng4 di1 dak1 m4 dak1?",en:"Can it be cheaper?"},
+    {a:true,hz:"最平一百八十蚊。",jp:"zeoi3 peng4 jat1 baak3 baat3 sap6 man1.",en:"Cheapest is one hundred and eighty."},
+    {a:false,hz:"好，我買喇。",jp:"hou2, ngo5 maai5 laa1.",en:"OK, I'll take it."},
+  ]},
+  {title:"☎️ Phone call",tip:"<strong>Key tip:</strong> Answer the phone with 喂 (wai3) — like 'hello'. NOT 你好!",lines:[
+    {a:false,hz:"喂？我係 Sarah。",jp:"wai3? ngo5 hai6 Sarah.",en:"Hello? I'm Sarah."},
+    {a:true,hz:"喂！你搵邊位？",jp:"wai3! nei5 wan2 bin1 wai2?",en:"Hello! Who are you looking for?"},
+    {a:false,hz:"你聽日得唔得閒？我哋一齊食飯？",jp:"nei5 ting1 jat6 dak1 m4 dak1 haan4? ngo5 dei6 jat1 cai4 sik6 faan6?",en:"Are you free tomorrow? Let's eat together?"},
+    {a:true,hz:"得！幾點鐘？七點，銅鑼灣。",jp:"dak1! gei2 dim2 zung1? cat1 dim2, Tung4 Lo4 Waan1.",en:"Sure! What time? 7, Causeway Bay."},
+  ]},
+  {title:"💊 Visiting a doctor",tip:"<strong>Key tip:</strong> 我唔舒服 (ngo5 m4 syu1 fuk6) = 'I don't feel well' is the perfect opener at any clinic.",lines:[
+    {a:false,hz:"我唔舒服，我頭痛同發燒。",jp:"ngo5 m4 syu1 fuk6, ngo5 tau4 tung3 tung4 faat3 siu1.",en:"I don't feel well — headache and fever."},
+    {a:true,hz:"幾時開始？",jp:"gei2 si4 hoi1 ci2?",en:"When did it start?"},
+    {a:false,hz:"尋日開始。",jp:"cam4 jat6 hoi1 ci2.",en:"It started yesterday."},
+    {a:true,hz:"我開藥俾你。多飲水，多休息。",jp:"ngo5 hoi1 joek6 bei2 nei5. do1 jam2 seoi2, do1 jau1 sik1.",en:"I'll prescribe medicine. Drink water, rest well."},
+  ]},
 ];
-
 function renderConvoGuide(){
   const el=document.getElementById('convoGuideContent');if(!el)return;
-  el.innerHTML=CONVERSATIONS.map(conv=>`
-    <div class="convo-card">
-      <h3>${conv.title}</h3>
-      ${conv.lines.map(l=>`
-        <div class="convo-line">
-          <span class="speaker-tag ${l.a?'tag-a':'tag-b'}">${l.a?'A':'B'}</span>
-          <span class="convo-hz">${l.hz}</span>
-          <span class="convo-en">${l.en}</span>
-          <button class="convo-listen" onclick="speak('${l.hz.replace(/'/g,"\\'")}')">🔊</button>
-        </div>`).join('')}
-      <div class="convo-tip">${conv.tip}</div>
-    </div>`).join('');
+  el.innerHTML=CONVERSATIONS.map(conv=>`<div class="convo-card"><h3>${conv.title}</h3>${conv.lines.map(l=>`<div class="convo-line"><span class="speaker-tag ${l.a?'tag-a':'tag-b'}">${l.a?'A':'B'}</span><span class="convo-hz">${l.hz}</span><span class="convo-en">${l.en}</span><button class="convo-listen" onclick="speak('${l.hz.replace(/'/g,"\\'")}')">🔊</button></div>`).join('')}<div class="convo-tip">${conv.tip}</div></div>`).join('');
 }
 renderConvoGuide();
 
-// ============================================================
-//  INTERMEDIATE RENDERS
-// ============================================================
-function renderCharacters(){
-  const items=[
-    {title:"開心 (hoi1 sam1)",desc:"Open (開) + Heart (心) = Happy"},
-    {title:"電話 (din6 waa6)",desc:"Electric (電) + Speech (話) = Telephone"},
-    {title:"飛機 (fei1 gei1)",desc:"Fly (飛) + Machine (機) = Aeroplane"},
-    {title:"電腦 (din6 nou5)",desc:"Electric (電) + Brain (腦) = Computer"},
-    {title:"手機 (sau2 gei1)",desc:"Hand (手) + Machine (機) = Mobile phone"},
-    {title:"火車 (fo2 ce1)",desc:"Fire (火) + Vehicle (車) = Train"},
-    {title:"圖書館 (tou4 syu1 gun2)",desc:"Picture + Book + Hall = Library"},
-  ];
-  document.getElementById('grid-characters').innerHTML=items.map(i=>`<div class="wide-card"><h3>${i.title}</h3><p>${i.desc}</p></div>`).join('');
-}
-function renderThisThat(){
-  const items=[
-    {jp:"ni1 go3",hz:"呢個",en:"This (one)"},{jp:"go2 go3",hz:"嗰個",en:"That (one)"},
-    {jp:"ni1 dou6",hz:"呢度",en:"Here"},{jp:"go2 dou6",hz:"嗰度",en:"There"},
-    {jp:"ni1 di1",hz:"呢啲",en:"These"},{jp:"go2 di1",hz:"嗰啲",en:"Those"},
-  ];
-  document.getElementById('grid-this_that').innerHTML=`<div class="wide-card"><h3>Demonstratives</h3>
-    <p>Use <strong style="color:var(--accent)">ni1</strong> (呢) for this/here and <strong style="color:var(--accent)">go2</strong> (嗰) for that/there.</p>
-    <div class="examples">${items.map(i=>`<div class="example-row"><span class="ex-jp">${renderJyutping(i.jp)}</span><span style="font-family:'Noto Serif TC',serif;font-size:1rem;color:var(--text-muted);">${i.hz}</span><span class="ex-en">${i.en}</span><button class="ex-listen" onclick="speak('${i.hz}','${i.jp}')">🔊</button></div>`).join('')}</div>
-  </div>`;
-}
-function renderParticles(){
-  const p=[
-    {jp:"aa3",hz:"啊",en:"Softens → 'OK aa3' = 'OK then'"},
-    {jp:"laa1",hz:"喇",en:"Suggestion → 'Heoi3 sik6 laa1' = 'Let's eat'"},
-    {jp:"ge3",hz:"嘅",en:"Assertion → 'Hou2 ge3' = 'It's good, trust me'"},
-    {jp:"maa3",hz:"咩",en:"Tag question → 'Nei5 hou2 maa3?' = 'You OK?'"},
-    {jp:"lo3",hz:"囉",en:"Obviously → 'Hai6 lo3' = 'Of course'"},
-    {jp:"gaa3",hz:"㗎",en:"Asserts fact → 'Gam3 ge3 gaa3' = 'That's how it is'"},
-    {jp:"wo3",hz:"喎",en:"Hearsay → 'Keoi5 lei4 wo3' = 'Oh, she's coming'"},
-    {jp:"zaa3",hz:"咋",en:"Only/just → 'jat1 go3 zaa3' = 'just one'"},
-  ];
-  document.getElementById('grid-particles').innerHTML=`<div class="wide-card"><h3>Sentence-final particles</h3>
-    <p>These are essential for sounding natural in Cantonese.</p>
-    <div class="examples">${p.map(x=>`<div class="example-row"><span class="ex-jp">${renderJyutping(x.jp)}</span><span style="font-family:'Noto Serif TC',serif;font-size:1.1rem;color:var(--text-muted);">${x.hz}</span><span class="ex-en">${x.en}</span><button class="ex-listen" onclick="speak('${x.hz}','${x.jp}')">🔊</button></div>`).join('')}</div>
-  </div>`;
-}
-function renderToneMistakes(){
-  const pairs=[
-    {a:"si6 (事)",ae:"Thing",b:"si3 (試)",be:"Try"},{a:"maai5 (買)",ae:"Buy",b:"maai6 (賣)",be:"Sell"},
-    {a:"maa5 (馬)",ae:"Horse",b:"maa6 (罵)",be:"Scold"},{a:"tong4 (糖)",ae:"Sugar",b:"tong3 (燙)",be:"Scalding"},
-    {a:"jyu2 (魚)",ae:"Fish",b:"jyu5 (雨)",be:"Rain"},{a:"gai1 (雞)",ae:"Chicken",b:"gai3 (計)",be:"Calculate"},
-    {a:"fan3 (瞓)",ae:"Sleep",b:"fan4 (焚)",be:"Burn"},
-  ];
-  document.getElementById('grid-tone_mistakes').innerHTML=`<div class="wide-card"><h3>Watch your tones! Same sound ≠ same meaning</h3>
-    <div class="examples">${pairs.map(p=>`<div class="example-row"><span class="ex-jp">${p.a}</span><span class="ex-en">${p.ae}</span><span style="color:var(--text-dim);margin:0 .5rem;font-weight:700;">≠</span><span class="ex-jp">${p.b}</span><span class="ex-en">${p.be}</span></div>`).join('')}</div>
-  </div>`;
-}
-function renderRiddles(){
-  const r=[
-    {q:"What has four legs in the morning, two in afternoon, three in evening?",a:"A person 人 (jan4)"},
-    {q:"我係水，但唔係海 — I am water but not the sea. What am I?",a:"雨 (jyu5) — Rain"},
-    {q:"越舊越靚 — The older, the more beautiful. What am I?",a:"古董 (gu2 dung2) — Antique"},
-    {q:"有腳唔識行 — Has legs but can't walk. What am I?",a:"枱 (toi2) — A table"},
-  ];
-  document.getElementById('grid-riddles').innerHTML=r.map((x,i)=>`<div class="wide-card"><h3>謎語 ${i+1}</h3><p><strong style="color:var(--text)">❓ ${x.q}</strong></p>
-    <details style="margin-top:.8rem;"><summary style="cursor:pointer;color:var(--accent);font-size:.88rem;">Reveal answer</summary>
-    <p style="margin-top:.5rem;padding:.5rem;background:var(--surface2);border-radius:6px;">💡 ${x.a}</p></details>
-  </div>`).join('');
-}
-function renderMTR(){
-  const lines=[
-    {line:"Tsuen Wan",color:"#e60026",stations:[
-      {en:"Central",jp:"Zung1 Waan4",hz:"中環"},{en:"Admiralty",jp:"Gam1 Zung1",hz:"金鐘"},
-      {en:"Wan Chai",jp:"Waan1 Zai2",hz:"灣仔"},{en:"Causeway Bay",jp:"Tung4 Lo4 Waan1",hz:"銅鑼灣"},
-      {en:"Tsim Sha Tsui",jp:"Zim1 Saa1 Zeoi2",hz:"尖沙咀"},{en:"Mong Kok",jp:"Wong6 Gok3",hz:"旺角"},
-    ]},
-    {line:"Island",color:"#006caf",stations:[
-      {en:"Kennedy Town",jp:"Gei1 nei4 dei6 sing4",hz:"堅尼地城"},{en:"Sheung Wan",jp:"Soeng6 Waan1",hz:"上環"},
-      {en:"Tai Koo",jp:"Taai3 Gu2",hz:"太古"},{en:"Shau Kei Wan",jp:"Sau3 Gei1 Waan1",hz:"筲箕灣"},
-    ]},
-    {line:"East Rail",color:"#53b7e8",stations:[
-      {en:"Hung Hom",jp:"Hung4 Haam3",hz:"紅磡"},{en:"Sha Tin",jp:"Saa1 Tin4",hz:"沙田"},
-      {en:"Fanling",jp:"Faan4 Ling4",hz:"粉嶺"},{en:"Lo Wu",jp:"Lo4 Wu6",hz:"羅湖"},
-    ]},
-  ];
-  document.getElementById('grid-mtr').innerHTML=lines.map(line=>`<div class="wide-card" style="margin-bottom:1rem;">
-    <h3 style="display:flex;align-items:center;gap:.6rem;"><span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>${line.line} Line</h3>
-    <table class="mtr-table" style="margin-top:.8rem;">
-      <thead><tr><th>Station</th><th>漢字</th><th>Jyutping</th><th>🔊</th></tr></thead>
-      <tbody>${line.stations.map(s=>`<tr><td>${s.en}</td><td style="font-family:'Noto Serif TC',serif;font-size:1rem;">${s.hz}</td><td>${renderJyutping(s.jp)}</td><td><button class="ex-listen" onclick="speak('${s.hz}','${s.jp}')">🔊</button></td></tr>`).join('')}</tbody>
-    </table>
-  </div>`).join('');
-}
+// INTERMEDIATE
+function renderCharacters(){const items=[{title:"開心 (hoi1 sam1)",desc:"Open + Heart = Happy"},{title:"電話 (din6 waa6)",desc:"Electric + Speech = Telephone"},{title:"飛機 (fei1 gei1)",desc:"Fly + Machine = Aeroplane"},{title:"電腦 (din6 nou5)",desc:"Electric + Brain = Computer"},{title:"手機 (sau2 gei1)",desc:"Hand + Machine = Mobile phone"},{title:"火車 (fo2 ce1)",desc:"Fire + Vehicle = Train"},{title:"圖書館 (tou4 syu1 gun2)",desc:"Picture + Book + Hall = Library"}];document.getElementById('grid-characters').innerHTML=items.map(i=>`<div class="wide-card"><h3>${i.title}</h3><p>${i.desc}</p></div>`).join('');}
+function renderThisThat(){const items=[{jp:"ni1 go3",hz:"呢個",en:"This"},{jp:"go2 go3",hz:"嗰個",en:"That"},{jp:"ni1 dou6",hz:"呢度",en:"Here"},{jp:"go2 dou6",hz:"嗰度",en:"There"},{jp:"ni1 di1",hz:"呢啲",en:"These"},{jp:"go2 di1",hz:"嗰啲",en:"Those"}];document.getElementById('grid-this_that').innerHTML=`<div class="wide-card"><h3>Demonstratives</h3><p>Use <strong style="color:var(--accent)">ni1</strong> for this/here and <strong style="color:var(--accent)">go2</strong> for that/there.</p><div class="examples">${items.map(i=>`<div class="example-row"><span class="ex-jp">${renderJyutping(i.jp)}</span><span style="font-family:'Noto Serif TC',serif;font-size:1rem;color:var(--text-muted);">${i.hz}</span><span class="ex-en">${i.en}</span><button class="ex-listen" onclick="speak('${i.hz}','${i.jp}')">🔊</button></div>`).join('')}</div></div>`;}
+function renderParticles(){const p=[{jp:"aa3",hz:"啊",en:"Softens → 'OK aa3' = 'OK then'"},{jp:"laa1",hz:"喇",en:"Suggestion → 'Heoi3 sik6 laa1'"},{jp:"ge3",hz:"嘅",en:"Assertion → 'Hou2 ge3' = trust me"},{jp:"maa3",hz:"咩",en:"Tag question → 'You OK?'"},{jp:"lo3",hz:"囉",en:"Obviously → 'Of course'"},{jp:"gaa3",hz:"㗎",en:"Asserts fact"},{jp:"wo3",hz:"喎",en:"Hearsay/surprise"},{jp:"zaa3",hz:"咋",en:"Only/just"}];document.getElementById('grid-particles').innerHTML=`<div class="wide-card"><h3>Sentence-final particles</h3><p>Essential for sounding natural in Cantonese.</p><div class="examples">${p.map(x=>`<div class="example-row"><span class="ex-jp">${renderJyutping(x.jp)}</span><span style="font-family:'Noto Serif TC',serif;font-size:1.1rem;color:var(--text-muted);">${x.hz}</span><span class="ex-en">${x.en}</span><button class="ex-listen" onclick="speak('${x.hz}','${x.jp}')">🔊</button></div>`).join('')}</div></div>`;}
+function renderToneMistakes(){const pairs=[{a:"si6 (事)",ae:"Thing",b:"si3 (試)",be:"Try"},{a:"maai5 (買)",ae:"Buy",b:"maai6 (賣)",be:"Sell"},{a:"maa5 (馬)",ae:"Horse",b:"maa6 (罵)",be:"Scold"},{a:"tong4 (糖)",ae:"Sugar",b:"tong3 (燙)",be:"Scalding"},{a:"jyu2 (魚)",ae:"Fish",b:"jyu5 (雨)",be:"Rain"},{a:"gai1 (雞)",ae:"Chicken",b:"gai3 (計)",be:"Calculate"},{a:"fan3 (瞓)",ae:"Sleep",b:"fan4 (焚)",be:"Burn"}];document.getElementById('grid-tone_mistakes').innerHTML=`<div class="wide-card"><h3>Same sound ≠ same meaning</h3><div class="examples">${pairs.map(p=>`<div class="example-row"><span class="ex-jp">${p.a}</span><span class="ex-en">${p.ae}</span><span style="color:var(--text-dim);margin:0 .5rem;font-weight:700;">≠</span><span class="ex-jp">${p.b}</span><span class="ex-en">${p.be}</span></div>`).join('')}</div></div>`;}
+function renderRiddles(){const r=[{q:"Four legs morning, two afternoon, three evening?",a:"人 (jan4) — Person"},{q:"我係水但唔係海 — I am water but not the sea.",a:"雨 (jyu5) — Rain"},{q:"越舊越靚 — The older, the more beautiful.",a:"古董 (gu2 dung2) — Antique"},{q:"有腳唔識行 — Has legs but can't walk.",a:"枱 (toi2) — A table"}];document.getElementById('grid-riddles').innerHTML=r.map((x,i)=>`<div class="wide-card"><h3>謎語 ${i+1}</h3><p><strong style="color:var(--text)">❓ ${x.q}</strong></p><details style="margin-top:.8rem;"><summary style="cursor:pointer;color:var(--accent);font-size:.88rem;">Reveal answer</summary><p style="margin-top:.5rem;padding:.5rem;background:var(--surface2);border-radius:6px;">💡 ${x.a}</p></details></div>`).join('');}
+function renderMTR(){const lines=[{line:"Tsuen Wan",color:"#e60026",stations:[{en:"Central",jp:"Zung1 Waan4",hz:"中環"},{en:"Admiralty",jp:"Gam1 Zung1",hz:"金鐘"},{en:"Wan Chai",jp:"Waan1 Zai2",hz:"灣仔"},{en:"Causeway Bay",jp:"Tung4 Lo4 Waan1",hz:"銅鑼灣"},{en:"Tsim Sha Tsui",jp:"Zim1 Saa1 Zeoi2",hz:"尖沙咀"},{en:"Mong Kok",jp:"Wong6 Gok3",hz:"旺角"}]},{line:"Island",color:"#006caf",stations:[{en:"Kennedy Town",jp:"Gei1 nei4 dei6 sing4",hz:"堅尼地城"},{en:"Sheung Wan",jp:"Soeng6 Waan1",hz:"上環"},{en:"Tai Koo",jp:"Taai3 Gu2",hz:"太古"},{en:"Shau Kei Wan",jp:"Sau3 Gei1 Waan1",hz:"筲箕灣"}]},{line:"East Rail",color:"#53b7e8",stations:[{en:"Hung Hom",jp:"Hung4 Haam3",hz:"紅磡"},{en:"Sha Tin",jp:"Saa1 Tin4",hz:"沙田"},{en:"Fanling",jp:"Faan4 Ling4",hz:"粉嶺"},{en:"Lo Wu",jp:"Lo4 Wu6",hz:"羅湖"}]}];document.getElementById('grid-mtr').innerHTML=lines.map(line=>`<div class="wide-card" style="margin-bottom:1rem;"><h3 style="display:flex;align-items:center;gap:.6rem;"><span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>${line.line} Line</h3><table class="mtr-table" style="margin-top:.8rem;"><thead><tr><th>Station</th><th>漢字</th><th>Jyutping</th><th>🔊</th><th>🐢</th></tr></thead><tbody>${line.stations.map(s=>`<tr><td>${s.en}</td><td style="font-family:'Noto Serif TC',serif;font-size:1rem;">${s.hz}</td><td>${renderJyutping(s.jp)}</td><td><button class="ex-listen" onclick="speak('${s.hz}','${s.jp}',1)">🔊</button></td><td><button class="ex-listen" onclick="speak('${s.hz}','${s.jp}',0.45)" title="Slow">🐢</button></td></tr>`).join('')}</tbody></table></div>`).join('');}
 
 renderToneGuide();renderCharacters();renderThisThat();renderParticles();renderToneMistakes();renderRiddles();renderMTR();
 
 // ============================================================
-//  SPEECH ENGINE
+//  SPEECH ENGINE — rate parameter for slow mode
 // ============================================================
 function loadCustomRecordings(){try{return JSON.parse(localStorage.getItem('customAudio')||'{}');}catch{return {};}}
 function saveRecordingToStorage(phrase,dataUrl){const r=loadCustomRecordings();r[phrase]=dataUrl;localStorage.setItem('customAudio',JSON.stringify(r));updateStorageInfo();}
+function deleteRecording(phrase){const r=loadCustomRecordings();delete r[phrase];localStorage.setItem('customAudio',JSON.stringify(r));updateStorageInfo();}
 let cachedVoice=null;
 
-function speak(text,fallbackJp){
+// speak(text, fallbackJp, rate)  — rate: 1=normal, 0.45=slow
+function speak(text,fallbackJp,rate){
+  rate=rate||1;
   const custom=loadCustomRecordings(),key=fallbackJp||text;
-  if(custom[key]){new Audio(custom[key]).play().catch(()=>doTTS(text));return;}
-  doTTS(text);
+  if(custom[key]&&rate===1){
+    // custom recording: play as-is (no rate control for recorded audio)
+    new Audio(custom[key]).play().catch(()=>doTTS(text,rate));return;
+  }
+  doTTS(text,rate);
 }
-function doTTS(text){
+function doTTS(text,rate){
   if(!window.speechSynthesis)return;
+  rate=rate||1;
   window.speechSynthesis.cancel();
   function go(voice){
     const u=new SpeechSynthesisUtterance(text);
-    u.lang='zh-HK';u.rate=0.75;u.pitch=1.0;
+    u.lang='zh-HK';u.rate=rate*0.75;u.pitch=1.0; // 0.75 base, halved for slow
+    if(rate<1)u.rate=0.38; // extra slow for 🐢
     if(voice)u.voice=voice;
     window.speechSynthesis.speak(u);
   }
   if(cachedVoice){go(cachedVoice);return;}
-  function find(){
-    const vs=window.speechSynthesis.getVoices();
-    const priority=[v=>v.lang==='zh-HK',v=>v.name.toLowerCase().includes('cantonese'),v=>v.lang==='zh-TW',v=>v.lang.startsWith('zh')];
-    for(const t of priority){const f=vs.find(t);if(f){cachedVoice=f;go(f);return;}}
-    go(null);
-  }
+  function find(){const vs=window.speechSynthesis.getVoices();const priority=[v=>v.lang==='zh-HK',v=>v.name.toLowerCase().includes('cantonese'),v=>v.lang==='zh-TW',v=>v.lang.startsWith('zh')];for(const t of priority){const f=vs.find(t);if(f){cachedVoice=f;go(f);return;}}go(null);}
   window.speechSynthesis.getVoices().length>0?find():(window.speechSynthesis.onvoiceschanged=()=>{find();window.speechSynthesis.onvoiceschanged=null;});
 }
 
@@ -1218,6 +1257,12 @@ function openRecordingModal(phrase){
   document.getElementById('recordingStatus').textContent='Ready. Click Start.';
   ['startRecordBtn','stopRecordBtn','playbackBtn','saveRecordingBtn'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'inline-block':'none');
   recordedBlob=null;
+  // Show if existing recording
+  const hasRec=hasRecording(phrase);
+  const existNote=document.getElementById('existingRecNote');
+  const delBtn=document.getElementById('deleteThisRecBtn');
+  existNote.style.display=hasRec?'block':'none';
+  delBtn.style.display=hasRec?'inline-block':'none';
 }
 function closeRecordingModal(){document.getElementById('recordingModal').style.display='none';if(mediaRecorder?.state==='recording')mediaRecorder.stop();}
 async function startRecording(){
@@ -1231,7 +1276,7 @@ async function startRecording(){
       document.getElementById('playbackBtn').style.display='inline-block';
       document.getElementById('playbackBtn').onclick=()=>new Audio(url).play();
       document.getElementById('saveRecordingBtn').style.display='inline-block';
-      document.getElementById('recordingStatus').textContent='✅ Done!';
+      document.getElementById('recordingStatus').textContent='✅ Done! Playback or save.';
       stream.getTracks().forEach(t=>t.stop());
     };
     mediaRecorder.start();
@@ -1244,12 +1289,55 @@ function stopRecording(){if(mediaRecorder?.state==='recording'){mediaRecorder.st
 function saveRecording(){
   if(!recordedBlob){alert('Nothing to save!');return;}
   const reader=new FileReader();
-  reader.onloadend=()=>{saveRecordingToStorage(currentRecordingPhrase,reader.result);alert(`✅ Saved!`);closeRecordingModal();};
+  reader.onloadend=()=>{saveRecordingToStorage(currentRecordingPhrase,reader.result);alert(`✅ Saved for: "${currentRecordingPhrase}"`);closeRecordingModal();refreshAllGrids();};
   reader.readAsDataURL(recordedBlob);
 }
+function deleteCurrentRec(){
+  if(!confirm(`Delete recording for "${currentRecordingPhrase}"?`))return;
+  deleteRecording(currentRecordingPhrase);
+  document.getElementById('existingRecNote').style.display='none';
+  document.getElementById('deleteThisRecBtn').style.display='none';
+  refreshAllGrids();
+}
 function updateStorageInfo(){const c=Object.keys(loadCustomRecordings()).length;const el=document.getElementById('storageInfo');if(el)el.textContent=`📀 ${c} recording${c!==1?'s':''} saved`;}
+function refreshAllGrids(){Object.keys(VOCAB).forEach(k=>renderGrid(k,VOCAB[k]));}
 function exportAllRecordings(){const r=loadCustomRecordings();if(!Object.keys(r).length){alert('No recordings!');return;}const b=new Blob([JSON.stringify(r)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`cantonese_recordings_${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
-function importRecordings(file){const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);localStorage.setItem('customAudio',JSON.stringify({...loadCustomRecordings(),...d}));alert(`Imported ${Object.keys(d).length} recordings!`);updateStorageInfo();}catch{alert('Invalid file!');}};r.readAsText(file);}
+function importRecordings(file){const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);localStorage.setItem('customAudio',JSON.stringify({...loadCustomRecordings(),...d}));alert(`Imported ${Object.keys(d).length} recordings!`);updateStorageInfo();refreshAllGrids();}catch{alert('Invalid file!');}};r.readAsText(file);}
+
+// ============================================================
+//  RECORDINGS MANAGER — list all, play individual, delete individual
+// ============================================================
+function renderRecordingsManager(){
+  const el=document.getElementById('recManagerContent');if(!el)return;
+  const recs=loadCustomRecordings();
+  const keys=Object.keys(recs);
+  if(keys.length===0){
+    el.innerHTML=`<div class="wide-card"><h3>No recordings yet</h3><p>Record your voice on any vocab card — it will appear here so you can manage it.</p></div>`;
+    return;
+  }
+  el.innerHTML=`
+    <div class="rec-manager">
+      <h3>🎙️ ${keys.length} Saved Recording${keys.length!==1?'s':''}</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem;">Play to check, or delete ones you want to redo. The system voice will be used instead of your recording once deleted.</p>
+      <div class="rec-list" id="recList"></div>
+      <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+        <button class="btn-outline" onclick="if(confirm('Delete ALL recordings?')){localStorage.removeItem('customAudio');updateStorageInfo();renderRecordingsManager();refreshAllGrids();}">🗑️ Delete All</button>
+        <button class="btn-outline" onclick="exportAllRecordings()">📥 Export All</button>
+      </div>
+    </div>`;
+  const list=document.getElementById('recList');
+  keys.sort().forEach(phrase=>{
+    const audio=new Audio(recs[phrase]);
+    const item=document.createElement('div');
+    item.className='rec-item';
+    item.innerHTML=`
+      <span class="rec-item-phrase" title="${phrase}">${phrase}</span>
+      <button class="rec-item-play" onclick="new Audio(loadCustomRecordings()['${phrase.replace(/'/g,"\\'")}']).play()">▶ Play</button>
+      <button class="rec-item-play" onclick="speak('${phrase.replace(/'/g,"\\'")}',undefined,0.45)" style="color:var(--text-dim);" title="TTS slow">🐢</button>
+      <button class="rec-item-del" onclick="deleteRecording('${phrase.replace(/'/g,"\\'")}');renderRecordingsManager();refreshAllGrids();">🗑️</button>`;
+    list.appendChild(item);
+  });
+}
 
 // ============================================================
 //  SMART QUIZ SYSTEM
