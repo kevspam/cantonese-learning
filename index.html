@@ -1219,7 +1219,6 @@ renderToneGuide();renderCharacters();renderThisThat();renderParticles();renderTo
 // ============================================================
 //  SPEECH ENGINE — rate parameter for slow mode
 // ============================================================
-function loadCustomRecordings(){try{return JSON.parse(localStorage.getItem('customAudio')||'{}');}catch{return {};}}
 function saveRecordingToStorage(phrase,dataUrl){const r=loadCustomRecordings();r[phrase]=dataUrl;localStorage.setItem('customAudio',JSON.stringify(r));updateStorageInfo();}
 function deleteRecording(phrase){const r=loadCustomRecordings();delete r[phrase];localStorage.setItem('customAudio',JSON.stringify(r));updateStorageInfo();}
 let cachedVoice=null;
