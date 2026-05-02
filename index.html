@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cantonese Study Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cantonese Study Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{--bg:#0e0f13;--surface:#161820;--surface2:#1e2028;--border:#2a2c36;--accent:#e8b86d;--accent2:#6d9ee8;--accent3:#e86d8c;--text:#e8e4dc;--text-muted:#7a7a8c;--text-dim:#4a4a5c;--green:#6dcc9e;--red:#e86d6d;--sidebar-w:260px;--t1:#f5c842;--t2:#6dcc9e;--t3:#6d9ee8;--t4:#e86d6d;--t5:#cc8dcc;--t6:#e8b86d;}
     *{margin:0;padding:0;box-sizing:border-box;}
@@ -370,11 +377,11 @@
     <div id="recordingStatus" style="margin:1rem 0;padding:.5rem;background:var(--surface2);border-radius:8px;color:var(--text-muted);"></div>
     <div id="existingRecNote" style="display:none;margin:.5rem 0;padding:.4rem .8rem;background:rgba(109,158,232,.1);border:1px solid var(--accent2);border-radius:6px;font-size:.8rem;color:var(--accent2);">📀 You already have a recording for this — saving will replace it.</div>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-      <button id="startRecordBtn" class="btn-primary" onclick="startRecording()">⏺ Start</button>
-      <button id="stopRecordBtn" class="btn-primary" style="display:none;background:var(--red);" onclick="stopRecording()">⏹️ Stop</button>
-      <button id="playbackBtn" class="btn-primary" style="display:none;background:var(--accent2);" onclick="playbackRecording()">▶️ Playback</button>
-      <button id="saveRecordingBtn" class="btn-primary" style="display:none;" onclick="saveRecording()">💾 Save</button>
-      <button id="deleteThisRecBtn" class="btn-primary" style="display:none;background:var(--red);" onclick="deleteCurrentRecording()">🗑️ Delete existing</button>
+      <button id="startRecordBtn" class="btn-primary">⏺ Start</button>
+      <button id="stopRecordBtn" class="btn-primary" style="display:none;background:var(--red);">⏹️ Stop</button>
+      <button id="playbackBtn" class="btn-primary" style="display:none;background:var(--accent2);">▶️ Playback</button>
+      <button id="saveRecordingBtn" class="btn-primary" style="display:none;">💾 Save</button>
+      <button id="deleteThisRecBtn" class="btn-primary" style="display:none;background:var(--red);">🗑️ Delete existing</button>
       <button onclick="closeRecordingModal()" class="btn-primary" style="background:var(--text-dim);">Close</button>
     </div>
   </div>
@@ -1219,6 +1226,7 @@ renderToneGuide();renderCharacters();renderThisThat();renderParticles();renderTo
 // ============================================================
 //  SPEECH ENGINE — rate parameter for slow mode
 // ============================================================
+function loadCustomRecordings(){try{return JSON.parse(localStorage.getItem('customAudio')||'{}');}catch{return {};}}
 function saveRecordingToStorage(phrase,dataUrl){const r=loadCustomRecordings();r[phrase]=dataUrl;localStorage.setItem('customAudio',JSON.stringify(r));updateStorageInfo();}
 function deleteRecording(phrase){const r=loadCustomRecordings();delete r[phrase];localStorage.setItem('customAudio',JSON.stringify(r));updateStorageInfo();}
 let cachedVoice=null;
@@ -1250,441 +1258,97 @@ function doTTS(text,rate){
 }
 
 // ============================================================
-// FIXED RECORDING SYSTEM - Working version
+//  RECORDING
 // ============================================================
-
-let mediaRecorder = null;
-let audioChunks = [];
-let currentRecordingPhrase = '';
-let recordedBlob = null;
-let recordedAudioUrl = null;
-
-// Load recordings from localStorage
-function loadCustomRecordings() {
-    try {
-        return JSON.parse(localStorage.getItem('cantonese_recordings') || '{}');
-    } catch(e) {
-        return {};
-    }
+let mediaRecorder=null,audioChunks=[],currentRecordingPhrase='',recordedBlob=null;
+function openRecordingModal(phrase){
+  currentRecordingPhrase=phrase;
+  document.getElementById('recordingPhrase').textContent=phrase;
+  document.getElementById('recordingModal').style.display='flex';
+  document.getElementById('recordingStatus').textContent='Ready. Click Start.';
+  ['startRecordBtn','stopRecordBtn','playbackBtn','saveRecordingBtn'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'inline-block':'none');
+  recordedBlob=null;
+  // Show if existing recording
+  const hasRec=hasRecording(phrase);
+  const existNote=document.getElementById('existingRecNote');
+  const delBtn=document.getElementById('deleteThisRecBtn');
+  existNote.style.display=hasRec?'block':'none';
+  delBtn.style.display=hasRec?'inline-block':'none';
 }
-
-// Save recording to storage
-function saveRecordingToStorage(phrase, base64Data) {
-    const recordings = loadCustomRecordings();
-    recordings[phrase] = base64Data;
-    localStorage.setItem('cantonese_recordings', JSON.stringify(recordings));
-    updateStorageInfo();
-    refreshAllGrids();
-}
-
-// Delete single recording
-function deleteRecording(phrase) {
-    const recordings = loadCustomRecordings();
-    delete recordings[phrase];
-    localStorage.setItem('cantonese_recordings', JSON.stringify(recordings));
-    updateStorageInfo();
-    refreshAllGrids();
-    if (document.getElementById('recManagerContent')) {
-        renderRecordingsManager();
-    }
-}
-
-// Check if recording exists
-function hasRecording(jp) {
-    const recordings = loadCustomRecordings();
-    return !!recordings[jp];
-}
-
-// Get recording URL
-function getRecordingUrl(jp) {
-    const recordings = loadCustomRecordings();
-    return recordings[jp] || null;
-}
-
-// Open recording modal
-function openRecordingModal(phrase) {
-    currentRecordingPhrase = phrase;
-    document.getElementById('recordingPhrase').textContent = phrase;
-    document.getElementById('recordingModal').style.display = 'flex';
-    document.getElementById('recordingStatus').textContent = '🎤 Ready. Click Start to record.';
-    document.getElementById('recordingStatus').style.color = 'var(--text-muted)';
-    
-    // Reset UI
-    document.getElementById('startRecordBtn').style.display = 'inline-block';
-    document.getElementById('stopRecordBtn').style.display = 'none';
-    document.getElementById('playbackBtn').style.display = 'none';
-    document.getElementById('saveRecordingBtn').style.display = 'none';
-    document.getElementById('deleteThisRecBtn').style.display = 'none';
-    
-    // Clear any previous blob/url
-    if (recordedAudioUrl) {
-        URL.revokeObjectURL(recordedAudioUrl);
-        recordedAudioUrl = null;
-    }
-    recordedBlob = null;
-    
-    // Show if existing recording exists
-    const hasRec = hasRecording(phrase);
-    const existNote = document.getElementById('existingRecNote');
-    const delBtn = document.getElementById('deleteThisRecBtn');
-    if (existNote) existNote.style.display = hasRec ? 'block' : 'none';
-    if (delBtn) delBtn.style.display = hasRec ? 'inline-block' : 'none';
-}
-
-function closeRecordingModal() {
-    document.getElementById('recordingModal').style.display = 'none';
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-    }
-    if (recordedAudioUrl) {
-        URL.revokeObjectURL(recordedAudioUrl);
-        recordedAudioUrl = null;
-    }
-}
-
-// Start recording with proper error handling
-async function startRecording() {
-    try {
-        // Stop any existing recording
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
-            await new Promise(r => setTimeout(r, 200));
-        }
-        
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioChunks = [];
-        mediaRecorder = new MediaRecorder(stream);
-        
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data && event.data.size > 0) {
-                audioChunks.push(event.data);
-            }
-        };
-        
-        mediaRecorder.onstop = () => {
-            if (audioChunks.length === 0) {
-                document.getElementById('recordingStatus').textContent = '⚠️ No audio recorded. Please try again.';
-                document.getElementById('recordingStatus').style.color = 'var(--red)';
-                return;
-            }
-            
-            recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            recordedAudioUrl = URL.createObjectURL(recordedBlob);
-            
-            document.getElementById('playbackBtn').style.display = 'inline-block';
-            document.getElementById('saveRecordingBtn').style.display = 'inline-block';
-            document.getElementById('recordingStatus').textContent = '✅ Recording done! Listen or save.';
-            document.getElementById('recordingStatus').style.color = 'var(--green)';
-            
-            // Clean up stream tracks
-            stream.getTracks().forEach(track => track.stop());
-        };
-        
-        mediaRecorder.start(100); // Collect data in 100ms chunks
-        document.getElementById('startRecordBtn').style.display = 'none';
-        document.getElementById('stopRecordBtn').style.display = 'inline-block';
-        document.getElementById('recordingStatus').textContent = '🔴 Recording... Speak clearly!';
-        document.getElementById('recordingStatus').style.color = 'var(--red)';
-        
-    } catch (error) {
-        console.error('Microphone error:', error);
-        let errorMsg = '❌ Cannot access microphone. ';
-        if (error.name === 'NotAllowedError') {
-            errorMsg += 'Please allow microphone permission.';
-        } else if (error.name === 'NotFoundError') {
-            errorMsg += 'No microphone found.';
-        } else {
-            errorMsg += 'Please check your microphone settings.';
-        }
-        document.getElementById('recordingStatus').textContent = errorMsg;
-        document.getElementById('recordingStatus').style.color = 'var(--red)';
-    }
-}
-
-function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        document.getElementById('startRecordBtn').style.display = 'inline-block';
-        document.getElementById('stopRecordBtn').style.display = 'none';
-    }
-}
-
-function playbackRecording() {
-    if (recordedAudioUrl) {
-        const audio = new Audio(recordedAudioUrl);
-        audio.play().catch(e => console.error('Playback error:', e));
-    } else if (recordedBlob) {
-        recordedAudioUrl = URL.createObjectURL(recordedBlob);
-        const audio = new Audio(recordedAudioUrl);
-        audio.play().catch(e => console.error('Playback error:', e));
-    } else {
-        alert('No recording to play back.');
-    }
-}
-
-function saveRecording() {
-    if (!recordedBlob) {
-        alert('No recording to save! Please record something first.');
-        return;
-    }
-    
-    const reader = new FileReader();
-    reader.onloadend = function() {
-        saveRecordingToStorage(currentRecordingPhrase, reader.result);
-        alert(`✅ Recording saved for: "${currentRecordingPhrase}"`);
-        closeRecordingModal();
+function closeRecordingModal(){document.getElementById('recordingModal').style.display='none';if(mediaRecorder?.state==='recording')mediaRecorder.stop();}
+async function startRecording(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder=new MediaRecorder(stream);audioChunks=[];
+    mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
+    mediaRecorder.onstop=()=>{
+      recordedBlob=new Blob(audioChunks,{type:'audio/webm'});
+      const url=URL.createObjectURL(recordedBlob);
+      document.getElementById('playbackBtn').style.display='inline-block';
+      document.getElementById('playbackBtn').onclick=()=>new Audio(url).play();
+      document.getElementById('saveRecordingBtn').style.display='inline-block';
+      document.getElementById('recordingStatus').textContent='✅ Done! Playback or save.';
+      stream.getTracks().forEach(t=>t.stop());
     };
-    reader.onerror = function() {
-        alert('Failed to save recording. Please try again.');
-    };
-    reader.readAsDataURL(recordedBlob);
+    mediaRecorder.start();
+    document.getElementById('startRecordBtn').style.display='none';
+    document.getElementById('stopRecordBtn').style.display='inline-block';
+    document.getElementById('recordingStatus').textContent='🔴 Recording…';
+  }catch{alert('Microphone access denied.');}
 }
-
-function deleteCurrentRecording() {
-    if (!confirm(`Delete recording for "${currentRecordingPhrase}"? This cannot be undone.`)) {
-        return;
-    }
-    deleteRecording(currentRecordingPhrase);
-    document.getElementById('existingRecNote').style.display = 'none';
-    document.getElementById('deleteThisRecBtn').style.display = 'none';
-    alert(`Recording deleted for: "${currentRecordingPhrase}"`);
-    closeRecordingModal();
+function stopRecording(){if(mediaRecorder?.state==='recording'){mediaRecorder.stop();document.getElementById('startRecordBtn').style.display='inline-block';document.getElementById('stopRecordBtn').style.display='none';}}
+function saveRecording(){
+  if(!recordedBlob){alert('Nothing to save!');return;}
+  const reader=new FileReader();
+  reader.onloadend=()=>{saveRecordingToStorage(currentRecordingPhrase,reader.result);alert(`✅ Saved for: "${currentRecordingPhrase}"`);closeRecordingModal();refreshAllGrids();};
+  reader.readAsDataURL(recordedBlob);
 }
-
-// Update storage info display
-function updateStorageInfo() {
-    const recordings = loadCustomRecordings();
-    const count = Object.keys(recordings).length;
-    const infoEl = document.getElementById('storageInfo');
-    if (infoEl) {
-        infoEl.textContent = `📀 ${count} recording${count !== 1 ? 's' : ''} saved locally`;
-    }
+function deleteCurrentRec(){
+  if(!confirm(`Delete recording for "${currentRecordingPhrase}"?`))return;
+  deleteRecording(currentRecordingPhrase);
+  document.getElementById('existingRecNote').style.display='none';
+  document.getElementById('deleteThisRecBtn').style.display='none';
+  refreshAllGrids();
 }
+function updateStorageInfo(){const c=Object.keys(loadCustomRecordings()).length;const el=document.getElementById('storageInfo');if(el)el.textContent=`📀 ${c} recording${c!==1?'s':''} saved`;}
+function refreshAllGrids(){Object.keys(VOCAB).forEach(k=>renderGrid(k,VOCAB[k]));}
+function exportAllRecordings(){const r=loadCustomRecordings();if(!Object.keys(r).length){alert('No recordings!');return;}const b=new Blob([JSON.stringify(r)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`cantonese_recordings_${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
+function importRecordings(file){const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);localStorage.setItem('customAudio',JSON.stringify({...loadCustomRecordings(),...d}));alert(`Imported ${Object.keys(d).length} recordings!`);updateStorageInfo();refreshAllGrids();}catch{alert('Invalid file!');}};r.readAsText(file);}
 
-// Refresh all vocab grids to show/hide rec badges
-function refreshAllGrids() {
-    Object.keys(VOCAB).forEach(k => renderGrid(k, VOCAB[k]));
-    if (document.getElementById('recManagerContent')) {
-        renderRecordingsManager();
-    }
+// ============================================================
+//  RECORDINGS MANAGER — list all, play individual, delete individual
+// ============================================================
+function renderRecordingsManager(){
+  const el=document.getElementById('recManagerContent');if(!el)return;
+  const recs=loadCustomRecordings();
+  const keys=Object.keys(recs);
+  if(keys.length===0){
+    el.innerHTML=`<div class="wide-card"><h3>No recordings yet</h3><p>Record your voice on any vocab card — it will appear here so you can manage it.</p></div>`;
+    return;
+  }
+  el.innerHTML=`
+    <div class="rec-manager">
+      <h3>🎙️ ${keys.length} Saved Recording${keys.length!==1?'s':''}</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem;">Play to check, or delete ones you want to redo. The system voice will be used instead of your recording once deleted.</p>
+      <div class="rec-list" id="recList"></div>
+      <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+        <button class="btn-outline" onclick="if(confirm('Delete ALL recordings?')){localStorage.removeItem('customAudio');updateStorageInfo();renderRecordingsManager();refreshAllGrids();}">🗑️ Delete All</button>
+        <button class="btn-outline" onclick="exportAllRecordings()">📥 Export All</button>
+      </div>
+    </div>`;
+  const list=document.getElementById('recList');
+  keys.sort().forEach(phrase=>{
+    const audio=new Audio(recs[phrase]);
+    const item=document.createElement('div');
+    item.className='rec-item';
+    item.innerHTML=`
+      <span class="rec-item-phrase" title="${phrase}">${phrase}</span>
+      <button class="rec-item-play" onclick="new Audio(loadCustomRecordings()['${phrase.replace(/'/g,"\\'")}']).play()">▶ Play</button>
+      <button class="rec-item-play" onclick="speak('${phrase.replace(/'/g,"\\'")}',undefined,0.45)" style="color:var(--text-dim);" title="TTS slow">🐢</button>
+      <button class="rec-item-del" onclick="deleteRecording('${phrase.replace(/'/g,"\\'")}');renderRecordingsManager();refreshAllGrids();">🗑️</button>`;
+    list.appendChild(item);
+  });
 }
-
-// Play custom recording or fallback to TTS
-function playCustomRecording(phrase, jyutping, rate = 1) {
-    const recording = getRecordingUrl(jyutping || phrase);
-    if (recording && rate === 1) {
-        // Use custom recording
-        const audio = new Audio(recording);
-        audio.play().catch(err => {
-            console.warn('Custom recording play failed, falling back to TTS', err);
-            doTTS(phrase, rate);
-        });
-    } else {
-        // Use TTS (with slow mode if requested)
-        doTTS(phrase, rate);
-    }
-}
-
-// Text-to-speech with Cantonese support
-let cachedVoice = null;
-
-function doTTS(text, rate = 1) {
-    if (!window.speechSynthesis) {
-        console.warn('Speech synthesis not supported');
-        return;
-    }
-    
-    window.speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-HK';
-    
-    // Adjust rate: normal = 0.9, slow = 0.45
-    utterance.rate = rate === 1 ? 0.9 : 0.45;
-    utterance.pitch = 1.0;
-    
-    const trySpeak = () => {
-        const voices = window.speechSynthesis.getVoices();
-        // Priority: Cantonese > Chinese HK > Chinese TW > Chinese
-        const hkVoice = voices.find(v => v.lang === 'zh-HK' || v.name.includes('Ting-Ting') || v.name.includes('Sin-Ji'));
-        if (hkVoice) {
-            utterance.voice = hkVoice;
-        }
-        window.speechSynthesis.speak(utterance);
-    };
-    
-    if (window.speechSynthesis.getVoices().length > 0) {
-        trySpeak();
-    } else {
-        window.speechSynthesis.onvoiceschanged = () => {
-            trySpeak();
-            window.speechSynthesis.onvoiceschanged = null;
-        };
-    }
-}
-
-// Export all recordings as JSON file
-function exportAllRecordings() {
-    const recordings = loadCustomRecordings();
-    const keys = Object.keys(recordings);
-    if (keys.length === 0) {
-        alert('No recordings to export!');
-        return;
-    }
-    
-    const dataStr = JSON.stringify(recordings, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `cantonese_recordings_${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-// Import recordings from JSON file
-function importRecordings(file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const imported = JSON.parse(e.target.result);
-            if (typeof imported !== 'object') {
-                throw new Error('Invalid format');
-            }
-            const current = loadCustomRecordings();
-            const merged = { ...current, ...imported };
-            localStorage.setItem('cantonese_recordings', JSON.stringify(merged));
-            const count = Object.keys(imported).length;
-            alert(`✅ Imported ${count} recording${count !== 1 ? 's' : ''}!`);
-            updateStorageInfo();
-            refreshAllGrids();
-            if (document.getElementById('recManagerContent')) {
-                renderRecordingsManager();
-            }
-        } catch (err) {
-            alert('Invalid file. Please select a valid recordings export file.');
-        }
-    };
-    reader.onerror = () => alert('Failed to read file.');
-    reader.readAsText(file);
-}
-
-// Render recordings manager panel
-function renderRecordingsManager() {
-    const container = document.getElementById('recManagerContent');
-    if (!container) return;
-    
-    const recordings = loadCustomRecordings();
-    const keys = Object.keys(recordings);
-    
-    if (keys.length === 0) {
-        container.innerHTML = `
-            <div class="wide-card">
-                <h3>🎙️ No recordings yet</h3>
-                <p style="color:var(--text-muted);">Record your voice on any vocab card — they will appear here for playback and management.</p>
-                <button class="btn-outline" style="margin-top:1rem;" onclick="importViaInput()">📤 Import recordings</button>
-            </div>
-        `;
-        return;
-    }
-    
-    const listHtml = keys.sort().map(phrase => {
-        const escapedPhrase = phrase.replace(/'/g, "\\'");
-        return `
-            <div class="rec-item">
-                <span class="rec-item-phrase" title="${phrase}">${phrase}</span>
-                <button class="rec-item-play" onclick="playCustomRecordingFromManager('${escapedPhrase}')">▶ Play</button>
-                <button class="rec-item-play" onclick="doTTS('${escapedPhrase}', 0.45)" style="color:var(--text-muted);" title="Text-to-speech slow">🐢 TTS</button>
-                <button class="rec-item-del" onclick="deleteRecordingAndRefresh('${escapedPhrase}')">🗑️</button>
-            </div>
-        `;
-    }).join('');
-    
-    container.innerHTML = `
-        <div class="rec-manager">
-            <h3>🎙️ ${keys.length} Saved Recording${keys.length !== 1 ? 's' : ''}</h3>
-            <p style="font-size:.82rem;color:var(--text-muted); margin-bottom:1rem;">Click Play to hear your voice, or delete recordings you want to redo.</p>
-            <div class="rec-list" style="max-height:400px; overflow-y:auto;">${listHtml}</div>
-            <div style="margin-top:1.5rem; display:flex; gap:0.8rem; flex-wrap:wrap;">
-                <button class="btn-outline" onclick="if(confirm('Delete ALL recordings? This cannot be undone.')){localStorage.removeItem('cantonese_recordings');updateStorageInfo();refreshAllGrids();renderRecordingsManager();}">🗑️ Delete All</button>
-                <button class="btn-outline" onclick="exportAllRecordings()">📥 Export All</button>
-                <button class="btn-outline" onclick="importViaInput()">📤 Import</button>
-            </div>
-        </div>
-    `;
-}
-
-function playCustomRecordingFromManager(phrase) {
-    const recordings = loadCustomRecordings();
-    const url = recordings[phrase];
-    if (url) {
-        const audio = new Audio(url);
-        audio.play().catch(err => console.error('Playback error:', err));
-    } else {
-        alert('Recording not found.');
-    }
-}
-
-function deleteRecordingAndRefresh(phrase) {
-    if (confirm(`Delete recording for "${phrase}"?`)) {
-        deleteRecording(phrase);
-        renderRecordingsManager();
-        refreshAllGrids();
-    }
-}
-
-function importViaInput() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (e) => {
-        if (e.target.files && e.target.files[0]) {
-            importRecordings(e.target.files[0]);
-        }
-    };
-    input.click();
-}
-
-// Modified speak function to use custom recordings when available
-function speak(text, fallbackJp, rate = 1) {
-    const phraseKey = fallbackJp || text;
-    const customRec = getRecordingUrl(phraseKey);
-    
-    if (customRec && rate === 1) {
-        // Play custom recording at normal speed
-        const audio = new Audio(customRec);
-        audio.play().catch(() => doTTS(text, rate));
-    } else {
-        // Use TTS (with optional slow speed)
-        doTTS(text, rate);
-    }
-}
-
-// Helper for the renderGrid to check recording existence
-function hasRecordingForCard(jp) {
-    return hasRecording(jp);
-}
-
-// Make functions globally available
-window.speak = speak;
-window.openRecordingModal = openRecordingModal;
-window.closeRecordingModal = closeRecordingModal;
-window.startRecording = startRecording;
-window.stopRecording = stopRecording;
-window.playbackRecording = playbackRecording;
-window.saveRecording = saveRecording;
-window.deleteCurrentRecording = deleteCurrentRecording;
-window.exportAllRecordings = exportAllRecordings;
-window.importRecordings = importRecordings;
-window.playCustomRecordingFromManager = playCustomRecordingFromManager;
-window.deleteRecordingAndRefresh = deleteRecordingAndRefresh;
-window.importViaInput = importViaInput;
-window.doTTS = doTTS;
-window.renderRecordingsManager = renderRecordingsManager;
-window.refreshAllGrids = refreshAllGrids;
-window.updateStorageInfo = updateStorageInfo;
 
 // ============================================================
 //  SMART QUIZ SYSTEM
