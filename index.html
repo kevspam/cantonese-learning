@@ -1370,14 +1370,39 @@ function deleteRecording(phrase){const r=loadCustomRecordings();delete r[phrase]
 let cachedVoice=null;
 
 // speak(text, fallbackJp, rate)  — rate: 1=normal, 0.45=slow
-function speak(text,fallbackJp,rate){
-  rate=rate||1;
-  const custom=loadCustomRecordings(),key=fallbackJp||text;
-  if(custom[key]&&rate===1){
-    // custom recording: play as-is (no rate control for recorded audio)
-    new Audio(custom[key]).play().catch(()=>doTTS(text,rate));return;
+function speak(text, fallbackJp, rate){
+  rate = rate || 1;
+  
+  // Cancel any ongoing speech
+  if(window.speechSynthesis){
+    window.speechSynthesis.cancel();
   }
-  doTTS(text,rate);
+  
+  // Create utterance
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'zh-HK';
+  utterance.rate = rate === 0.45 ? 0.5 : 0.9;  // Slow mode
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+  
+  // Try to get a Cantonese voice
+  const voices = window.speechSynthesis.getVoices();
+  let cantoneseVoice = null;
+  
+  for (let i = 0; i < voices.length; i++) {
+    const v = voices[i];
+    if (v.lang === 'zh-HK' || v.lang === 'zh-Hant-HK' || v.name.toLowerCase().includes('ting-ting') || v.name.toLowerCase().includes('ching')) {
+      cantoneseVoice = v;
+      break;
+    }
+  }
+  
+  if (cantoneseVoice) {
+    utterance.voice = cantoneseVoice;
+  }
+  
+  // Speak
+  window.speechSynthesis.speak(utterance);
 }
 function doTTS(text,rate){
   if(!window.speechSynthesis)return;
@@ -1949,6 +1974,68 @@ function scorerDrawModelPitch(jp){
     ctx.textAlign = 'left';
   }
 }
+function scorerPlayReference(){
+  const word = scorerSelectedWord;
+  if(!word){
+    const statusEl = document.getElementById('scorerStatus');
+    if(statusEl) statusEl.innerHTML = '⚠️ Please select a word first.';
+    return;
+  }
+  
+  const textToSpeak = word.hz || word.jp;
+  
+  // Cancel any ongoing speech
+  if(window.speechSynthesis){
+    window.speechSynthesis.cancel();
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.lang = 'zh-HK';
+  utterance.rate = 0.85;
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+  
+  // Try to get Cantonese voice
+  const voices = window.speechSynthesis.getVoices();
+  for (let i = 0; i < voices.length; i++) {
+    if (voices[i].lang === 'zh-HK' || voices[i].lang === 'zh-TW' || voices[i].name.toLowerCase().includes('ting') || voices[i].name.toLowerCase().includes('ching')) {
+      utterance.voice = voices[i];
+      break;
+    }
+  }
+  
+  window.speechSynthesis.speak(utterance);
+  
+  const statusEl = document.getElementById('scorerStatus');
+  if(statusEl) statusEl.innerHTML = '🔊 Playing reference... now press ⏺ Record.';
+}
+
+function scorerPlaySlow(){
+  const word = scorerSelectedWord;
+  if(!word) return;
+  
+  const textToSpeak = word.hz || word.jp;
+  
+  if(window.speechSynthesis){
+    window.speechSynthesis.cancel();
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.lang = 'zh-HK';
+  utterance.rate = 0.45;
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+  
+  const voices = window.speechSynthesis.getVoices();
+  for (let i = 0; i < voices.length; i++) {
+    if (voices[i].lang === 'zh-HK' || voices[i].lang === 'zh-TW' || voices[i].name.toLowerCase().includes('ting') || voices[i].name.toLowerCase().includes('ching')) {
+      utterance.voice = voices[i];
+      break;
+    }
+  }
+  
+  window.speechSynthesis.speak(utterance);
+}
 function scorerDrawPitchCurve(canvas,data,color,label){
   const W=canvas.offsetWidth||300,H=canvas.offsetHeight||70;canvas.width=W;canvas.height=H;
   const ctx=canvas.getContext('2d');ctx.fillStyle='#1e2028';ctx.fillRect(0,0,W,H);
@@ -2313,6 +2400,20 @@ if(target==='recordings_manager'){
     if(mainContent) mainContent.scrollTop = 0;
   }, 50);
 }
+
+// Force voice loading on page load
+window.addEventListener('load', function() {
+  // Pre-load voices
+  if(window.speechSynthesis){
+    window.speechSynthesis.getVoices();
+    // Some browsers need a dummy speak to trigger voice loading
+    const dummy = new SpeechSynthesisUtterance('');
+    dummy.lang = 'zh-HK';
+    window.speechSynthesis.speak(dummy);
+    window.speechSynthesis.cancel();
+  }
+  console.log('🎤 Speech synthesis ready');
+});
 
 </script>
 </body>
