@@ -1958,6 +1958,52 @@ function scorerDrawModelPitch(jp){
   
   scorerRefPitchData = scorerResample(smoothed, 80);
   scorerDrawPitchCurve(canvas, scorerRefPitchData, '#6dcc9e', 'Reference pitch');
+
+  // ========== DRAW REFERENCE WAVEFORM ==========
+  const refWaveCanvas = document.getElementById('refWaveCanvas');
+  if (refWaveCanvas) {
+    const w = refWaveCanvas.offsetWidth || 300;
+    const h = 80;
+    refWaveCanvas.width = w;
+    refWaveCanvas.height = h;
+    const ctx = refWaveCanvas.getContext('2d');
+    
+    // Clear background
+    ctx.fillStyle = '#1e2028';
+    ctx.fillRect(0, 0, w, h);
+    
+    // Generate waveform based on tones
+    const points = [];
+    for (let i = 0; i < w; i++) {
+      const toneIndex = Math.floor((i / w) * tones.length);
+      const toneVal = tones[toneIndex] || 3;
+      // Map tone number to amplitude (higher tone = more waves)
+      const amp = 0.2 + (toneVal / 6) * 0.6;
+      const freq = 2 + (toneVal / 6) * 4;
+      const value = Math.sin(i * 0.05 * freq) * amp;
+      points.push(value);
+    }
+    
+    // Draw waveform
+    ctx.beginPath();
+    ctx.strokeStyle = '#6dcc9e';
+    ctx.lineWidth = 1.5;
+    
+    for (let x = 0; x < w; x++) {
+      const y = h/2 + points[x] * (h/3);
+      if (x === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = 'rgba(109,204,158,0.7)';
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.fillText('📢 Reference waveform', 8, 16);
+  }
   
   const refWaveCanvas = document.getElementById('refWaveCanvas');
   if (refWaveCanvas) {
