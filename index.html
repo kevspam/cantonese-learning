@@ -480,24 +480,6 @@
   </div>
 </div>
 
-    <!-- Results Stage -->
-    <div class="scorer-stage" id="scorerResultStage" style="display:none;">
-      <h3>④ Your results</h3>
-      <div class="scorer-result">
-        <div class="scorer-score-ring" id="scorerRing">—</div>
-        <div class="scorer-score-label" id="scorerScoreLabel">Overall score</div>
-        <div class="scorer-feedback" id="scorerFeedback"></div>
-        <div class="scorer-bars" id="scorerSubBars"></div>
-      </div>
-      <div class="scorer-btn-row">
-        <button class="scorer-btn primary" onclick="scorerResetCurrent()">🔄 Try same word again</button>
-        <button class="scorer-btn" onclick="scorerBackToWords()">📋 Different word</button>
-        <button class="scorer-btn" onclick="scorerBackToTopics()">🗂️ Change topic</button>
-      </div>
-    </div>
-  </div>
-</div>
-    
     <!-- RECORDINGS MANAGER -->
     <div class="panel" id="panel-recordings_manager">
       <div class="panel-header"><h2>🎙️ My Recordings</h2><p>Manage all your saved voice recordings — play, delete, or export individual ones</p></div>
@@ -507,18 +489,16 @@
 </div>
 
 <!-- RECORDING MODAL -->
-<div id="recordingModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;">
-  <div style="background:var(--surface);padding:2rem;border-radius:16px;max-width:500px;width:90%;border:1px solid var(--accent);">
+<div id="recordingModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.95);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);padding:2rem;border-radius:20px;max-width:500px;width:90%;border:1px solid var(--accent);">
     <h3 style="color:var(--accent);margin-bottom:1rem;">🎙️ Record Your Voice</h3>
     <p style="margin:1rem 0;">Phrase: <strong id="recordingPhrase" style="color:var(--accent2);font-family:'Space Mono',monospace;"></strong></p>
     <div id="recordingStatus" style="margin:1rem 0;padding:.5rem;background:var(--surface2);border-radius:8px;color:var(--text-muted);"></div>
-    <div id="existingRecNote" style="display:none;margin:.5rem 0;padding:.4rem .8rem;background:rgba(109,158,232,.1);border:1px solid var(--accent2);border-radius:6px;font-size:.8rem;color:var(--accent2);">📀 You already have a recording for this — saving will replace it.</div>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
       <button id="startRecordBtn" class="btn-primary">⏺ Start</button>
       <button id="stopRecordBtn" class="btn-primary" style="display:none;background:var(--red);">⏹️ Stop</button>
       <button id="playbackBtn" class="btn-primary" style="display:none;background:var(--accent2);">▶️ Playback</button>
       <button id="saveRecordingBtn" class="btn-primary" style="display:none;">💾 Save</button>
-      <button id="deleteThisRecBtn" class="btn-primary" style="display:none;background:var(--red);">🗑️ Delete existing</button>
       <button id="closeModalBtn" class="btn-primary" style="background:var(--text-dim);">Close</button>
     </div>
   </div>
@@ -2376,44 +2356,6 @@ function scorerBuildQuickPicks() {
   // No longer needed - using topic grid instead
   scorerBuildTopicGrid();
 }
-
-</script>
-
-updateStorageInfo();
-loadQuiz();
-  
-if(target==='pronunciation_scorer'){
-  scorerBuildTopicGrid();
-  scorerSelectedTopic = null;
-  scorerSelectedWord = null;
-  scorerCurrentWordList = [];
-  document.getElementById('scorerTopicStage').style.display = 'block';
-  document.getElementById('scorerWordStage').style.display = 'none';
-  document.getElementById('scorerRecordStage').style.display = 'none';
-  document.getElementById('scorerResultStage').style.display = 'none';
-}
-// Add this for recordings manager - scroll to top of content
-if(target==='recordings_manager'){
-  // Small delay to ensure content is rendered
-  setTimeout(() => {
-    const mainContent = document.getElementById('mainContent');
-    if(mainContent) mainContent.scrollTop = 0;
-  }, 50);
-}
-
-// Force voice loading on page load
-window.addEventListener('load', function() {
-  // Pre-load voices
-  if(window.speechSynthesis){
-    window.speechSynthesis.getVoices();
-    // Some browsers need a dummy speak to trigger voice loading
-    const dummy = new SpeechSynthesisUtterance('');
-    dummy.lang = 'zh-HK';
-    window.speechSynthesis.speak(dummy);
-    window.speechSynthesis.cancel();
-  }
-  console.log('🎤 Speech synthesis ready');
-});
 
 </script>
 </body>
