@@ -2249,7 +2249,7 @@ function scorerBuildTopicGrid() {
   }
   
   container.innerHTML = availableTopics.map(topic => `
-    <div class="topic-chip" data-topic="${topic}" onclick="scorerSelectTopic('${topic}')">
+    <div class="topic-chip" style="cursor:pointer;display:inline-block;margin:4px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.3rem .8rem;" onclick="scorerSelectTopic('${topic}')">
       ${topic.charAt(0).toUpperCase() + topic.slice(1)}
       <span class="chip-score" style="font-size:.65rem;">${VOCAB[topic].length} words</span>
     </div>
@@ -2262,6 +2262,8 @@ function scorerBuildTopicGrid() {
 }
 
 function scorerSelectTopic(topicId) {
+  console.log('Topic clicked:', topicId);
+  
   scorerSelectedTopic = topicId;
   scorerCurrentWordList = VOCAB[topicId] || [];
   
@@ -2276,7 +2278,10 @@ function scorerSelectTopic(topicId) {
   document.getElementById('scorerRecordStage').style.display = 'none';
   document.getElementById('scorerResultStage').style.display = 'none';
   
-  document.getElementById('scorerCurrentTopicName').innerHTML = `<span style="color:var(--accent)">${SCORER_TOPIC_LABELS[topicId] || topicId}</span>`;
+  const topicNameEl = document.getElementById('scorerCurrentTopicName');
+  if (topicNameEl) {
+    topicNameEl.innerHTML = `<span style="color:var(--accent)">${topicId.charAt(0).toUpperCase() + topicId.slice(1)}</span>`;
+  }
   
   const wordGrid = document.getElementById('scorerWordGrid');
   wordGrid.innerHTML = scorerCurrentWordList.map((item, idx) => `
