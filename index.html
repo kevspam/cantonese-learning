@@ -2187,107 +2187,68 @@ updateStorageInfo();
 loadQuiz();
 
 // ============================================================
-//  UPDATED PRONUNCIATION SCORER - Topic-based selection
+//  PRONUNCIATION SCORER - WORKING VERSION
 // ============================================================
+
 let scorerSelectedTopic = null;
 let scorerSelectedWord = null;
 let scorerCurrentWordList = [];
 
-// Topic display names mapping
-const SCORER_TOPIC_LABELS = {
-  numbers: "🔢 Numbers",
-  natural: "🌿 Natural Objects",
-  dates: "📅 Dates",
-  quantities: "📏 Quantities & Sizes",
-  directions: "🧭 Directions",
-  time: "⏰ Time",
-  adjectives: "✨ Adjectives",
-  animals: "🐾 Animals",
-  basic_conversation: "💬 Basic Conversation",
-  body: "🫀 Body",
-  buildings: "🏢 Buildings",
-  colours: "🎨 Colours",
-  common_phrases: "🗣️ Common Phrases",
-  cooking: "🍳 Cooking",
-  countries: "🌍 Countries",
-  drinks: "🥤 Drinks",
-  eating_out: "🍜 Eating Out",
-  chinese_restaurant: "🥢 Chinese Restaurant",
-  emotions: "😊 Emotions",
-  family: "👨‍👩‍👧 Family",
-  greetings: "👋 Greetings",
-  health: "🏥 Health",
-  holidays: "🏖️ Holidays",
-  home: "🏠 Home",
-  machines: "⚙️ Machines",
-  motoring: "🚗 Motoring",
-  people: "👥 People",
-  places: "📍 Places",
-  professions: "💼 Professions",
-  pronouns: "🔤 Pronouns",
-  school: "🎒 School",
-  seasons: "🌸 Seasons",
-  special_occasions: "🎉 Special Occasions",
-  sport: "⚽ Sport",
-  christmas: "🎄 Christmas",
-  slang: "🤬 Slang & Sarcasm",
-  verbs: "🏃 Verbs",
-  weather: "🌤️ Weather",
-  classifiers: "🔢 Classifiers",
-  idioms: "🀄 Idioms"
-};
-
-function scorerBackToTopics() {
-  scorerSelectedTopic = null;
-  scorerSelectedWord = null;
-  scorerCurrentWordList = [];
+function scorerBuildTopicGrid() {
+  const container = document.getElementById('scorerTopicGrid');
+  if (!container) return;
   
-  document.getElementById('scorerTopicStage').style.display = 'block';
-  document.getElementById('scorerWordStage').style.display = 'none';
-  document.getElementById('scorerRecordStage').style.display = 'none';
-  document.getElementById('scorerResultStage').style.display = 'none';
+  const topics = Object.keys(VOCAB);
+  container.innerHTML = '';
   
-  scorerBuildTopicGrid();
+  topics.forEach(topic => {
+    const btn = document.createElement('button');
+    btn.textContent = `${topic} (${VOCAB[topic].length})`;
+    btn.style.cssText = 'background:#1e2028;border:1px solid #2a2c36;border-radius:20px;padding:6px 12px;margin:4px;cursor:pointer;color:#e8e4dc;';
+    btn.onclick = function() { scorerSelectTopic(topic); };
+    container.appendChild(btn);
+  });
+  
+  document.getElementById('scorerTopicStatus').innerHTML = `📚 ${topics.length} topics available. Click a topic above.`;
 }
 
-function scorerBackToWords() {
-  if (!scorerSelectedTopic) {
-    scorerBackToTopics();
+function scorerSelectTopic(topicId) {
+  scorerSelectedTopic = topicId;
+  scorerCurrentWordList = VOCAB[topicId] || [];
+  
+  if (scorerCurrentWordList.length === 0) {
+    document.getElementById('scorerTopicStatus').innerHTML = 'No words in this topic';
     return;
   }
   
+  document.getElementById('scorerTopicStage').style.display = 'none';
   document.getElementById('scorerWordStage').style.display = 'block';
   document.getElementById('scorerRecordStage').style.display = 'none';
   document.getElementById('scorerResultStage').style.display = 'none';
   
-  // Rebuild word grid (in case of changes)
   const wordGrid = document.getElementById('scorerWordGrid');
-  wordGrid.innerHTML = scorerCurrentWordList.map((item, idx) => `
-    <button class="scorer-phrase-btn" data-word-idx="${idx}" onclick="scorerSelectWord(${idx})">
-      ${item.hz || item.jp} 
-      <span style="font-size:.68rem;color:var(--text-dim);margin-left:3px;">${item.jp}</span>
-      <span style="font-size:.6rem;color:var(--text-muted);margin-left:4px;">${item.en}</span>
-    </button>
-  `).join('');
+  wordGrid.innerHTML = '';
+  
+  scorerCurrentWordList.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = `${item.hz || item.jp} (${item.jp})`;
+    btn.style.cssText = 'background:#1e2028;border:1px solid #2a2c36;border-radius:8px;padding:8px 12px;margin:4px;cursor:pointer;color:#e8e4dc;';
+    btn.onclick = function() { scorerSelectWord(idx); };
+    wordGrid.appendChild(btn);
+  });
+  
+  document.getElementById('scorerStatus').innerHTML = `🎯 ${scorerCurrentWordList.length} words available. Click any to practice.`;
 }
 
-function scorerResetCurrent() {
-  if (!scorerSelectedWord) {
-    scorerBackToWords();
-    return;
-  }
+function scorerSelectWord(wordIdx) {
+  const word = scorerCurrentWordList[wordIdx];
+  scorerSelectedWord = word;
   
-  // Reset recording state only, keep same word
-  scorerUserBlob = null;
-  scorerUserUrl = null;
-  scorerRefPitchData = [];
-  scorerUserPitchData = [];
-  scorerAudioChunks = [];
+  document.getElementById('scorerSelectedWordLabel').innerHTML = `<strong>${word.hz || word.jp}</strong> — ${word.en}`;
+  document.getElementById('scorerPhraseJp').innerHTML = word.jp;
+  document.getElementById('scorerPhraseHz').innerHTML = word.hz || word.jp;
   
-  ['refWaveCanvas', 'userWaveCanvas', 'refPitchCanvas', 'userPitchCanvas'].forEach(scorerClearCanvas);
-  
-  scorerDrawModelPitch(scorerSelectedWord.jp);
-  
+  document.getElementById('scorerWordStage').style.display = 'none';
   document.getElementById('scorerRecordStage').style.display = 'block';
   document.getElementById('scorerResultStage').style.display = 'none';
   
@@ -2296,11 +2257,36 @@ function scorerResetCurrent() {
   document.getElementById('scorerPlaybackBtn').style.display = 'none';
   document.getElementById('scorerScoreBtn').style.display = 'none';
   
-  document.getElementById('scorerStatus').innerHTML = `🔄 Try again: <strong>${scorerSelectedWord.hz || scorerSelectedWord.jp}</strong>. Press 🔊 Listen, then ⏺ Record.`;
+  document.getElementById('scorerStatus').innerHTML = `🎤 Press "Listen" then "Record"`;
 }
 
+function scorerBackToTopics() {
+  document.getElementById('scorerTopicStage').style.display = 'block';
+  document.getElementById('scorerWordStage').style.display = 'none';
+  document.getElementById('scorerRecordStage').style.display = 'none';
+  document.getElementById('scorerResultStage').style.display = 'none';
+  scorerBuildTopicGrid();
+}
+
+function scorerBackToWords() {
+  document.getElementById('scorerWordStage').style.display = 'block';
+  document.getElementById('scorerRecordStage').style.display = 'none';
+  document.getElementById('scorerResultStage').style.display = 'none';
+}
+
+function scorerResetCurrent() {
+  document.getElementById('scorerRecordStage').style.display = 'block';
+  document.getElementById('scorerResultStage').style.display = 'none';
+  document.getElementById('scorerRecordBtn').style.display = 'inline-flex';
+  document.getElementById('scorerStopBtn').style.display = 'none';
+  document.getElementById('scorerPlaybackBtn').style.display = 'none';
+  document.getElementById('scorerScoreBtn').style.display = 'none';
+}
+
+// Make sure the scorer builds when page loads
 scorerBuildTopicGrid();
-  
+
+
 </script>
 </body>
 </html>
