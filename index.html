@@ -1232,55 +1232,6 @@ const VOCAB = {
   ],
 };
 
-let scorerSelectedTopic = null;
-let scorerSelectedWord = null;
-let scorerCurrentWordList = [];
-
-function scorerSelectTopic(topicId) {
-  alert('Topic clicked: ' + topicId);
-  
-  scorerSelectedTopic = topicId;
-  scorerCurrentWordList = VOCAB[topicId] || [];
-  
-  if (scorerCurrentWordList.length === 0) {
-    document.getElementById('scorerTopicStatus').innerHTML = 'No words in this topic';
-    return;
-  }
-  
-  document.getElementById('scorerTopicStage').style.display = 'none';
-  document.getElementById('scorerWordStage').style.display = 'block';
-  
-  const wordGrid = document.getElementById('scorerWordGrid');
-  wordGrid.innerHTML = scorerCurrentWordList.map((item, idx) => `
-    <button style="background:#1e2028;border:1px solid #2a2c36;border-radius:8px;padding:8px 12px;margin:4px;cursor:pointer;" onclick="scorerSelectWord(${idx})">
-      ${item.hz || item.jp} (${item.jp})
-    </button>
-  `).join('');
-}
-
-function scorerSelectWord(idx) {
-  alert('Word selected');
-  const word = scorerCurrentWordList[idx];
-  document.getElementById('scorerSelectedWordLabel').innerHTML = word.hz || word.jp;
-  document.getElementById('scorerPhraseJp').innerHTML = word.jp;
-  document.getElementById('scorerPhraseHz').innerHTML = word.hz || word.jp;
-  
-  document.getElementById('scorerWordStage').style.display = 'none';
-  document.getElementById('scorerRecordStage').style.display = 'block';
-}
-
-function scorerBuildTopicGrid() {
-  const container = document.getElementById('scorerTopicGrid');
-  if (!container) return;
-  
-  const topics = Object.keys(VOCAB);
-  container.innerHTML = topics.map(topic => `
-    <button onclick="scorerSelectTopic('${topic}')" style="background:#1e2028;border:1px solid #2a2c36;border-radius:20px;padding:6px 12px;margin:4px;cursor:pointer;">
-      ${topic} (${VOCAB[topic].length})
-    </button>
-  `).join('');
-}
-
 // ============================================================
 //  TONE ENGINE
 // ============================================================
