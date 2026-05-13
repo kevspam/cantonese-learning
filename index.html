@@ -1462,50 +1462,50 @@ function importRecordings(file){const r=new FileReader();r.onload=e=>{try{const 
 //  RECORDINGS MANAGER — list all, play individual, delete individual
 // ============================================================
 function renderRecordingsManager(){
-  const el=document.getElementById('recManagerContent');if(!el)return;
-  const recs=loadCustomRecordings();
-  const keys=Object.keys(recs);
-  if(keys.length===0){
-    el.innerHTML=`<div class="wide-card"><h3>No recordings yet</h3><p>Record your voice on any vocab card — it will appear here so you can manage it.</p></div>`;
+  const el = document.getElementById('recManagerContent');
+  if(!el) return;
+  
+  const recs = loadCustomRecordings();
+  const keys = Object.keys(recs);
+  
+  if(keys.length === 0){
+    el.innerHTML = `<div class="wide-card"><h3>No recordings yet</h3><p>Record your voice on any vocab card — it will appear here so you can manage it.</p></div>`;
     return;
   }
-  el.innerHTML=`
+  
+  el.innerHTML = `
     <div class="rec-manager">
-      <h3>🎙️ ${keys.length} Saved Recording${keys.length!==1?'s':''}</h3>
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem;">Play to check, or delete ones you want to redo. The system voice will be used instead of your recording once deleted.</p>
+      <h3>🎙️ ${keys.length} Saved Recording${keys.length !== 1 ? 's' : ''}</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem;">Click ▶ to play, 🗑️ to delete individual recordings.</p>
       <div class="rec-list" id="recList"></div>
       <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
         <button class="btn-outline" onclick="if(confirm('Delete ALL recordings?')){localStorage.removeItem('customAudio');updateStorageInfo();renderRecordingsManager();refreshAllGrids();}">🗑️ Delete All</button>
         <button class="btn-outline" onclick="exportAllRecordings()">📥 Export All</button>
       </div>
     </div>`;
-  const list=document.getElementById('recList');
-  keys.sort().forEach(phrase=>{
+  
+  const list = document.getElementById('recList');
+  keys.sort().forEach(phrase => {
     const audioData = recs[phrase];
-    const item=document.createElement('div');
-    item.className='rec-item';
-    item.innerHTML=`
-      <span class="rec-item-phrase" title="${phrase}">${phrase}</span>
-      <button class="rec-item-play" data-phrase="${phrase.replace(/'/g,"\\'")}">▶ Play</button>
-      <button class="rec-item-play" onclick="speak('${phrase.replace(/'/g,"\\'")}',undefined,0.45)" style="color:var(--text-dim);" title="TTS slow">🐢</button>
-      <button class="rec-item-del" data-phrase="${phrase.replace(/'/g,"\\'")}">🗑️</button>`;
+    const item = document.createElement('div');
+    item.className = 'rec-item';
+    item.style.cssText = 'display:flex;align-items:center;gap:.7rem;padding:.5rem .8rem;background:var(--surface2);border-radius:8px;margin-bottom:.5rem;';
     
-    // Fix: Create audio element and store reference
-    const playBtn = item.querySelector('.rec-item-play:first-child');
+    item.innerHTML = `
+      <span class="rec-item-phrase" style="font-family:\'Space Mono\',monospace;color:var(--accent);flex:1;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${phrase}">${phrase}</span>
+      <button class="rec-item-play" style="background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--accent2);cursor:pointer;font-size:.75rem;">▶ Play</button>
+      <button class="rec-item-del" style="background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--red);cursor:pointer;font-size:.75rem;">🗑️ Delete</button>
+    `;
+    
     const audioObj = new Audio(audioData);
-    playBtn.onclick = (e) => {
-      e.stopPropagation();
-      try {
-        audioObj.currentTime = 0;
-        audioObj.play().catch(err => console.warn('Playback error:', err));
-      } catch(err) {
-        console.warn('Audio playback failed:', err);
-      }
+    const playBtn = item.querySelector('.rec-item-play');
+    playBtn.onclick = () => {
+      audioObj.currentTime = 0;
+      audioObj.play().catch(err => console.warn('Play error:', err));
     };
     
     const delBtn = item.querySelector('.rec-item-del');
-    delBtn.onclick = (e) => {
-      e.stopPropagation();
+    delBtn.onclick = () => {
       if(confirm(`Delete recording for "${phrase}"?`)){
         deleteRecording(phrase);
         renderRecordingsManager();
@@ -1830,30 +1830,61 @@ document.getElementById('deleteThisRecBtn').addEventListener('click',deleteCurre
 document.getElementById('closeModalBtn').addEventListener('click',closeRecordingModal);
 
 (function(){
-  const KS='studyStreak',KD='lastStudyDate';
-  function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-  function load(){return{count:parseInt(localStorage.getItem(KS)||'0'),last:localStorage.getItem(KD)||''};}
-  function save(c,d){localStorage.setItem(KS,String(c));localStorage.setItem(KD,d);}
-  function ui(c,toast){
-    const w=document.getElementById('streakWidget'),n=document.getElementById('streakCount');
-    if(!w||!n)return;
-    n.textContent=c;
-    w.classList.toggle('cold',c===0);
-    if(toast&&c>1){
-      const t=document.createElement('div');
-      t.className='streak-toast';
-      t.innerHTML='🔥 <strong>'+c+' day streak!</strong> Keep it up!';
-      document.body.appendChild(t);
-      setTimeout(()=>t.remove(),3500);
+  const KS='studyStreak';
+  const KD='lastStudyDate';
+  
+  function today(){
+    const d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  
+  function load(){
+    return {
+      count: parseInt(localStorage.getItem(KS) || '0'),
+      last: localStorage.getItem(KD) || ''
+    };
+  }
+  
+  function save(c,d){
+    localStorage.setItem(KS, String(c));
+    localStorage.setItem(KD, d);
+  }
+  
+  function updateDisplay(count){
+    const streakCountEl = document.getElementById('streakCount');
+    if(streakCountEl){
+      streakCountEl.textContent = count;
     }
   }
-  const t=today(),{count,last}=load();
-  if(last===t){ui(count,false);}
-  else if(last===''){save(1,t);ui(1,false);}
+  
+  const t = today();
+  const {count, last} = load();
+  
+  if(last === t){
+    // Already studied today
+    updateDisplay(count);
+  }
+  else if(last === ''){
+    // First time ever
+    save(1, t);
+    updateDisplay(1);
+  }
   else{
-    const diff=Math.round((new Date(t)-new Date(last))/86400000);
-    if(diff===1){save(count+1,t);ui(count+1,true);}
-    else{save(1,t);ui(1,false);}
+    // Check if yesterday
+    const lastDate = new Date(last);
+    const todayDate = new Date(t);
+    const diff = Math.round((todayDate - lastDate) / 86400000);
+    
+    if(diff === 1){
+      // Consecutive day
+      save(count + 1, t);
+      updateDisplay(count + 1);
+    }
+    else{
+      // Streak broken
+      save(1, t);
+      updateDisplay(1);
+    }
   }
 })();
 
@@ -2219,7 +2250,10 @@ function scorerBuildTopicGrid() {
     </div>
   `).join('');
   
-  document.getElementById('scorerTopicStatus').textContent = `📚 ${availableTopics.length} topics available. Select one to practice pronunciation.`;
+  const statusEl = document.getElementById('scorerTopicStatus');
+  if (statusEl) {
+    statusEl.textContent = `📚 ${availableTopics.length} topics available. Select one to practice pronunciation.`;
+  }
 }
 
 function scorerSelectTopic(topicId) {
