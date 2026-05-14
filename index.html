@@ -2192,17 +2192,42 @@ loadQuiz();
 
 function scorerBuildTopicGrid() {
   const container = document.getElementById('scorerTopicGrid');
-  if (!container) return;
+  if (!container) {
+    console.error('scorerTopicGrid container not found');
+    return;
+  }
   
   const topics = Object.keys(VOCAB);
+  if (topics.length === 0) {
+    console.error('No topics in VOCAB');
+    return;
+  }
+  
   container.innerHTML = '';
   
   topics.forEach(topic => {
     const btn = document.createElement('button');
     btn.textContent = `${topic} (${VOCAB[topic].length})`;
-    btn.className = 'topic-chip';
-    btn.style.cssText = 'background:#1e2028;border:1px solid #2a2c36;border-radius:20px;padding:8px 16px;margin:5px;cursor:pointer;color:#e8e4dc;';
-    btn.onclick = (function(t) { return function() { scorerSelectTopic(t); }; })(topic);
+    btn.style.cssText = 'background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:0.55rem 1.1rem;margin:4px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.88rem;color:var(--text-muted);transition:all 0.15s;display:inline-block;';
+    btn.type = 'button';
+    
+    // Add hover effect
+    btn.addEventListener('mouseenter', function() {
+      this.style.borderColor = 'var(--accent2)';
+      this.style.color = 'var(--accent2)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      this.style.borderColor = 'var(--border)';
+      this.style.color = 'var(--text-muted)';
+    });
+    
+    // Use addEventListener instead of onclick
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      scorerSelectTopic(topic);
+    });
+    
     container.appendChild(btn);
   });
   
@@ -2224,19 +2249,44 @@ function scorerSelectTopic(topicId) {
   document.getElementById('scorerRecordStage').style.display = 'none';
   document.getElementById('scorerResultStage').style.display = 'none';
   
+  document.getElementById('scorerCurrentTopicName').innerHTML = `(${topicId})`;
+  
   const wordGrid = document.getElementById('scorerWordGrid');
+  if (!wordGrid) {
+    console.error('scorerWordGrid not found');
+    return;
+  }
+  
   wordGrid.innerHTML = '';
   
   scorerCurrentWordList.forEach((item, idx) => {
     const btn = document.createElement('button');
     btn.textContent = `${item.hz || item.jp} (${item.jp})`;
-    btn.className = 'scorer-phrase-btn';
-    btn.style.cssText = 'background:#1e2028;border:1px solid #2a2c36;border-radius:8px;padding:8px 12px;margin:5px;cursor:pointer;color:#e8e4dc;';
-    btn.onclick = (function(i) { return function() { scorerSelectWord(i); }; })(idx);
+    btn.style.cssText = 'background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0.4rem 0.8rem;margin:4px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:0.78rem;color:var(--text-muted);transition:all 0.15s;display:inline-block;';
+    btn.type = 'button';
+    
+    // Add hover effect
+    btn.addEventListener('mouseenter', function() {
+      this.style.borderColor = 'var(--accent2)';
+      this.style.color = 'var(--accent2)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      this.style.borderColor = 'var(--border)';
+      this.style.color = 'var(--text-muted)';
+    });
+    
+    // Use addEventListener for reliability
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      scorerSelectWord(idx);
+    });
+    
     wordGrid.appendChild(btn);
   });
   
-  document.getElementById('scorerStatus').innerHTML = `🎯 ${scorerCurrentWordList.length} words. Click any to practice.`;
+  const statusEl = document.getElementById('scorerStatus');
+  if (statusEl) statusEl.innerHTML = `🎯 ${scorerCurrentWordList.length} words. Click any to practice.`;
 }
 
 function scorerSelectWord(wordIdx) {
@@ -2291,8 +2341,12 @@ function scorerResetCurrent() {
   scorerDrawModelPitch(scorerSelectedWord.jp);
 }
 
-// Make sure it builds when page loads
-scorerBuildTopicGrid();
+// Build scorer grid at page end
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', scorerBuildTopicGrid);
+} else {
+  scorerBuildTopicGrid();
+}
 
 
 </script>
